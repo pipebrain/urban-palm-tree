@@ -2,7 +2,7 @@
 
 **Implementation and local verification complete; physical-phone review outstanding.** App version **0.2.0**, QUDT **3.5.2**, 6 October 2026. Andrew authorized M2 after reporting that the corrected M1 0.1.1 release passes on Android and iOS phones. That is M1 smoke acceptance, not verification of the new M2 authoring controls.
 
-The public [GitHub Pages preview](https://pipebrain.github.io/urban-palm-tree/) remains **M1 0.1.1**, source [`9ada4474`](https://github.com/pipebrain/urban-palm-tree/commit/9ada447447811f51000db92f9287fc45045e2e18). **M2 publication has not been authorized.** This report records the implemented M2 scope and production-build verification. M2 has not been tested on physical phones or published.
+Andrew subsequently reported that he unpublished GitHub Pages and explicitly requested redeployment. **M2 0.2.0 is published and verified** at the [GitHub Pages preview](https://pipebrain.github.io/urban-palm-tree/) from commit `95684ad4`. All live assets match the tested build, and public-URL Chrome/WebKit authoring and fresh offline checks pass; see the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). This report records the implemented M2 scope and local production-build verification. Physical-phone M2 testing remains outstanding.
 
 ## Implemented scope
 
@@ -22,13 +22,13 @@ Numerical conversion remains unavailable. Unit preferences choose an exact revie
 
 The lockfile pins these new runtime dependencies for Markdown rendering and internal-reference integrity:
 
-| Dependency | Version | Purpose |
-| --- | --- | --- |
-| `react-markdown` | 10.1.0 | Render Markdown as React elements with explicit component and URL handling |
-| `remark-math` | 6.0.0 | Parse inline/display math for the existing KaTeX presentation |
-| `mdast-util-from-markdown` | 2.1.0 | Parse note references from a Markdown syntax tree |
-| `mdast-util-math` | 3.0.0 | Match math-node treatment during reference checks |
-| `micromark-extension-math` | 3.1.0 | Use the same math grammar during reference checks |
+| Dependency                 | Version | Purpose                                                                    |
+| -------------------------- | ------- | -------------------------------------------------------------------------- |
+| `react-markdown`           | 10.1.0  | Render Markdown as React elements with explicit component and URL handling |
+| `remark-math`              | 6.0.0   | Parse inline/display math for the existing KaTeX presentation              |
+| `mdast-util-from-markdown` | 2.1.0   | Parse note references from a Markdown syntax tree                          |
+| `mdast-util-math`          | 3.0.0   | Match math-node treatment during reference checks                          |
+| `micromark-extension-math` | 3.1.0   | Use the same math grammar during reference checks                          |
 
 The renderer and parser choices follow the official [react-markdown documentation](https://github.com/remarkjs/react-markdown), [remark-math documentation](https://github.com/remarkjs/remark-math), and [mdast parser documentation](https://github.com/syntax-tree/mdast-util-from-markdown). The renderer uses React components rather than executing document HTML; the independent reference validator shares its Markdown/math grammar.
 
@@ -36,16 +36,16 @@ The renderer and parser choices follow the official [react-markdown documentatio
 
 All checks below ran against the production build at `http://127.0.0.1:4175/urban-palm-tree/` on **6 October 2026**. Browser evidence is Mac automation, with desktop **1440×960** and phone **390×844** viewports. It does not substitute for Android/iPhone testing.
 
-| M2 criterion | Result and evidence |
-| --- | --- |
-| Create and connect an HVACR quantity, equation, and contextual constant | Pass: domain validation and desktop/touch authoring workflows create all three, bind participants, and create typed relationships |
-| Edit a unit, node name, or symbol without changing stable identity | Pass: bindings and backlinks retain IDs; unit label/LaTeX edits propagate; original source remains inspectable and restorable |
-| Overlapping groups; deleting a group retains its members | Pass: group membership, primary colour/count marker, filter, deletion, and history restore |
-| Undo/redo exclusion, restoration, membership, placement, and deletion | Pass: domain transactional actions plus authoring/graph browser workflows; referenced deletion is refused |
-| One Save/drag is one history action; force ticks create none | Pass: edit/cancel checks, completed drag, repeated pin/unpin, cancelled drag, hidden-node restoration, and force movement |
-| Notes, embedded images, internal links, and math work on desktop/phone | Pass: Chrome and WebKit render inline/display math and images; unsafe schemes/HTML remain inert; preview links cannot navigate away from an unsaved draft |
-| Constant context and equation participation remain inspectable/editable | Pass: precise numerical strings, sources, assumptions, status, explicit bindings, and matching participation links |
-| A numerical value's unit is never silently relabelled | Pass: incompatible change is rejected without conversion; failed edits preserve content/history |
+| M2 criterion                                                            | Result and evidence                                                                                                                                       |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Create and connect an HVACR quantity, equation, and contextual constant | Pass: domain validation and desktop/touch authoring workflows create all three, bind participants, and create typed relationships                         |
+| Edit a unit, node name, or symbol without changing stable identity      | Pass: bindings and backlinks retain IDs; unit label/LaTeX edits propagate; original source remains inspectable and restorable                             |
+| Overlapping groups; deleting a group retains its members                | Pass: group membership, primary colour/count marker, filter, deletion, and history restore                                                                |
+| Undo/redo exclusion, restoration, membership, placement, and deletion   | Pass: domain transactional actions plus authoring/graph browser workflows; referenced deletion is refused                                                 |
+| One Save/drag is one history action; force ticks create none            | Pass: edit/cancel checks, completed drag, repeated pin/unpin, cancelled drag, hidden-node restoration, and force movement                                 |
+| Notes, embedded images, internal links, and math work on desktop/phone  | Pass: Chrome and WebKit render inline/display math and images; unsafe schemes/HTML remain inert; preview links cannot navigate away from an unsaved draft |
+| Constant context and equation participation remain inspectable/editable | Pass: precise numerical strings, sources, assumptions, status, explicit bindings, and matching participation links                                        |
+| A numerical value's unit is never silently relabelled                   | Pass: incompatible change is rejected without conversion; failed edits preserve content/history                                                           |
 
 **Build and integrity:** frozen-lockfile installation, TypeScript, formatting, deterministic QUDT regeneration/check, **57/57 tests**, and the repository-subpath production build pass. The full eligible source remains unchanged. Tests cover frozen originals, shared QUDT value aliases, exact IDs, reference-style Markdown links, compound failures, history branching/no-ops, equation binding synchronization, exclusion, deletion, unit guards, and shared immutable history content. All 331 imported constants were also checked for a successful display-name edit without losing original identity.
 
@@ -69,11 +69,11 @@ Retained machine-readable evidence:
 
 Tested implementation commit: [`313984e3d69f1f4ed54ba59eaf5e72f9b911feec`](https://github.com/pipebrain/urban-palm-tree/commit/313984e3d69f1f4ed54ba59eaf5e72f9b911feec). The following documentation-only commit records this evidence without changing the build.
 
-## Try M2 locally
+## Try M2
 
-Start the production preview using the README commands. On a phone layout, open **Search**; on desktop, use **Library**. Choose Quantity, Equation, or Constant, then **Create concept**. Use **Edit concept**, **Edit unit**, and the relationship controls to revise existing content. Enter exact participant/unit references separately from display notation. Save applies one action; Cancel discards the draft.
+Open the published URL, or start the production preview using the README commands. There is no global edit-mode toggle. On a phone layout, open **Search**; on desktop, use **Library**. Choose Quantity, Equation, or Constant, then **Create concept**. Use **Edit concept**, **Edit unit presentation**, and the relationship controls to revise existing content. Enter exact participant/unit references separately from display notation. Save applies one action; Cancel discards the draft.
 
-Create groups from the Library/Search panel and manage membership in Inspector. Exclude a concept, find it using **Excluded concepts only**, and restore it. Use the visible **Undo/Redo** buttons for edits, groups, curation, and graph placement. For a phone smoke check after a separately requested publication, repeat creation, notes/image rendering, group membership, exclusion/restoration, canvas selection, drag/pinch, and undo/redo on both devices.
+Create groups from the Library/Search panel and manage membership in Inspector. Exclude a concept, find it using **Excluded concepts only**, and restore it. Use the visible **Undo/Redo** buttons for edits, groups, curation, and graph placement. For a phone smoke check of the requested M2 release, repeat creation, notes/image rendering, group membership, exclusion/restoration, canvas selection, drag/pinch, and undo/redo on both devices.
 
 ## Limits and next step
 
@@ -82,6 +82,6 @@ Create groups from the Library/Search panel and manage membership in Inspector. 
 - Linked images and external sources may require connectivity. Embedded image portability cannot be claimed until workspace files exist.
 - Numerical unit conversion, general equation solving, CoolProp evaluation, flashcards, generated problems, and calculation visualizations remain outside M2.
 - Classification and reviewed unit coverage retain M1's limits. Source constants may be historical; no calculations use them.
-- M1 physical-phone acceptance does not certify M2. Public Pages remains M1 0.1.1 until a separately authorized M2 deployment.
+- M1 physical-phone acceptance does not certify M2. The authorized M2 deployment does not establish physical-device acceptance.
 
-M2 implementation and local verification are complete. The next review is physical-phone testing after an explicitly requested M2 release. The next planned implementation milestone is **M3 — persistence and reusable content**; it has not been started.
+M2 implementation and local verification are complete. The next review is physical-phone testing of the requested M2 release. The next planned implementation milestone is **M3 — persistence and reusable content**; it has not been started.

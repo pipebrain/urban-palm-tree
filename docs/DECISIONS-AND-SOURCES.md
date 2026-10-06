@@ -39,7 +39,7 @@ The latest classification decision supersedes the earlier proposal to treat Quan
 
 ## M2 implementation decisions — 6 October 2026
 
-Andrew authorized M2 after the successful physical-phone recheck. Local source is **0.2.0, implemented and locally verified** with 57 passing tests and successful production browser checks. Physical-phone M2 review remains outstanding, and the public site remains **M1 0.1.1** at `9ada4474`. No M2 deployment is authorized. See [M2 results](M2-RESULTS.md).
+Andrew authorized M2 after the successful physical-phone recheck. Local source is **0.2.0, implemented and locally verified** with 57 passing tests and successful production browser checks. Physical-phone M2 review remains outstanding. Andrew subsequently unpublished Pages and explicitly requested redeployment; M2 0.2.0 is now published from `95684ad4`, with successful live asset, Chrome/WebKit authoring, and fresh offline verification. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). See [M2 results](M2-RESULTS.md).
 
 - One transactional authoring state holds custom nodes/relationships, source overrides, exclusions, groups, explicit placements, and unit preferences separately from the immutable baseline. IDs and original provenance remain intact. A failed command must preserve the previous state.
 - A completed Save, membership change, exclusion, or drag is one undoable action. Automatic layout ticks do not become history. Save applies a session edit; it does not write a workspace file. Autosave, portable files, source export, and Reload from source remain M3.
@@ -52,16 +52,16 @@ Andrew authorized M2 after the successful physical-phone recheck. Local source i
 
 These defaults guide remaining implementation. M1 choices and M2 implementation decisions are recorded above; M2 physical-phone acceptance remains outstanding.
 
-| Topic | Working default | When to revisit |
-| --- | --- | --- |
-| Backend/accounts | Browser-local workspaces; no login, shared server workspace, or automatic synchronization | If collaboration or cloud sync becomes a requirement |
-| Device transfer | Explicit workspace file export/import | When synchronization is requested |
-| Import conflicts | Load a file as a separate workspace; do not silently merge concurrent edits | Before M3 |
-| Graph weight | M1: distinct visible neighbours, bounded radius, one spring per pair | If measured usability requires adjustment |
-| Group colours | M2: first matching group's colour plus a membership-count badge | During physical-device usability review |
-| Source export | Versioned, deterministic data and assets consumable by the app; exact format chosen by Codex | Before M3 |
-| Release trigger | Manually initiated Pages publishing via `.github/workflows/pages.yml` (`workflow_dispatch`), separate from ordinary code pushes | Each requested preview or alpha release |
-| App name | HVACR Knowledge Graph is a working name | Before public release |
+| Topic            | Working default                                                                                                                 | When to revisit                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Backend/accounts | Browser-local workspaces; no login, shared server workspace, or automatic synchronization                                       | If collaboration or cloud sync becomes a requirement |
+| Device transfer  | Explicit workspace file export/import                                                                                           | When synchronization is requested                    |
+| Import conflicts | Load a file as a separate workspace; do not silently merge concurrent edits                                                     | Before M3                                            |
+| Graph weight     | M1: distinct visible neighbours, bounded radius, one spring per pair                                                            | If measured usability requires adjustment            |
+| Group colours    | M2: first matching group's colour plus a membership-count badge                                                                 | During physical-device usability review              |
+| Source export    | Versioned, deterministic data and assets consumable by the app; exact format chosen by Codex                                    | Before M3                                            |
+| Release trigger  | Manually initiated Pages publishing via `.github/workflows/pages.yml` (`workflow_dispatch`), separate from ordinary code pushes | Each requested preview or alpha release              |
+| App name         | HVACR Knowledge Graph is a working name                                                                                         | Before public release                                |
 
 Offline use is now selected. The implementation must distinguish online preparation, offline-ready status, and offline reopening; storing edits in an online tab alone is insufficient. The working interpretation of source is the released app content/defaults, not direct access to unpublished GitHub commits. Detailed source-replacement behaviour is specified in the product brief.
 
@@ -100,7 +100,9 @@ These are primary source entry points. Verify the current release and relevant d
 
 ## Change log
 
-- M1 phone acceptance and M2 authorization, 6 October 2026: Andrew reports the corrected M1 0.1.1 release passes on Android and iOS phones and instructs Codex to proceed with M2. Local version 0.2.0 now implements editing, curation, groups, and action history; 57 tests and the production Chrome/WebKit authoring, graph, semantic, and offline checks pass. The public site remains M1 0.1.1 and M2 publication is not authorized. This acceptance does not certify offline/storage behavior. See [M2 results](M2-RESULTS.md).
+- M2 publication, 6 October 2026: Andrew reported that he unpublished GitHub Pages and requested redeployment after finding that the public site did not expose M2 editing. At that request, published M2 0.2.0 commit `95684ad4376cc32221962b34f8acc3699d55ea1a` through [Actions run 37479683546](https://github.com/pipebrain/urban-palm-tree/actions/runs/37479683546), after restoring Pages to workflow publishing. Every release asset matches verified build `a3ccb9ca6434f09fef63`; live Chrome/WebKit authoring and fresh offline checks pass. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). Physical-phone M2 acceptance remains outstanding.
+
+- M1 phone acceptance and M2 authorization, 6 October 2026: Andrew reports the corrected M1 0.1.1 release passes on Android and iOS phones and instructs Codex to proceed with M2. Local version 0.2.0 now implements editing, curation, groups, and action history; 57 tests and the production Chrome/WebKit authoring, graph, semantic, and offline checks pass. At implementation completion, the public site remained M1 0.1.1; the later redeployment request separately authorized M2 publication. This acceptance does not certify offline/storage behavior. See [M2 results](M2-RESULTS.md).
 - M1 rendering correction release, 6 October 2026: Published version 0.1.1, commit `9ada447447811f51000db92f9287fc45045e2e18`, through [Actions run 37454092024](https://github.com/pipebrain/urban-palm-tree/actions/runs/37454092024). The live index, service worker, inventory, Inter font, and license return HTTP 200 and match local build `fd67e8fbe52c3c3a5a13` byte for byte. The 37 tests, local Chrome/WebKit checks, and offline font checks pass. Actual-phone retesting was pending at publication and subsequently passed by Andrew's report; see [rendering correction](M1-IOS-RENDERING-FIX.md).
 - M1 physical-phone feedback, 6 October 2026: Andrew initially reports M1 passes on iOS and Android except for UI rendering issues in iOS Safari and Chrome. KaTeX renders as expected; other fonts appear missing, the logo arrow appears as an emoji, and the hop selector is too short. Both screenshots remain outside the public repository. The subsequent 0.1.1 correction addresses interface fonts, icons, and control sizing, and Andrew later reports both phones pass. Neither report establishes comprehensive offline/storage certification. See [M1 results](M1-RESULTS.md).
 - M1 Pages deployment, 6 October 2026: At Andrew's request for public iPhone and Android testing, published commit `7fb7d5396a30a1dafeb57e156c6aa334a206c7e8` through [manual Actions run 37448915597](https://github.com/pipebrain/urban-palm-tree/actions/runs/37448915597). See [M1 deployment record](M1-PAGES-DEPLOYMENT.md). This releases the verified browsing milestone without declaring physical-device acceptance or later milestones complete.
