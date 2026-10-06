@@ -1,6 +1,8 @@
-# HVACR Knowledge Atlas — M0
+# HVACR Knowledge Atlas — M1 · v0.1.0
 
-A feasibility implementation of the HVACR knowledge graph. The starting universe is the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node and four participant links. Source is in the public GitHub repository [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree). Andrew authorized GitHub Pages publication of this M0 preview on 6 October 2026; this is not the completed classroom alpha.
+A browsable semantic foundation for the HVACR knowledge graph. The starting universe remains the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node, four participant links, and a separate Fahrenheit-interval unit. Source is in [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree).
+
+The working source is **M1, version 0.1.0**. The public GitHub Pages site still serves the authorized **M0** release, commit `85c174f0`. Code pushes do not publish M1. See [M1 results](docs/M1-RESULTS.md) and [release guidance](docs/GIT-AND-RELEASE.md).
 
 ## Run on this Mac
 
@@ -16,26 +18,29 @@ Open the localhost address printed by Vite. The helper uses installed Node/pnpm 
 Production preview, including offline asset preparation and a Pages-style repository subpath:
 
 ```sh
-APP_BASE=/hvacr-m0/ sh scripts/pnpm.sh build
-APP_BASE=/hvacr-m0/ sh scripts/pnpm.sh preview --port 4173
+APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh build
+APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh preview --port 4174
 ```
 
-Then open `http://127.0.0.1:4173/hvacr-m0/`. `APP_BASE` must start and end with `/`; use `/urban-palm-tree/` to match the Pages deployment. The default build base is `/`. The Git remote `origin` points to `pipebrain/urban-palm-tree`, with `main` tracking `origin/main`.
+Then open [the local M1 preview](http://127.0.0.1:4174/urban-palm-tree/). `APP_BASE` must start and end with `/`; this path matches the Pages deployment. The default build base is `/`. The Git remote `origin` points to `pipebrain/urban-palm-tree`.
 
 ## GitHub Pages preview
 
-The preview is live at [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). The first deployment and live browser checks passed on 6 October 2026; see [deployment record](docs/PAGES-DEPLOYMENT.md). The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`); ordinary pushes do not publish changes. See [Git and release workflow](docs/GIT-AND-RELEASE.md) for publication and verification guidance.
+The **M0** preview is live at [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). Its deployment and live browser checks passed on 6 October 2026; see [deployment record](docs/PAGES-DEPLOYMENT.md). The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`). M1 publication is a separate release step.
 
 ## Explore
 
 - Use **Search** (phone) or **Library** (desktop) to select a concept. Search narrows only the result list; it does not remove graph nodes.
 - Drag empty graph space to pan. Pinch, scroll, or use `+`/`−` to zoom. **Fit all** follows the full layout while it settles. Selecting a concept or manually navigating stops automatic fitting.
 - Tap/click a node to inspect it. Dragging a node pins it; **Pin/Unpin** and **Pause/Resume** also work without keyboard or hover.
-- Open the authored sensible-heat example from the inspector welcome card or search. Its participants have stable references and exact unit identities. The small display-name/LaTeX editing probe lasts only in this tab.
-- Unit links open internal references. Upstream compatibility is labelled separately from actual explicit-use backlinks. No numerical conversion or equation solving is provided.
-- Desktop Dockview panels can be resized and moved. Phone navigation uses the same domain data in focused Map/Search/Inspector views.
+- Use **Map filters** for node type, classification, origin, relationships, and deprecated records. Focus a selected concept's one- or two-hop neighbourhood; **Reset map** restores the full universe. Pins follow stable IDs through filtering and display edits.
+- Open the authored sensible-heat example from the inspector welcome card or search. Its participants have stable references, exact unit identities, and no fixed solve direction. Display-name/LaTeX overrides can be applied and restored without rewriting the source; they last only in this tab.
+- Unit links and the searchable **Unit dictionary** open internal references. Explicit-use backlinks, source applicability, and display preferences are labelled separately. Reviewed preferences for 46 concepts select exact units while preserving values and equation conventions. No numerical conversion or equation solving is provided.
+- Desktop Dockview panels can be resized and moved. Phone navigation uses the same domain data in Map/Search/Inspector/Units views. Back/forward reference controls revisit concepts and units.
 
-All node shapes remain in the graph. KaTeX labels appear at useful zoom levels with an overlap/budget cap of 60 HTML labels; the selected label has priority. Full formulas appear in the inspector. No state-property classifications are guessed, so unreviewed quantities remain circles. Constants are diamonds and the authored equation is a rounded rectangle. Force placement is a navigation aid, not a physical model.
+The default view includes all learning nodes. KaTeX labels appear at useful zoom levels with an overlap/budget cap of 60 HTML labels; the selected label has priority. Full formulas appear in the inspector. Twelve reviewed thermodynamic state-property quantities use hexagons; other quantities use circles, constants diamonds, and equations rounded rectangles. Eighteen exact concepts have sourced classifications; all other quantities remain visibly unreviewed. The legend identifies state property as a quantity subtype. Force placement is a navigation aid, not a physical model.
+
+Source provenance, typed relationship meanings, four missing upstream subjects, and known unit-description disagreements are inspectable. See [semantic boundary](docs/M1-SEMANTICS.md) and [unit choices](docs/M1-UNITS.md).
 
 ## Reproduce data and verification
 
@@ -45,18 +50,20 @@ sh scripts/pnpm.sh data:import  # regenerate from committed official Turtle
 sh scripts/pnpm.sh data:fetch   # explicitly redownload only the pinned release
 sh scripts/pnpm.sh test
 sh scripts/pnpm.sh typecheck
+sh scripts/pnpm.sh format:check
 sh scripts/pnpm.sh test:browser
+sh scripts/pnpm.sh test:semantic-browser
 sh scripts/pnpm.sh test:offline-browser
 ```
 
-Browser tests require the production preview above. They use installed Google Chrome on macOS by default; override `CHROME_PATH` and `PREVIEW_URL` if needed. Screenshots and machine-readable reports are written to ignored `test-results/`. Phone tests are **viewport/touch emulation on the Mac**, not actual Android/iPhone testing. Browser automation may require permission to launch Chrome in Codex's sandbox.
+The 37 automated tests and all three browser harnesses passed for M1. Browser tests require the production preview above. They use installed Google Chrome on macOS by default; override `CHROME_PATH` and `PREVIEW_URL` if needed. Screenshots and machine-readable reports are written to ignored `test-results/`; retained milestone evidence is linked from [M1 results](docs/M1-RESULTS.md). Phone browser tests are **viewport/touch emulation on the Mac**, not actual Android/iPhone testing. Use the matching source revision when reproducing historical M0 checks.
 
 The requested `qudt-all.jsonld` was not available as an upstream release artifact. The exact official Turtle is retained, and the importer generates expanded JSON-LD without dropping any RDF assertions. See [source inventory and licensing](docs/QUDT-IMPORT.md). Repeated names/symbols do not merge identities, deprecated records are retained, and dimensions alone never create relationships.
 
 ## Scope and next work
 
-M0 demonstrates full-data rendering, touch navigation, KaTeX, source provenance, limited example authoring, and offline **read-only baseline reopening**. It does not implement complete authoring, curation, undo/redo, autosave, workspace files, source export, or Reload from source; those belong to later milestones. Refreshing discards the example draft. CoolProp has an explicit uninstalled service boundary; there is no substituted engine or solver.
+M1 adds semantic browsing, reviewed classifications and display-unit choices, reference navigation, reversible view filters, and immutable source/display separation. Offline checks cover fresh baseline reopening and in-session browsing/preferences. Refreshing discards display overrides, preferences, and other session changes. Complete authoring, curation, groups, and undo/redo are **M2**; autosave, workspace files, source export, and Reload from source remain **M3**. CoolProp has an explicit uninstalled service boundary; there is no substituted engine or solver.
 
-Physical Android/iPhone testing, Safari testing, mobile storage eviction, and prolonged memory behavior remain unverified. Offline preparation is not a permanent-backup guarantee. The UI says *preview prepared*, not device-certified offline authoring. See [offline scope and protocol](docs/M0-OFFLINE.md), [technical choices](docs/M0-TECHNICAL-NOTES.md), and [M0 results](docs/M0-RESULTS.md). Continue with M1 semantic browsing and review, preserving the full initial universe.
+On 6 October 2026 Andrew reported acceptable performance from rough physical Android and iOS testing of **M0**. Device models, browser versions, and detailed measurements were not supplied; this was a smoke test, not comprehensive or offline certification. M1 has not yet been physically tested. Safari-specific behavior, mobile storage eviction, and prolonged memory behavior remain unverified. The UI says *preview prepared*, not device-certified offline authoring. See [offline scope and protocol](docs/M0-OFFLINE.md) and [M0 results](docs/M0-RESULTS.md). The next implementation milestone is **M2: editing, curation, groups, and action history**.
 
 QUDT attribution: QUDT.org, QUDT 3.5.2, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); browser projection and generated JSON-LD are adaptations. Original source, license and checksums are in `data/qudt/`. DOE example provenance is attached to the example in the app. Third-party code retains its package licenses in the dependency installation.

@@ -2,6 +2,8 @@
 
 Published and verified 6 October 2026 (America/Toronto), after Andrew made the repository public and explicitly requested Pages enablement. This publishes the feasibility preview, not a completed classroom alpha.
 
+Later status, 6 October 2026: Andrew reported acceptable performance during rough physical Android/iOS testing of M0. Models, browser versions, and comprehensive/offline verification were not supplied. M1 source is now version 0.1.0 with separate local verification, but **no M1 deployment has occurred**; the deployed M0 revision and measurements below remain unchanged.
+
 - Site: [https://pipebrain.github.io/urban-palm-tree/](https://pipebrain.github.io/urban-palm-tree/)
 - Repository: [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree), verified public.
 - Deployed source: [`85c174f0a1655db666e299afea436677fd0c0067`](https://github.com/pipebrain/urban-palm-tree/commit/85c174f0a1655db666e299afea436677fd0c0067).
@@ -30,7 +32,7 @@ Online timings include public-network loading and are single observed runs, not 
 
 Offline preparation verified **65 assets / 6,622,224 bytes**, including all **59 KaTeX font files**, the complete graph/unit dataset, and layout worker. After closing every app tab, disabling network, and opening a fresh page at the deployed URL, the graph and previously unseen constant/unit/math loaded successfully: desktop **303 ms**, phone viewport emulation **269 ms**, zero page errors. [Live offline report](verification/pages-offline-report.json). This verifies new-document startup, not browser-process restart or permanent storage retention.
 
-To repeat after building the same revision for the production path:
+To reproduce these historical checks, use the deployed M0 source revision and its matching scripts, then build for the production path. Current M1 browser scripts expect M1 features and should not be run against this older public release as if it were M1:
 
 ```sh
 APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh build
@@ -40,6 +42,6 @@ PREVIEW_URL=https://pipebrain.github.io/urban-palm-tree/ sh scripts/pnpm.sh test
 
 ## Scope and limitations
 
-Actual Android/iPhone hardware and Safari remain unverified. The preview has a temporary name/LaTeX editing probe, but no full authoring, undo/redo, autosave, portable workspace files, source export, or Reload from source. Refreshing discards the draft. M1–M4 acceptance criteria remain in effect for the later classroom alpha; public availability is not completion of those milestones. Source constants remain imported/unreviewed, and no conversions, equations, or CoolProp calculations are evaluated.
+Physical Android/iOS M0 smoke testing is user-reported; Safari-specific behavior, detailed device performance, and physical offline reopening remain unverified. The deployed preview has a temporary name/LaTeX editing probe, but no full authoring, undo/redo, autosave, portable workspace files, source export, or Reload from source. Refreshing discards the draft. Public availability does not complete later milestone acceptance; [M1 results](M1-RESULTS.md) cover the newer source separately. Source constants remain imported/unreviewed, and no conversions, equations, or CoolProp calculations are evaluated.
 
-Documentation-only commits recorded after this release do not change the deployed artifact unless the workflow is explicitly run again.
+Later documentation and implementation commits do not change the deployed artifact unless the workflow is explicitly run again.

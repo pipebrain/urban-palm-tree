@@ -26,16 +26,25 @@ Planning baseline v0.2: 6 October 2026.
 
 The latest classification decision supersedes the earlier proposal to treat Quantity and Property as mutually exclusive root types. The course does not mandate the distinction.
 
+## M1 implementation decisions — 6 October 2026
+
+- Runtime validation preserves and freezes the original import, checks stable identities and references, and rejects inconsistent source versions/counts. Label and LaTeX overrides remain separate. QUDT's five shared constant-value aliases are retained without merging their learning concepts.
+- Eighteen exact quantity IDs have sourced application classifications; twelve are state-property quantity subtypes shown as hexagons. Unreviewed concepts remain explicit, and classification never propagates from a symbol, dimension, unit, or broader concept. See [semantic review](M1-SEMANTICS.md).
+- Unit preferences cover 46 reviewed concept identities. Mass/force, temperature reading/interval, pressure reference, gallon variants, and Btu variants stay distinct. Explicit uses, source applicability, and display preferences have separate backlinks. Preferences do not perform conversions or alter recorded values/equation conventions. See [unit decisions](M1-UNITS.md).
+- Layout degree counts distinct visible learning neighbours. Radius is `4 + min(6, sqrt(degree))`; one visible pair supplies one spring. Duplicate/reversed predicates, self-links, units, and metadata add no weight. Filtering preserves IDs and cached positions/pins; labels do not restart layout.
+- Andrew's rough physical Android/iOS test of M0 found performance acceptable. Models and browser versions were unspecified, and no comprehensive or offline certification was reported. This supports proceeding beyond M0; it is not physical-device evidence for M1.
+- M1 source is version 0.1.0 with 37 passing automated tests and three passing desktop/touch-emulated browser harnesses. The public Pages release remains M0 `85c174f0`; publication of M1 is separate.
+
 ## Provisional implementation defaults
 
-These let M0 proceed. They are recommendations, not previously settled user requirements.
+These defaults guide remaining implementation. Resolved M1 choices are recorded above; other entries remain provisional.
 
 | Topic | Working default | When to revisit |
 | --- | --- | --- |
 | Backend/accounts | Browser-local workspaces; no login, shared server workspace, or automatic synchronization | If collaboration or cloud sync becomes a requirement |
 | Device transfer | Explicit workspace file export/import | When synchronization is requested |
 | Import conflicts | Load a file as a separate workspace; do not silently merge concurrent edits | Before M3 |
-| Initial graph weight | Distinct visible neighbours contribute equally, with bounded size/influence | During M0/M1 |
+| Graph weight | M1: distinct visible neighbours, bounded radius, one spring per pair | If measured usability requires adjustment |
 | Group colours | User-selected primary group colour plus membership markers | During M2 |
 | Source export | Versioned, deterministic data and assets consumable by the app; exact format chosen by Codex | Before M3 |
 | Release trigger | Manually initiated Pages publishing via `.github/workflows/pages.yml` (`workflow_dispatch`), separate from ordinary code pushes | Each requested preview or alpha release |
@@ -45,7 +54,7 @@ Offline use is now selected. The implementation must distinguish online preparat
 
 ## Questions to resolve at the relevant milestone
 
-1. What do ambiguous preferred labels mean in this project, especially g, gr, lb, oz, Ton, and gallon/water-column conventions?
+1. Which additional classroom shorthand should the author adopt? M1 offers explicitly identified gram/grain, mass/force, US/UK gallon, refrigeration-ton, and water-column choices; it does not guess the meaning of an ambiguous imported label.
 2. For each named engineering constant, what is its associated classroom equation, source, and intended units?
 3. What actual Android/iPhone models and browsers should define the performance baseline?
 
@@ -78,6 +87,7 @@ These are primary source entry points. Verify the current release and relevant d
 
 ## Change log
 
+- M1 implementation, 6 October 2026: Completed the semantic browsing foundation and recorded user-reported M0 Android/iOS smoke testing. [M1 results](M1-RESULTS.md) distinguish automated/browser evidence, remaining physical-device checks, and the separate M0 public deployment.
 - Pages deployment, 6 October 2026: Published M0 commit `85c174f0a1655db666e299afea436677fd0c0067` through the manual Actions workflow. HTTPS site and full-graph, touch-emulation, unit/math, and fresh-document offline checks passed at `https://pipebrain.github.io/urban-palm-tree/`. See [deployment evidence](PAGES-DEPLOYMENT.md). This does not complete physical-device or later-milestone acceptance.
 
 - Publication decision, 6 October 2026: Andrew changed `pipebrain/urban-palm-tree` to public and requested enabling GitHub Pages for the current M0 feasibility preview. This supersedes the earlier private-only and wait-until-M4 publication constraints. Deployment is manually triggered, independent of code pushes. A successful deployment and URL verification must be recorded separately; no later milestone is declared complete by publication.

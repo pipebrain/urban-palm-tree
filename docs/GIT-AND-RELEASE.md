@@ -6,6 +6,8 @@ The MacBook Air holds the local development checkout. Git records changes locall
 
 These are separate operations. A code push should not publish an unfinished alpha automatically.
 
+Current status, 6 October 2026: the working source is M1 version 0.1.0. The public Pages artifact remains the M0 release at `85c174f0a1655db666e299afea436677fd0c0067`. M1 implementation and verification do not authorize or trigger a new deployment.
+
 ## Local Mac setup
 
 Codex should first inspect the chosen folder and any existing repository. Check installed Git, Apple developer command-line tooling if needed, the JavaScript runtime, package manager, and Codex setup before installing anything.
@@ -60,7 +62,9 @@ Before release, confirm the chosen public content and attribution. Reference lin
 
 ## Tester expectations
 
-The M0 preview supports exploration and a temporary example-editing probe. It does not yet provide full authoring, undo/redo, autosave, workspace files, source export, or Reload from source. Refreshing discards the example draft. Actual Android/iPhone testing remains outstanding; see [M0 results](M0-RESULTS.md). The following expectations apply to the later classroom alpha after its acceptance checks pass.
+The public **M0** preview supports exploration and a temporary example-editing probe. The current **M1** source adds typed relationships, reviewed classifications and exact unit preferences, filters/neighbourhoods, reference navigation, and temporary display overrides; run it using the [local preview instructions](../README.md). Neither version provides full authoring, undo/redo, autosave, workspace files, source export, or Reload from source. Refreshing discards session changes.
+
+Andrew reported acceptable performance during rough physical Android/iOS testing of M0 on 6 October 2026, without model/browser details or offline certification. M1's passing phone browser checks use touch emulation on the Mac; physical M1 testing remains outstanding. See [M0 results](M0-RESULTS.md) and [M1 results](M1-RESULTS.md). The following expectations apply to the later classroom alpha after its acceptance checks pass.
 
 The alpha supports individual exploration and authoring. Edits are local until exported. Reopening the site should recover local work where storage remains available, and explicit workspace files provide a portable backup. Transferring a file is manual synchronization.
 

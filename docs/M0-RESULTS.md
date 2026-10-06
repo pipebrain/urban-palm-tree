@@ -1,8 +1,10 @@
 # M0 results — 6 October 2026
 
+Later user report, 6 October 2026: Andrew completed rough testing of M0 on physical Android and iOS devices and reported acceptable performance. Models, browser versions, measurements, and a comprehensive test protocol were not supplied. This is useful real-device smoke-test evidence, not offline certification or evidence for the subsequent M1 changes. The original measurements and limitations below are preserved as the historical M0 record; current work is described in [M1 results](M1-RESULTS.md).
+
 Repository follow-up: after the M0 implementation below, Andrew selected private `pipebrain/urban-palm-tree`. The M0 source was uploaded to [GitHub](https://github.com/pipebrain/urban-palm-tree); `main` tracks `origin/main`. This follow-up does not publish the website. The milestone measurements below describe the original local verification.
 
-The local foundation and feasibility implementation is complete, with physical-device acceptance explicitly still outstanding. The full imported universe renders and can be searched and inspected in the tested desktop and touch-emulated phone views. No app publication, GitHub remote, later-stage solver, flashcards, problem generator, or calculation visualization was created.
+At the original measurement point, the local foundation and feasibility implementation was complete, with physical-device acceptance still outstanding. The full imported universe rendered and could be searched and inspected in the tested desktop and touch-emulated phone views. That implementation step created no app publication, GitHub remote, later-stage solver, flashcards, problem generator, or calculation visualization. Subsequent publication is recorded separately in [the M0 Pages deployment](PAGES-DEPLOYMENT.md).
 
 ## Reproducible foundation
 

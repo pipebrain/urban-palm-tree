@@ -1,0 +1,112 @@
+{
+  "baseURL": "http://127.0.0.1:4174/urban-palm-tree/",
+  "startedAt": "2026-10-06T09:59:32.241Z",
+  "note": "Desktop Chromium; phone viewports emulate touch and size, not physical devices.",
+  "runs": [
+    {
+      "profile": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "firstGraphMs": 416.5914999999999,
+      "frameIntervalMedianMs": 16.699999999999818,
+      "frameIntervalP95Ms": 16.700000000000045,
+      "metrics": {
+        "testid": "graph",
+        "nodeCount": "1556",
+        "totalNodeCount": "1556",
+        "ticks": "52",
+        "drawMs": "0.70",
+        "layoutMs": "1681",
+        "pinRevision": "0",
+        "layoutError": "false",
+        "zoom": "0.160",
+        "pins": "0",
+        "visiblePins": "0",
+        "renderedNodes": "1556",
+        "cameraX": "-1.12",
+        "cameraY": "-1.04"
+      },
+      "runtime": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "heapUsedBytes": 39556886,
+        "horizontalOverflow": false
+      },
+      "errors": [],
+      "checks": [
+        "full-import-visible",
+        "search-selection",
+        "katex",
+        "internal-unit-reference",
+        "zoom",
+        "pan",
+        "pin",
+        "pause",
+        "edit-preserves-layout",
+        "filter-hide-restore-preserves-id-pins-and-camera",
+        "filter-retains-paused-layout",
+        "empty-filter-recovery",
+        "neighbourhood-focus-depth",
+        "same-selection-focus",
+        "node-drag",
+        "search-no-results",
+        "responsive-inspector"
+      ]
+    },
+    {
+      "profile": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "firstGraphMs": 336.6526670000003,
+      "frameIntervalMedianMs": 16.700000000000045,
+      "frameIntervalP95Ms": 16.80000000000001,
+      "metrics": {
+        "testid": "graph",
+        "nodeCount": "1556",
+        "totalNodeCount": "1556",
+        "ticks": "48",
+        "drawMs": "0.60",
+        "layoutMs": "1584",
+        "pinRevision": "0",
+        "layoutError": "false",
+        "zoom": "0.111",
+        "pins": "0",
+        "visiblePins": "0",
+        "renderedNodes": "1556",
+        "cameraX": "-0.78",
+        "cameraY": "-0.73"
+      },
+      "runtime": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "heapUsedBytes": 19850642,
+        "horizontalOverflow": false
+      },
+      "errors": [],
+      "checks": [
+        "full-import-visible",
+        "search-selection",
+        "katex",
+        "internal-unit-reference",
+        "zoom",
+        "pan",
+        "pin",
+        "pause",
+        "edit-preserves-layout",
+        "filter-hide-restore-preserves-id-pins-and-camera",
+        "filter-retains-paused-layout",
+        "empty-filter-recovery",
+        "neighbourhood-focus-depth",
+        "same-selection-focus",
+        "node-drag",
+        "search-no-results",
+        "responsive-inspector",
+        "touch-selection",
+        "multitouch-pinch"
+      ]
+    }
+  ],
+  "browser": "154.0.8037.98"
+}

@@ -2,7 +2,9 @@
 
 This plan is for stage 1 only. It defines outcomes rather than pseudocode. Implementation details are for Codex to resolve against the real source data and devices.
 
-Release update, 6 October 2026: Andrew made `pipebrain/urban-palm-tree` public and authorized publishing the M0 feasibility preview with GitHub Pages now. This changes the original publication timing only; M1–M4 acceptance criteria remain outstanding, including actual phone testing and complete authoring/persistence.
+Release update, 6 October 2026: Andrew made `pipebrain/urban-palm-tree` public and authorized publishing the M0 feasibility preview with GitHub Pages. This changed the original publication timing; publication remains separate from milestone acceptance.
+
+M1 status, 6 October 2026: Version 0.1.0 implements browsing and the semantic foundation below. All 37 automated tests and desktop/touch-emulated phone runs of the interaction, semantic, and offline browser harnesses passed; see [M1 results](M1-RESULTS.md). Andrew reported acceptable performance from rough physical Android/iOS testing of M0, without device/browser details or offline certification. M1 physical-device testing remains outstanding. The public site still serves M0 commit `85c174f0`; M1 was not deployed. Next implementation milestone: M2.
 
 ## M0 — Local foundation and feasibility
 
