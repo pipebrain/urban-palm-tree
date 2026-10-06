@@ -1,6 +1,6 @@
 # HVACR Knowledge Atlas — M0
 
-A local feasibility implementation of the HVACR knowledge graph. The starting universe is the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node and four participant links. Source is backed up in the private GitHub repository [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree). The website has not been published.
+A feasibility implementation of the HVACR knowledge graph. The starting universe is the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node and four participant links. Source is in the public GitHub repository [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree). Andrew authorized GitHub Pages publication of this M0 preview on 6 October 2026; this is not the completed classroom alpha.
 
 ## Run on this Mac
 
@@ -20,7 +20,11 @@ APP_BASE=/hvacr-m0/ sh scripts/pnpm.sh build
 APP_BASE=/hvacr-m0/ sh scripts/pnpm.sh preview --port 4173
 ```
 
-Then open `http://127.0.0.1:4173/hvacr-m0/`. `APP_BASE` must start and end with `/`; use your eventual repository name when separately preparing a release. The default build base is `/`. The Git remote `origin` points to the private `pipebrain/urban-palm-tree` repository, with `main` tracking `origin/main`. No deploy workflow has been created.
+Then open `http://127.0.0.1:4173/hvacr-m0/`. `APP_BASE` must start and end with `/`; use `/urban-palm-tree/` to match the Pages deployment. The default build base is `/`. The Git remote `origin` points to `pipebrain/urban-palm-tree`, with `main` tracking `origin/main`.
+
+## GitHub Pages preview
+
+The planned public URL is [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). Deployment success must be verified in GitHub Actions and at that URL. The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`); ordinary pushes do not publish changes. See [Git and release workflow](docs/GIT-AND-RELEASE.md) for publication and verification guidance.
 
 ## Explore
 

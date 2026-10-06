@@ -23,7 +23,7 @@ Work on the requested milestone. Stage 1 is the editable knowledge graph. Later 
 - Target offline reopening and authoring after complete initial online preparation. Include the full selected dataset, KaTeX fonts, and other required local assets; verify actual device behaviour before declaring offline readiness.
 - Add Reload from source as a deliberate menu action. Online, fetch and validate published defaults; offline, offer an explicitly labelled cached baseline. Offer to save current edits before replacement, preserve work on cancellation or failure, and never embed private-repository credentials in the app.
 - Workspace files and autosave preserve current content and layout only. Keep undo/redo in memory for the current editing session; loading/reopening a workspace starts empty history. Saving alone does not clear the active session's history.
-- The GitHub repository must be private for now. Website publication is a separate later decision.
+- Andrew made `pipebrain/urban-palm-tree` public and authorized GitHub Pages publication of the M0 feasibility preview on 6 October 2026. This does not declare the later classroom alpha acceptance criteria complete.
 
 ## Engineering behaviour
 
@@ -43,6 +43,6 @@ Use the acceptance criteria for the current milestone. Prioritize data integrity
 
 Inspect current repository and toolchain state before setup. Keep the lockfile and reproducible data/build instructions. Preserve unrelated user work. Make reviewable local commits; do not force-push or rewrite shared history.
 
-The intended host is GitHub Pages. Keep code pushes and publication separate until alpha release. Do not create a public repository, publish a site, or change its audience based only on this document; use the active user's repository/release instruction. No routine implementation choice requires another approval when already covered by the task.
+The intended host is GitHub Pages. Keep code pushes and publication separate: the Pages workflow is manually triggered. The current user instruction authorizes publishing the M0 preview; future releases and audience changes follow the active user's release instruction. Do not infer additional publication authorization from this document. No routine implementation choice requires another approval when already covered by the task.
 
 When reporting completion, say what changed, what was verified, known limitations, and the next useful step. Update project documentation when implementation resolves a provisional decision.

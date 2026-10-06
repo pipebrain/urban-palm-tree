@@ -2,7 +2,7 @@
 
 ## Intended workflow
 
-The MacBook Air holds the local development checkout. Git records changes locally. The chosen GitHub repository stores pushed commits and supports review/backups. GitHub Pages serves a built static version to testers once a release is ready.
+The MacBook Air holds the local development checkout. Git records changes locally. The public `pipebrain/urban-palm-tree` GitHub repository stores pushed commits and supports review/backups. GitHub Pages serves a built static version after an explicitly requested release. On 6 October 2026 Andrew authorized publication of the M0 feasibility preview before the full classroom alpha is ready.
 
 These are separate operations. A code push should not publish an unfinished alpha automatically.
 
@@ -14,15 +14,15 @@ Use a supported runtime compatible with the selected dependencies, record the ve
 
 Begin with a documentation commit, then small implementation commits for each useful milestone. Keep a readable default branch; use short-lived branches for larger changes. Commit messages should describe the behaviour changed. No complex branching scheme is required for one primary developer.
 
-M0 initialized local Git and recorded the original handoff before implementation. It uses the existing Codex-bundled Node/pnpm runtime without changing system tooling. Exact dependencies and source data are pinned and checked in. Andrew has selected `pipebrain/urban-palm-tree` with private visibility. The private repository was created and the M0 commits were pushed on 6 October 2026. Local `origin` is `https://github.com/pipebrain/urban-palm-tree.git`; `main` tracks `origin/main`. GitHub CLI 2.102.0 was installed through Homebrew and authenticated as `pipebrain` using its browser sign-in flow. Website publication and audience remain later decisions. See [README](../README.md) for commands.
+M0 initialized local Git and recorded the original handoff before implementation. It uses the existing Codex-bundled Node/pnpm runtime without changing system tooling. Exact dependencies and source data are pinned and checked in. The repository was initially created private and the M0 commits pushed on 6 October 2026; Andrew subsequently made it public and requested enabling Pages. Local `origin` is `https://github.com/pipebrain/urban-palm-tree.git`; `main` tracks `origin/main`. GitHub CLI 2.102.0 was installed through Homebrew and authenticated as `pipebrain` using its browser sign-in flow. See [README](../README.md) for commands.
 
 ## Connecting the remote
 
-The repository must be private for now. Andrew selected owner `pipebrain` and repository name `urban-palm-tree` on 6 October 2026. Inspect existing GitHub authentication on the Mac and use the supported sign-in flow if needed. Never embed an access token in the application or commit credentials. Do not change repository visibility to make deployment easier.
+Andrew selected owner `pipebrain` and repository name `urban-palm-tree` on 6 October 2026, then made the repository public and requested Pages publication. Inspect existing GitHub authentication on the Mac and use the supported sign-in flow if needed. Never embed an access token in the application or commit credentials. Future visibility changes require Andrew's instruction.
 
 Push local commits to the chosen repository. Do not create a duplicate repository when one already exists. Normal pushes preserve history; avoid force pushes to shared branches.
 
-A private repository is now confirmed. GitHub Free supports Pages from public repositories; Pages from private repositories depends on the account plan. Verify the available hosting route before the later alpha release while preserving repository privacy. Website visibility must be considered separately from source visibility.
+The current source repository and Pages preview are intended to be public. Confirm the Pages deployment succeeds and verify its URL; changing repository visibility alone does not deploy the app.
 
 ## Why GitHub Pages fits
 
@@ -44,21 +44,23 @@ Offline use is a confirmed target after a successful initial online preparation.
 
 Reload from source retrieves the released app content/defaults from the deployment when online; it may restore the identified cached baseline while offline. It must protect current edits and validate compatibility before replacement. It never requires browser access to private repository credentials. Workspace saves and autosave omit undo/redo history.
 
-## Suggested initial release process
+## Release process
 
 1. Develop and commit locally; push work to GitHub.
 2. Run the stage-specific checks and build verification without deploying.
-3. Complete the documented alpha acceptance checklist.
+3. For the classroom alpha, complete the documented alpha acceptance checklist. The currently authorized M0 feasibility preview may be published earlier with its limitations clearly stated.
 4. Select a stable commit and identify the release version.
 5. When Andrew requests publication, run a separate GitHub Actions Pages deployment for that commit.
 6. Verify the resulting URL, record the commit, and provide tester instructions.
 7. For a regression, redeploy a known-good build; preserve user file compatibility.
 
-GitHub Actions is the proposed build/deploy mechanism. No workflow has been implemented in this documentation package.
+GitHub Actions is the build/deploy mechanism. `.github/workflows/pages.yml` is manually triggered with `workflow_dispatch`; it has no push trigger. Use **Actions → Deploy GitHub Pages → Run workflow** to publish an authorized revision. The build uses `APP_BASE=/urban-palm-tree/`; the planned public URL is [https://pipebrain.github.io/urban-palm-tree/](https://pipebrain.github.io/urban-palm-tree/). A planned URL is not evidence that deployment succeeded: confirm the workflow and check the deployed app and assets before reporting it live.
 
 Before release, confirm the chosen public content and attribution. Reference links and original explanatory notes are suitable foundations; possession of classroom or handbook materials does not by itself make them public release content.
 
 ## Tester expectations
+
+The M0 preview supports exploration and a temporary example-editing probe. It does not yet provide full authoring, undo/redo, autosave, workspace files, source export, or Reload from source. Refreshing discards the example draft. Actual Android/iPhone testing remains outstanding; see [M0 results](M0-RESULTS.md). The following expectations apply to the later classroom alpha after its acceptance checks pass.
 
 The alpha supports individual exploration and authoring. Edits are local until exported. Reopening the site should recover local work where storage remains available, and explicit workspace files provide a portable backup. Transferring a file is manual synchronization.
 

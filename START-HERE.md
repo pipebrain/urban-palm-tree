@@ -4,15 +4,15 @@ Prepared for Andrew Gal • 6 October 2026 • Planning baseline v0.2
 
 This package captures the accepted concept for a learning web app supporting 313A Advanced Level III study at UA Local 787 JTAC. The institution is context, not an asserted sponsor or endorser.
 
-**M0 has now been implemented locally.** Start with [README.md](README.md) to run the app and [M0 results](docs/M0-RESULTS.md) for evidence and limitations. The original planning handoff below remains the historical baseline. The source now lives in the private [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree) repository. No website deployment has been created.
+**M0 has now been implemented.** Start with [README.md](README.md) to run the app and [M0 results](docs/M0-RESULTS.md) for evidence and limitations. The original planning handoff below remains the historical baseline. Andrew made [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree) public and authorized publishing the M0 feasibility preview with GitHub Pages on 6 October 2026. M1–M4 remain future work; publication does not establish classroom alpha readiness.
 
 ## What to do on your M2 MacBook Air
 
 1. Extract this package into a new project folder.
 2. Open that folder in Codex. Keep AGENTS.md at the project root.
 3. Give Codex the first-task prompt below.
-4. Use Git locally from the first milestone. Connect the project to a private GitHub repository when its name, owner, and credentials are established. Keep the repository private unless Andrew later changes that decision.
-5. Enable GitHub Pages publishing only after the first-stage alpha criteria are met and you choose to release.
+4. Use Git locally from the first milestone. The project is now connected to the public `pipebrain/urban-palm-tree` repository, following Andrew's updated visibility decision.
+5. Publish through the manually triggered GitHub Pages workflow when Andrew requests a release. The current request authorizes an M0 preview before the full first-stage alpha criteria are met; preserve its stated limitations.
 
 The app must also support editing and file transfer on Android and iPhone. Android is the preferred phone for file handling. Initial development and toolchain setup target the Mac. Target offline reopening and authoring after a successful initial online preparation, with a menu action named Reload from source. Workspace files preserve content and layout, not undo/redo history.
 
@@ -36,8 +36,8 @@ M0 includes application scaffolding and a feasibility implementation when this p
 
 ## Decisions that remain open
 
-None prevents M0. Offline use is now a confirmed development target; prove its feasibility on target devices. Undo/redo is session-only, and the GitHub repository is private. Account/repository naming and the eventual alpha website audience remain to be established. The exact graph library is a technical choice to resolve in M0 using observed results.
+None prevents M0. Offline use is a confirmed development target; prove its feasibility on target devices. Undo/redo is session-only. The repository is public `pipebrain/urban-palm-tree`, and a public M0 Pages preview is authorized. The classroom alpha still needs the documented acceptance checks. M0 selected Canvas with a bounded KaTeX overlay and d3-force in a Web Worker; see the results for the evidence.
 
-Reload from source means restoring the app's released content/defaults, using the latest published version when online or an explicitly labelled cached source version when offline. Protect the current workspace before replacement. It does not mean fetching authenticated files directly from the private GitHub repository.
+Reload from source means restoring the app's released content/defaults, using the latest published version when online or an explicitly labelled cached source version when offline. Protect the current workspace before replacement. It does not mean fetching unpublished GitHub commits or requiring repository credentials.
 
 Do not assume file export provides live device synchronization. Do not assume a private source repository makes the published app private.

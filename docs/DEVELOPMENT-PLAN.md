@@ -2,6 +2,8 @@
 
 This plan is for stage 1 only. It defines outcomes rather than pseudocode. Implementation details are for Codex to resolve against the real source data and devices.
 
+Release update, 6 October 2026: Andrew made `pipebrain/urban-palm-tree` public and authorized publishing the M0 feasibility preview with GitHub Pages now. This changes the original publication timing only; M1–M4 acceptance criteria remain outstanding, including actual phone testing and complete authoring/persistence.
+
 ## M0 — Local foundation and feasibility
 
 Establish the local Git project on the Mac and inspect installed tooling before modifying it. Select compatible current versions of the required libraries and a maintainable static build tool. Record the runtime/package-manager choice and lock dependencies.
@@ -84,7 +86,7 @@ A workspace file is a resumable authoring document. A source export is a reusabl
 
 ## M4 — Classroom alpha preparation
 
-Complete actual device checks, document limitations, and prepare a separately triggered GitHub Pages deployment of a stable commit. Enable publication only when Andrew requests the release.
+Complete actual device checks, document limitations, and prepare a separately triggered GitHub Pages deployment of a stable classroom alpha commit. The earlier M0 preview has separate publication authorization; publish future releases only when Andrew requests them.
 
 ### Done when
 
@@ -95,7 +97,7 @@ Complete actual device checks, document limitations, and prepare a separately tr
 - The release identifies its app/content versions and can be rolled back by redeploying a prior build.
 - Alpha testers understand that edits are local and exports are how they preserve/share work.
 - The published content has source attribution and contains only material selected for public release.
-- The repository remains private. Pages availability for the chosen account plan and the eventual website audience are confirmed without silently changing repository visibility.
+- The public repository and publicly reachable Pages audience are documented. Any later audience or visibility change requires Andrew's instruction.
 - The deployment report records the commit and resulting URL after publication actually succeeds.
 
 ## Verification priorities

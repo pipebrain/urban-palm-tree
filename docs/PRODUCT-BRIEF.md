@@ -157,7 +157,7 @@ Before replacing an edited workspace, offer Save current workspace, Replace with
 
 Keep the source version visible. New app/content versions must remain compatible or fail clearly; do not combine partial releases. Source reload refreshes released content, while updating app code is a separately managed operation. Browser storage is not a guaranteed permanent backup; keep explicit workspace file export available.
 
-The GitHub repository stays private. Serve any released default data through the chosen app deployment; do not put GitHub tokens in a browser client. Public alpha hosting remains a separate later decision.
+Andrew made `pipebrain/urban-palm-tree` public and authorized a public GitHub Pages M0 feasibility preview on 6 October 2026. Serve released default data through the app deployment; do not put GitHub tokens in a browser client. This preview publication does not complete the later authoring, persistence, or classroom alpha acceptance criteria. Future releases remain explicitly and manually initiated.
 
 ## Completion outcome
 
