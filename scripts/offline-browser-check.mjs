@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
 
-const baseURL = process.env.PREVIEW_URL || "http://127.0.0.1:4173/hvacr-m0/";
+const baseURL =
+  process.env.PREVIEW_URL || "http://127.0.0.1:4174/urban-palm-tree/";
 const chromePath =
   process.env.CHROME_PATH ||
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -43,6 +44,7 @@ const results = {
     eligibleNodes: baseline.nodes.length,
     displayedNodes: baseline.nodes.length + 1,
     unitReferences: baseline.units.length,
+    totalUnitReferences: baseline.units.length + 1,
   },
   build: {
     originalAssetCount: inventory.assets.length,
@@ -223,14 +225,18 @@ try {
       .first()
       .click();
     assert.equal(
-      await reopened.locator(".inspector h2").innerText(),
+      await reopened.getByTestId("unit-inspector").locator("h2").innerText(),
       unit.label,
     );
     await reopened
-      .locator(".inspector summary")
+      .getByTestId("unit-inspector")
+      .locator("summary")
       .filter({ hasText: "Source identity & conversion metadata" })
       .click();
-    assert.equal(await reopened.locator(".inspector code").innerText(), unitId);
+    assert.equal(
+      await reopened.getByTestId("unit-inspector").locator("code").innerText(),
+      unitId,
+    );
     await reopened.evaluate(() => document.fonts.ready);
     assert.equal(await reopened.locator(".katex-error").count(), 0);
     run.unseenNode = {
@@ -238,6 +244,118 @@ try {
       label: unseen.label,
       unitId,
       unitLabel: unit.label,
+    };
+    const selectConcept = async (id) => {
+      if (profile.isMobile)
+        await reopened
+          .getByRole("button", { name: "Search", exact: true })
+          .click();
+      await reopened
+        .getByRole("textbox", { name: "Search all nodes" })
+        .fill(id);
+      await reopened.locator(`.node-row[data-node-id="${id}"]`).click();
+    };
+    const equationId = "urn:hvacr:equation:steady-sensible-heat";
+    const temperatureId = "http://qudt.org/vocab/quantitykind/Temperature";
+    const celsiusId = "http://qudt.org/vocab/unit/DEG_C";
+    await selectConcept(equationId);
+    const bindingUnitsBefore = await reopened
+      .getByTestId("inspector")
+      .locator(".binding .unit-link")
+      .evaluateAll((buttons) => buttons.map((button) => button.title));
+    assert.equal(bindingUnitsBefore.length, 4);
+    await selectConcept(temperatureId);
+    const preference = reopened.getByRole("combobox", {
+      name: "Preferred display unit",
+      exact: true,
+    });
+    assert.equal(
+      await preference.inputValue(),
+      "http://qudt.org/vocab/unit/DEG_F",
+    );
+    await preference.selectOption(celsiusId);
+    assert.equal(await preference.inputValue(), celsiusId);
+    assert.equal(
+      await reopened
+        .getByTestId("inspector")
+        .getByText("Session choice", { exact: true })
+        .count(),
+      1,
+    );
+    await reopened
+      .getByTestId("inspector")
+      .locator(".preference-current .unit-link")
+      .click();
+    const reference = reopened.getByTestId("unit-inspector");
+    assert.equal(await reference.locator("h2").innerText(), "Degree Celsius");
+    const originalUses = baseline.nodes.filter(
+      (node) =>
+        node.unitIds.includes(celsiusId) ||
+        node.constantValues?.some((value) =>
+          value.unitIds.includes(celsiusId),
+        ) ||
+        node.bindings?.some((binding) => binding.unitId === celsiusId),
+    ).length;
+    assert.equal(
+      await reference
+        .getByRole("heading", {
+          name: `Explicit uses · ${originalUses}`,
+          exact: true,
+        })
+        .count(),
+      1,
+    );
+    await reference
+      .locator("summary")
+      .filter({ hasText: "Display preferences · 1" })
+      .click();
+    assert.equal(
+      await reference
+        .locator("details[open] .related")
+        .filter({ hasText: temperatureId })
+        .count(),
+      1,
+    );
+    await selectConcept(
+      "http://qudt.org/vocab/quantitykind/TemperatureDifference",
+    );
+    await reopened
+      .getByRole("combobox", { name: "Preferred display unit", exact: true })
+      .selectOption("http://qudt.org/vocab/unit/K");
+    await selectConcept(equationId);
+    const bindingUnitsAfter = await reopened
+      .getByTestId("inspector")
+      .locator(".binding .unit-link")
+      .evaluateAll((buttons) => buttons.map((button) => button.title));
+    assert.deepEqual(
+      bindingUnitsAfter,
+      bindingUnitsBefore,
+      "Offline preference changes preserve equation conventions",
+    );
+    await selectConcept("http://qudt.org/vocab/quantitykind/Acceleration");
+    assert.equal(
+      await reopened
+        .getByRole("combobox", { name: "Preferred display unit", exact: true })
+        .count(),
+      0,
+    );
+    assert.equal(
+      await reopened
+        .getByTestId("inspector")
+        .getByText("No reviewed unit preference for this concept yet.", {
+          exact: true,
+        })
+        .count(),
+      1,
+    );
+    assert.equal(await reopened.locator(".katex-error").count(), 0);
+    run.offlinePreferences = {
+      temperatureChoice: celsiusId,
+      intervalChoice: "http://qudt.org/vocab/unit/K",
+      explicitUseCountPreserved: originalUses,
+      displayPreferenceBacklinkPresent: true,
+      equationBindingsPreserved: true,
+      unreviewedConceptRemainedUnresolved: true,
     };
     run.fonts = await reopened.evaluate(() =>
       Array.from(document.fonts)
@@ -272,7 +390,7 @@ try {
     );
     run.passed = true;
     console.log(
-      `${profile.name}: passed full offline startup, unseen node, unit, and math checks (${run.offlineStartupMs} ms)`,
+      `${profile.name}: passed full offline startup, unseen node, unit, math and preference checks (${run.offlineStartupMs} ms)`,
     );
     await context.close();
   }

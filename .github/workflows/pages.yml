@@ -1,5 +1,5 @@
 name: Deploy GitHub Pages
-run-name: Publish M0 preview from ${{ inputs.ref }}
+run-name: Publish atlas from ${{ inputs.ref }}
 
 on:
   workflow_dispatch:
