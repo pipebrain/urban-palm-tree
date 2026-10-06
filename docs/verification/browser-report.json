@@ -1,0 +1,92 @@
+{
+  "baseURL": "http://127.0.0.1:4173/hvacr-m0/",
+  "startedAt": "2026-10-06T09:03:37.774Z",
+  "note": "Desktop Chromium; phone viewports emulate touch and size, not physical devices.",
+  "runs": [
+    {
+      "profile": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "firstGraphMs": 339.69937500000003,
+      "frameIntervalMedianMs": 16.699999999999818,
+      "frameIntervalP95Ms": 16.700000000000045,
+      "metrics": {
+        "testid": "graph",
+        "nodeCount": "1556",
+        "ticks": "60",
+        "drawMs": "0.70",
+        "layoutMs": "1627",
+        "pinRevision": "0",
+        "zoom": "0.204",
+        "pins": "0",
+        "renderedNodes": "1556",
+        "cameraX": "-1.39",
+        "cameraY": "-1.35"
+      },
+      "runtime": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "heapUsedBytes": 27205594,
+        "horizontalOverflow": false
+      },
+      "errors": [],
+      "checks": [
+        "full-import-visible",
+        "search-selection",
+        "katex",
+        "internal-unit-reference",
+        "zoom",
+        "pan",
+        "pin",
+        "pause",
+        "edit-preserves-layout",
+        "responsive-inspector"
+      ]
+    },
+    {
+      "profile": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "firstGraphMs": 276.058125,
+      "frameIntervalMedianMs": 16.69999999999999,
+      "frameIntervalP95Ms": 16.700000000000045,
+      "metrics": {
+        "testid": "graph",
+        "nodeCount": "1556",
+        "ticks": "52",
+        "drawMs": "0.70",
+        "layoutMs": "1550",
+        "pinRevision": "0",
+        "zoom": "0.110",
+        "pins": "0",
+        "renderedNodes": "1556",
+        "cameraX": "-0.71",
+        "cameraY": "-0.73"
+      },
+      "runtime": {
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "heapUsedBytes": 23143400,
+        "horizontalOverflow": false
+      },
+      "errors": [],
+      "checks": [
+        "full-import-visible",
+        "search-selection",
+        "katex",
+        "internal-unit-reference",
+        "zoom",
+        "pan",
+        "pin",
+        "pause",
+        "edit-preserves-layout",
+        "responsive-inspector",
+        "touch-selection",
+        "multitouch-pinch"
+      ]
+    }
+  ],
+  "browser": "154.0.8037.98"
+}

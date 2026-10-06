@@ -4,7 +4,7 @@ Prepared for Andrew Gal • 6 October 2026 • Planning baseline v0.2
 
 This package captures the accepted concept for a learning web app supporting 313A Advanced Level III study at UA Local 787 JTAC. The institution is context, not an asserted sponsor or endorser.
 
-**This is a development handoff, not an implemented app.** No application code, pseudocode, repository, deployment, or local Mac setup has been created by this package.
+**M0 has now been implemented locally.** Start with [README.md](README.md) to run the app and [M0 results](docs/M0-RESULTS.md) for evidence and limitations. The original planning handoff below remains the historical baseline. No remote repository or deployment has been created.
 
 ## What to do on your M2 MacBook Air
 

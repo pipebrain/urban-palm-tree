@@ -1,0 +1,17 @@
+{
+  "name": "QUDT",
+  "version": "3.5.2",
+  "releaseUrl": "https://github.com/qudt/qudt-public-repo/releases/tag/v3.5.2",
+  "artifactUrl": "https://github.com/qudt/qudt-public-repo/releases/download/v3.5.2/qudt-public-repo-3.5.2.zip",
+  "archiveFilename": "qudt-public-repo-3.5.2.zip",
+  "archiveSha256": "1a42d6409f57e2d8fc4f55aac5e4378926c28a655a045309714f0014fcea3e02",
+  "originalFilename": "QUDT-all-in-one-OWL.ttl",
+  "sha256": "aa11e3a4b6f0cd60327981f992099538a00fbf23281ef679fef8ddca96e65940",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "QUDT.org — QUDT 3.5.2. Adapted into an application index; original source retained.",
+  "retrievedOn": "2026-10-06",
+  "publishedAt": "2026-09-22T13:13:30Z",
+  "requestedFilename": "qudt-all.jsonld",
+  "requestedFormatFinding": "No JSON-LD asset in the official release. Both /qudt-all.jsonld and /3.5.2/qudt-all.jsonld returned 404; /3.5.2/qudt-all with Accept application/ld+json returned 406 on 2026-10-06. qudt-all.jsonld is therefore generated losslessly from the pinned official OWL Turtle artifact, not described as an upstream download."
+}

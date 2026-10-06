@@ -14,7 +14,7 @@ Use a supported runtime compatible with the selected dependencies, record the ve
 
 Begin with a documentation commit, then small implementation commits for each useful milestone. Keep a readable default branch; use short-lived branches for larger changes. Commit messages should describe the behaviour changed. No complex branching scheme is required for one primary developer.
 
-This package has not installed tooling, initialized Git on the Mac, authenticated GitHub, or created a remote repository.
+M0 initialized local Git and recorded the original handoff before implementation. It uses the existing Codex-bundled Node/pnpm runtime without changing system tooling. Exact dependencies and source data are pinned and checked in. GitHub authentication, remote creation, and publication have not been performed; owner/name/audience remain later decisions. See [README](../README.md) for commands.
 
 ## Connecting the remote
 
