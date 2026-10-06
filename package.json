@@ -1,7 +1,7 @@
 {
   "name": "hvacr-knowledge-graph",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "engines": {
@@ -15,6 +15,8 @@
     "test": "node --test tests/*.test.mjs scripts/offline.test.mjs",
     "test:browser": "node scripts/browser-check.mjs",
     "test:semantic-browser": "node scripts/semantic-browser-check.mjs",
+    "test:authoring-browser": "node scripts/authoring-browser-check.mjs",
+    "test:authoring-graph": "node scripts/authoring-graph-browser-check.mjs",
     "data:import": "node scripts/import-qudt.mjs",
     "data:check": "node scripts/import-qudt.mjs --check",
     "data:fetch": "node scripts/import-qudt.mjs --download",
@@ -26,8 +28,13 @@
     "d3-force": "3.0.0",
     "dockview-react": "8.4.0",
     "katex": "0.19.0",
+    "mdast-util-from-markdown": "2.1.0",
+    "mdast-util-math": "3.0.0",
+    "micromark-extension-math": "3.1.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-markdown": "10.1.0",
+    "remark-math": "6.0.0"
   },
   "devDependencies": {
     "@types/d3-force": "3.0.10",

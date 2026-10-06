@@ -22,6 +22,7 @@ let nodeById = new Map<string, LayoutNode>();
 let simulation: ReturnType<typeof forceSimulation<LayoutNode>> | undefined;
 let ticks = 0;
 let generation = 0;
+let revision = 0;
 let started = 0;
 let paused = false;
 function publish() {
@@ -33,6 +34,7 @@ function publish() {
   scope.postMessage(
     {
       generation,
+      revision,
       positions,
       ticks,
       elapsedMs: performance.now() - started,
@@ -45,6 +47,7 @@ scope.onmessage = ({ data }) => {
   if (data.type === "init") {
     simulation?.stop();
     generation = data.generation;
+    revision = 0;
     paused = Boolean(data.paused);
     nodes = data.nodes;
     nodeById = new Map(nodes.map((node) => [node.id, node]));
@@ -85,15 +88,16 @@ scope.onmessage = ({ data }) => {
   } else if (data.type === "resume") {
     paused = false;
     simulation?.alpha(0.35).restart();
-  } else if (data.type === "pin") {
+  } else if (data.type === "place") {
     const node = nodeById.get(data.id);
     if (!node) return;
-    node.fx = data.x;
-    node.fy = data.y;
-    if (data.x != null) {
-      node.x = data.x;
-      node.y = data.y;
-    }
+    revision = data.revision;
+    node.fx = data.pinned ? data.x : null;
+    node.fy = data.pinned ? data.y : null;
+    node.x = data.x;
+    node.y = data.y;
+    node.vx = 0;
+    node.vy = 0;
     publish();
     if (!paused) simulation?.alpha(0.15).restart();
   }

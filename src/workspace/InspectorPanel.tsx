@@ -9,8 +9,12 @@ import {
   preferredUnitId,
   unitPreferenceContext,
 } from "../domain/unit-preferences";
-import type { LearningNode } from "../domain/types";
+import type { GraphEdge, LearningNode } from "../domain/types";
 import { useWorkspace } from "./context";
+import { NodeEditor } from "./NodeEditor";
+import { RelationshipEditor } from "./RelationshipEditor";
+import { Markdown } from "./Markdown";
+import { NodeGroups } from "./GroupsPanel";
 import {
   NodeLink,
   SourceLinks,
@@ -23,14 +27,18 @@ function DisplayOverrides({ node }: { node: LearningNode }) {
   const w = useWorkspace();
   const [label, setLabel] = useState(node.label);
   const [latex, setLatex] = useState(node.latex || "");
-  const source = w.sourceNodes.get(node.id)!;
+  const source = w.sourceNodes.get(node.id) || node;
+  useEffect(() => {
+    setLabel(node.label);
+    setLatex(node.latex || "");
+  }, [node.label, node.latex]);
   const changed = node.label !== source.label || node.latex !== source.latex;
   return (
     <details>
       <summary>Display overrides{changed ? " · changed" : ""}</summary>
       <p className="muted">
-        Name and notation only. Apply to test stable links. Changes last in this
-        tab; saving and full editing arrive in later milestones.
+        A quick display edit preserves stable links and creates one undo step.
+        Use Edit concept for structured fields and notes.
       </p>
       <label>
         Display name
@@ -169,8 +177,9 @@ function Welcome() {
       <p>
         {w.data.report.counts.quantityNodes.toLocaleString()} quantity kinds,{" "}
         {w.data.report.counts.constantNodes} constants, and one authored
-        equation. {w.units.length.toLocaleString()} units live separately in the
-        reference library.
+        baseline equation, plus your authored concepts.{" "}
+        {w.units.length.toLocaleString()} units live separately in the reference
+        library.
       </p>
       <p className="muted">
         State properties are reviewed quantity subtypes, drawn as hexagons.
@@ -236,6 +245,24 @@ export function InspectorPanel() {
     scroll.current?.scrollTo({ top: 0 });
   }, [w.selectedId]);
   const [depth, setDepth] = useState<1 | 2>(1);
+  const [editing, setEditing] = useState<string>();
+  const [editingEdge, setEditingEdge] = useState<GraphEdge | "new">();
+  const [deleting, setDeleting] = useState(false);
+  useEffect(() => {
+    setEditing(undefined);
+    setEditingEdge(undefined);
+    setDeleting(false);
+  }, [w.selectedId]);
+  if (w.creating)
+    return (
+      <section className="inspector panel-scroll" data-testid="inspector">
+        <NodeEditor
+          key={w.creating}
+          kind={w.creating}
+          onClose={w.cancelCreate}
+        />
+      </section>
+    );
   const node = w.index.nodesById.get(w.selectedId || "");
   if (!w.selectedId) return <Welcome />;
   if (!node)
@@ -244,11 +271,29 @@ export function InspectorPanel() {
         <h2>Missing concept reference</h2>
         <code>{w.selectedId}</code>
         <p>
-          This record is absent from the loaded baseline. Its identity has not
-          been replaced by a similar name or symbol.
+          This concept is not in the current workspace. If it was just deleted
+          or its creation was undone, use Undo or Redo to restore it. Its
+          identity has not been replaced by a similar name or symbol.
         </p>
       </section>
     );
+  if (editing === node.id)
+    return (
+      <section
+        className="inspector panel-scroll"
+        data-testid="inspector"
+        data-node-id={node.id}
+      >
+        <NodeEditor
+          key={node.id}
+          node={node}
+          onClose={() => setEditing(undefined)}
+        />
+      </section>
+    );
+  const custom = Object.hasOwn(w.authoring.authoredNodes, node.id);
+  const excluded = w.excludedIds.includes(node.id);
+  const source = w.sourceNodes.get(node.id);
   const related = [
     ...new Map(
       [
@@ -271,11 +316,68 @@ export function InspectorPanel() {
     >
       <div className="inspector-top">
         <span className={"badge " + (authored ? "authored" : "")}>
-          {authored ? "APP-AUTHORED EXAMPLE" : `QUDT ${w.data.source.version}`}
+          {custom
+            ? "YOUR AUTHORED CONCEPT"
+            : authored
+              ? "APP-AUTHORED BASELINE"
+              : `QUDT ${w.data.source.version}`}
         </span>
+        {Object.hasOwn(w.authoring.nodeOverrides, node.id) && (
+          <span className="badge authored">LOCAL EDITS</span>
+        )}
         <span>{node.kind}</span>
       </div>
       <h2>{node.label}</h2>
+      <div className="action-row authoring-actions">
+        <button onClick={() => setEditing(node.id)}>Edit concept</button>
+        <button
+          onClick={() =>
+            w.perform(
+              { type: "node.exclude", id: node.id, excluded: !excluded },
+              `${excluded ? "Restore" : "Exclude"} ${node.label}`,
+            )
+          }
+        >
+          {excluded ? "Restore to map" : "Exclude from map"}
+        </button>
+        {custom && (
+          <button onClick={() => setDeleting(!deleting)}>
+            Delete custom node
+          </button>
+        )}
+      </div>
+      {excluded && (
+        <p className="notice">
+          Excluded from the curated map. References and notes are retained;
+          restoration is reversible.
+        </p>
+      )}
+      {deleting && (
+        <div className="notice">
+          <p>
+            Delete this custom concept and its relationships/group memberships?
+            References from other notes or equations must be removed first. Undo
+            restores the deletion.
+          </p>
+          <div className="action-row">
+            <button
+              onClick={() => {
+                if (
+                  w.perform(
+                    { type: "node.delete", id: node.id },
+                    `Delete ${node.label}`,
+                  )
+                )
+                  setDeleting(false);
+              }}
+            >
+              Delete node
+            </button>
+            <button onClick={() => setDeleting(false)}>Keep node</button>
+          </div>
+        </div>
+      )}
+      <NodeGroups id={node.id} />
       {node.latex && (
         <div className="math-card">
           <MathText latex={node.latex} display />
@@ -329,9 +431,18 @@ export function InspectorPanel() {
       <TextContent
         text={
           node.description ||
-          "This source record does not include a description."
+          (custom
+            ? "No definition added yet."
+            : "This source record does not include a description.")
         }
       />
+      {node.notes && (
+        <>
+          <h3>Notes</h3>
+          <Markdown text={node.notes} />
+        </>
+      )}
+      {!!node.sourceUrls?.length && <SourceLinks urls={node.sourceUrls} />}
       {!!unresolved.length && (
         <div className="notice" data-testid="unresolved-source">
           <strong>Unresolved source references · {unresolved.length}</strong>
@@ -356,12 +467,28 @@ export function InspectorPanel() {
           are retained.
         </p>
       )}
-      {node.kind === "constant" && (
+      {node.kind === "constant" && node.provenance.origin === "qudt" && (
         <p className="notice">
           Imported value, not reviewed for current numerical accuracy. Some QUDT
           constants predate current SI definitions; no calculation uses these
           values.
         </p>
+      )}
+      {node.kind === "constant" && (
+        <>
+          {node.constantSubtype && (
+            <p>
+              <strong>{node.constantSubtype}</strong>
+              {node.valueStatus && ` · ${node.valueStatus}`}
+            </p>
+          )}
+          {node.derivation && (
+            <details open>
+              <summary>Derivation</summary>
+              <TextContent text={node.derivation} />
+            </details>
+          )}
+        </>
       )}
       {node.constantValues?.map((v) => (
         <div className="constant-value" key={v.id}>
@@ -369,6 +496,7 @@ export function InspectorPanel() {
           {v.unitIds.map((id) => (
             <UnitLink key={id} id={id} />
           ))}
+          {!!v.sourceUrls.length && <SourceLinks urls={v.sourceUrls} />}
           {v.standardUncertainty && (
             <small>Standard uncertainty: {v.standardUncertainty}</small>
           )}
@@ -411,7 +539,33 @@ export function InspectorPanel() {
         </details>
       )}
       {node.kind === "quantity" && <UnitPreference node={node} />}
-      <DisplayOverrides key={node.id} node={node} />
+      {source && (
+        <>
+          <DisplayOverrides key={node.id} node={node} />
+          <details>
+            <summary>Original baseline & local overrides</summary>
+            <p className="muted">
+              The imported/released baseline stays intact. Restoring removes
+              your field overrides while preserving stable identity and
+              curation.
+            </p>
+            <pre className="source-record">
+              {JSON.stringify(source, null, 2)}
+            </pre>
+            <button
+              disabled={!Object.hasOwn(w.authoring.nodeOverrides, node.id)}
+              onClick={() =>
+                w.perform(
+                  { type: "node.reset", id: node.id },
+                  `Restore ${source.label} from baseline`,
+                )
+              }
+            >
+              Restore all source fields
+            </button>
+          </details>
+        </>
+      )}
       {!!node.applicableUnitIds.length && (
         <details>
           <summary>
@@ -429,9 +583,33 @@ export function InspectorPanel() {
         </details>
       )}
       <h3>Relationships · {related.length}</h3>
+      <button
+        onClick={() =>
+          setEditingEdge(editingEdge === "new" ? undefined : "new")
+        }
+      >
+        Create relationship
+      </button>
+      {editingEdge === "new" && (
+        <RelationshipEditor
+          sourceId={node.id}
+          onClose={() => setEditingEdge(undefined)}
+        />
+      )}
       {related.map((e) => {
         const meaning = describeRelationship(e);
         const id = e.source === node.id ? e.target : e.source;
+        const edgeExcluded = w.authoring.excludedEdgeIds.includes(e.id);
+        const originalEdge = w.sourceEdges.get(e.id);
+        if (editingEdge !== "new" && editingEdge?.id === e.id)
+          return (
+            <RelationshipEditor
+              key={e.id}
+              edge={e}
+              sourceId={node.id}
+              onClose={() => setEditingEdge(undefined)}
+            />
+          );
         return (
           <div className="relationship" key={e.id}>
             <button className="related" onClick={() => w.select(id)}>
@@ -446,12 +624,80 @@ export function InspectorPanel() {
             </button>
             <details>
               <summary>Meaning & provenance</summary>
+              {Object.hasOwn(w.authoring.edgeOverrides, e.id) && (
+                <span className="badge authored">LOCAL EDITS</span>
+              )}
               <p>{meaning.description}</p>
               <code>{e.predicate}</code>
+              {e.notes && <Markdown text={e.notes} />}
+              {!!e.sourceUrls?.length && <SourceLinks urls={e.sourceUrls} />}
+              {edgeExcluded && (
+                <p className="notice">Excluded from the curated map.</p>
+              )}
+              <div className="action-row">
+                <button onClick={() => setEditingEdge(e)}>
+                  Edit relationship
+                </button>
+                <button
+                  onClick={() =>
+                    w.perform(
+                      {
+                        type: "edge.exclude",
+                        id: e.id,
+                        excluded: !edgeExcluded,
+                      },
+                      `${edgeExcluded ? "Restore" : "Exclude"} relationship`,
+                    )
+                  }
+                >
+                  {edgeExcluded
+                    ? "Restore relationship"
+                    : "Exclude relationship"}
+                </button>
+                {Object.hasOwn(w.authoring.authoredEdges, e.id) &&
+                  e.predicate !==
+                    "urn:hvacr:relationship:equation-participation" && (
+                    <button
+                      onClick={() =>
+                        w.perform(
+                          { type: "edge.delete", id: e.id },
+                          "Delete relationship",
+                        )
+                      }
+                    >
+                      Delete relationship
+                    </button>
+                  )}
+              </div>
+              {originalEdge && (
+                <details>
+                  <summary>Original relationship</summary>
+                  <pre className="source-record">
+                    {JSON.stringify(originalEdge, null, 2)}
+                  </pre>
+                  <button
+                    disabled={!Object.hasOwn(w.authoring.edgeOverrides, e.id)}
+                    onClick={() =>
+                      w.perform(
+                        { type: "edge.reset", id: e.id },
+                        "Restore original relationship",
+                      )
+                    }
+                  >
+                    Restore relationship fields
+                  </button>
+                </details>
+              )}
               <p className="muted">Relationship ID: {e.id}</p>
-              <a href={e.provenance.sourceUrl} target="_blank" rel="noreferrer">
-                Relationship source <Icon name="arrow-up-right" />
-              </a>
+              {/^https?:\/\//.test(e.provenance.sourceUrl) && (
+                <a
+                  href={e.provenance.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Relationship source <Icon name="arrow-up-right" />
+                </a>
+              )}
             </details>
           </div>
         );
@@ -482,12 +728,16 @@ export function InspectorPanel() {
           metadata does not infer relationships or compatible units.
         </p>
       </details>
-      <a href={node.provenance.sourceUrl} target="_blank" rel="noreferrer">
-        {authored
-          ? "DOE Fundamentals Handbook · equation (2-15)"
-          : "Open QUDT reference"}{" "}
-        <Icon name="arrow-up-right" />
-      </a>
+      {/^https?:\/\//.test(node.provenance.sourceUrl) && (
+        <a href={node.provenance.sourceUrl} target="_blank" rel="noreferrer">
+          {node.id === EXAMPLE_ID
+            ? "DOE Fundamentals Handbook · equation (2-15)"
+            : authored
+              ? "Original source"
+              : "Open QUDT reference"}{" "}
+          <Icon name="arrow-up-right" />
+        </a>
+      )}
     </section>
   );
 }

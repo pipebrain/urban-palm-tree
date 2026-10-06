@@ -29,7 +29,13 @@ export function UnitLink({ id }: { id: string }) {
       title={unit ? `${unit.label} · ${id}` : `Missing unit · ${id}`}
       onClick={() => w.openUnit(id)}
     >
-      <MathText latex={unit ? unitLatex(unit) : plainMath(shortId(id))} />
+      <MathText
+        latex={
+          unit
+            ? unitLatex(unit, w.authoring.unitOverrides[id]?.latex)
+            : plainMath(shortId(id))
+        }
+      />
     </button>
   );
 }

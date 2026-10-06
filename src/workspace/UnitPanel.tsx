@@ -1,18 +1,104 @@
 import { Icon } from "../components/Icon";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MathText } from "../components/Math";
 import { unitLatex } from "../domain/notation";
 import {
   preferredUnitId,
   unitConversionStatus,
 } from "../domain/unit-preferences";
+import type { UnitReference } from "../domain/types";
 import { useWorkspace } from "./context";
 import { NodeLink, TextContent } from "./common";
+function UnitEditor({
+  unit,
+  onClose,
+}: {
+  unit: UnitReference;
+  onClose: () => void;
+}) {
+  const w = useWorkspace();
+  const [label, setLabel] = useState(unit.label);
+  const [latex, setLatex] = useState(
+    unitLatex(unit, w.authoring.unitOverrides[unit.id]?.latex),
+  );
+  const [description, setDescription] = useState(unit.description || "");
+  return (
+    <form
+      className="authoring-form unit-editor"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (
+          w.perform(
+            {
+              type: "unit.edit",
+              id: unit.id,
+              patch: { label: label.trim(), latex, description },
+            },
+            `Edit unit ${label.trim()}`,
+          )
+        )
+          onClose();
+      }}
+    >
+      <h3>Edit unit presentation</h3>
+      <p className="notice">
+        The exact unit identity, dimensions, multiplier, and offset stay fixed.
+        This edits typography and explanatory text; it never converts or
+        relabels a recorded value as another unit.
+      </p>
+      <label>
+        Unit name
+        <input
+          aria-label="Unit name"
+          required
+          maxLength={300}
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+        />
+      </label>
+      <label>
+        Unit LaTeX
+        <textarea
+          aria-label="Unit LaTeX"
+          maxLength={4000}
+          value={latex}
+          onChange={(e) => setLatex(e.target.value)}
+        />
+      </label>
+      <div className="math-card">
+        <MathText
+          latex={latex || unitLatex({ ...unit, label, latex: "" }, "")}
+          display
+        />
+      </div>
+      <label>
+        Unit definition
+        <textarea
+          aria-label="Unit definition"
+          rows={4}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </label>
+      <code>{unit.id}</code>
+      <div className="action-row">
+        <button type="submit" disabled={!label.trim()}>
+          Save unit
+        </button>
+        <button type="button" onClick={onClose}>
+          Cancel unit edit
+        </button>
+      </div>
+    </form>
+  );
+}
 export function UnitPanel() {
   const w = useWorkspace();
   const scroll = useRef<HTMLElement>(null);
+  const [editing, setEditing] = useState(false);
   useEffect(() => {
     scroll.current?.scrollTo({ top: 0 });
+    setEditing(false);
   }, [w.unitId]);
   const unit = w.index.unitsById.get(w.unitId || "");
   const preferredBy = useMemo(
@@ -25,6 +111,7 @@ export function UnitPanel() {
         : [],
     [unit, w.nodes, w.preferences, w.index],
   );
+  const source = unit ? w.sourceUnits.get(unit.id) : undefined;
   const uses = unit ? w.index.unitUseBacklinks.get(unit.id) || [] : [];
   const applicable = unit
     ? w.index.unitApplicableBacklinks.get(unit.id) || []
@@ -60,8 +147,22 @@ export function UnitPanel() {
       ) : (
         <>
           <h2>{unit.label}</h2>
+          {editing ? (
+            <UnitEditor
+              key={unit.id}
+              unit={unit}
+              onClose={() => setEditing(false)}
+            />
+          ) : (
+            <button onClick={() => setEditing(true)}>
+              Edit unit presentation
+            </button>
+          )}
           <div className="math-card">
-            <MathText latex={unitLatex(unit)} display />
+            <MathText
+              latex={unitLatex(unit, w.authoring.unitOverrides[unit.id]?.latex)}
+              display
+            />
           </div>
           <span
             className={
@@ -73,6 +174,9 @@ export function UnitPanel() {
               ? "APP-AUTHORED UNIT"
               : `QUDT ${unit.provenance.version || w.data.source.version}`}
           </span>
+          {Object.hasOwn(w.authoring.unitOverrides, unit.id) && (
+            <span className="badge authored">LOCAL PRESENTATION EDITS</span>
+          )}
           <TextContent
             text={unit.description || "No source definition supplied."}
           />
@@ -86,6 +190,28 @@ export function UnitPanel() {
           )}
           {unit.deprecated && (
             <p className="notice">Upstream marks this unit as deprecated.</p>
+          )}
+          {source && (
+            <details>
+              <summary>Original unit & local overrides</summary>
+              <pre className="source-record">
+                {JSON.stringify(source, null, 2)}
+              </pre>
+              <button
+                disabled={!Object.hasOwn(w.authoring.unitOverrides, unit.id)}
+                onClick={() => {
+                  if (
+                    w.perform(
+                      { type: "unit.reset", id: unit.id },
+                      `Restore unit ${source.label}`,
+                    )
+                  )
+                    setEditing(false);
+                }}
+              >
+                Restore source unit fields
+              </button>
+            </details>
           )}
           <h3>Explicit uses · {uses.length}</h3>
           <p className="muted">

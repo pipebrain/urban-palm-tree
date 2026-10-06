@@ -5,6 +5,7 @@ import {
   layoutLinks,
   nodeRadii,
   visibleNeighbourCounts,
+  groupStyles,
 } from "../src/graph/model.ts";
 
 const node = (id, overrides = {}) => ({
@@ -12,6 +13,21 @@ const node = (id, overrides = {}) => ({
   label: id,
   kind: "quantity",
   ...overrides,
+});
+
+test("overlapping groups retain every membership while the first listed group supplies colour", () => {
+  const first = { color: "#00aabb", nodeIds: ["a", "b", "a"] };
+  const second = { color: "#bb4400", nodeIds: ["a", "c"] };
+  const style = groupStyles([first, second]);
+  assert.deepEqual(style.get("a"), { color: "#00aabb", groupCount: 2 });
+  assert.deepEqual(style.get("b"), { color: "#00aabb", groupCount: 1 });
+  assert.deepEqual(style.get("c"), { color: "#bb4400", groupCount: 1 });
+  assert.equal(style.get("ungrouped"), undefined);
+  assert.deepEqual(groupStyles([second]).get("a"), {
+    color: "#bb4400",
+    groupCount: 1,
+  });
+  assert.deepEqual(first.nodeIds, ["a", "b", "a"]);
 });
 const edge = (id, source, target) => ({ id, source, target });
 

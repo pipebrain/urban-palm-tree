@@ -5,6 +5,7 @@ import {
   initialLayoutNodes,
   layoutLinks,
   nodeRadii,
+  type ManualPlacement,
   type Position,
   type ViewNode,
   type ViewEdge,
@@ -20,7 +21,9 @@ type Gesture = {
   node?: string;
   moved: boolean;
   pinch?: number;
+  before?: ManualPlacement;
 };
+const EMPTY_PLACEMENTS: Record<string, ManualPlacement> = {};
 export function Graph({
   nodes,
   edges,
@@ -30,6 +33,8 @@ export function Graph({
   viewDescription,
   focusRequest,
   fitRequest,
+  placements = EMPTY_PLACEMENTS,
+  onPlacement,
 }: {
   nodes: ViewNode[];
   edges: ViewEdge[];
@@ -39,11 +44,19 @@ export function Graph({
   viewDescription?: string;
   focusRequest?: { id: string; nonce: number };
   fitRequest?: number;
+  placements?: Record<string, ManualPlacement>;
+  onPlacement?: (
+    id: string,
+    next: ManualPlacement,
+    before: ManualPlacement,
+  ) => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const worker = useRef<Worker | null>(null);
   const generation = useRef(0);
+  const placementRevision = useRef(0);
+  const previousPlacements = useRef<Record<string, ManualPlacement>>({});
   const positions = useRef(new Float32Array());
   const positionKey = useRef("");
   const positionCache = useRef(new Map<string, Position>());
@@ -69,6 +82,7 @@ export function Graph({
   const lastMetric = useRef(0);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const gesture = useRef<Gesture | undefined>(undefined);
+  const completedTap = useRef<string | undefined>(undefined);
   const indices = useMemo(
     () => new Map(nodes.map((n, i) => [n.id, i])),
     [nodes],
@@ -153,16 +167,38 @@ export function Graph({
         }
         ctx.closePath();
       } else ctx.arc(px, py, r, 0, Math.PI * 2);
-      ctx.fillStyle = node.authored
-        ? "#c17c45"
-        : node.kind === "constant"
-          ? "#75879b"
-          : "#438570";
+      ctx.fillStyle =
+        node.color ||
+        (node.authored
+          ? "#c17c45"
+          : node.kind === "constant"
+            ? "#75879b"
+            : "#438570");
       ctx.fill();
       if (i === chosen || pinned.current.has(node.id)) {
         ctx.lineWidth = (i === chosen ? 2.8 : 1.6) / k;
         ctx.strokeStyle = i === chosen ? "#172f27" : "#8d4727";
         ctx.stroke();
+      }
+      if ((node.groupCount || 0) > 1) {
+        // A separate badge makes overlap visible without changing the meaning
+        // of shape, fill, or selection/pin outlines.
+        const bx = px + r,
+          by = py - r;
+        ctx.beginPath();
+        ctx.arc(bx, by, 5 / k, 0, Math.PI * 2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+        ctx.lineWidth = 1 / k;
+        ctx.strokeStyle = "#20382f";
+        ctx.stroke();
+        if (k > 1.7) {
+          ctx.font = `${8 / k}px Inter, sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#20382f";
+          ctx.fillText(String(node.groupCount), bx, by);
+        }
       }
       if (
         visibleLabels.length < 60 &&
@@ -190,6 +226,11 @@ export function Graph({
     el?.setAttribute("data-camera-x", x.toFixed(2));
     el?.setAttribute("data-camera-y", y.toFixed(2));
     if (chosen !== undefined) {
+      el?.setAttribute("data-selected-color", nodes[chosen].color || "");
+      el?.setAttribute(
+        "data-selected-group-count",
+        String(nodes[chosen].groupCount || 0),
+      );
       el?.setAttribute(
         "data-selected-x",
         String(w / 2 + x + positions.current[chosen * 2] * k),
@@ -212,6 +253,8 @@ export function Graph({
         "data-selected-y",
         "data-selected-world-x",
         "data-selected-world-y",
+        "data-selected-color",
+        "data-selected-group-count",
       ])
         el?.removeAttribute(name);
     }
@@ -256,8 +299,54 @@ export function Graph({
     schedule();
   }, [schedule]);
 
+  const applyPlacement = useCallback(
+    (id: string, next: ManualPlacement) => {
+      positionCache.current.set(id, { x: next.x, y: next.y });
+      if (next.pinned) pinned.current.add(id);
+      else pinned.current.delete(id);
+      const i = indices.get(id);
+      if (i !== undefined && positionKey.current === topologyKey) {
+        positions.current[i * 2] = next.x;
+        positions.current[i * 2 + 1] = next.y;
+        worker.current?.postMessage({
+          type: "place",
+          generation: generation.current,
+          revision: ++placementRevision.current,
+          id,
+          ...next,
+        });
+      }
+      setPinRevision((value) => value + 1);
+      schedule();
+    },
+    [indices, topologyKey, schedule],
+  );
+
+  // History restores deliberate placements independently of topology. Hidden
+  // nodes keep their positions and pins until they return to the current view.
+  useEffect(() => {
+    const previous = previousPlacements.current;
+    for (const [id, next] of Object.entries(placements)) {
+      const before = previous[id];
+      if (
+        !before ||
+        before.x !== next.x ||
+        before.y !== next.y ||
+        before.pinned !== next.pinned
+      )
+        applyPlacement(id, next);
+    }
+    for (const id of Object.keys(previous))
+      if (!placements[id]) {
+        const position = positionCache.current.get(id);
+        if (position) applyPlacement(id, { ...position, pinned: false });
+      }
+    previousPlacements.current = placements;
+  }, [placements, applyPlacement]);
+
   useEffect(() => {
     const currentGeneration = ++generation.current;
+    placementRevision.current = 0;
     if (
       previousTopologyKey.current !== undefined &&
       previousTopologyKey.current !== topologyKey
@@ -266,6 +355,7 @@ export function Graph({
     previousTopologyKey.current = topologyKey;
     pointers.current.clear();
     gesture.current = undefined;
+    completedTap.current = undefined;
     setLabels([]);
     setLayoutError(false);
     const seeds = initialLayoutNodes(
@@ -304,7 +394,8 @@ export function Graph({
       w.onmessage = ({ data }) => {
         if (
           generation.current !== currentGeneration ||
-          data.generation !== currentGeneration
+          data.generation !== currentGeneration ||
+          data.revision < placementRevision.current
         )
           return;
         if (
@@ -461,12 +552,26 @@ export function Graph({
     const has = pinned.current.has(selectedId);
     const x = positions.current[i * 2],
       y = positions.current[i * 2 + 1];
-    if (has) pinned.current.delete(selectedId);
-    else pinned.current.add(selectedId);
-    positionCache.current.set(selectedId, { x, y });
-    post({ type: "pin", id: selectedId, x: has ? null : x, y: has ? null : y });
-    setPinRevision((v) => v + 1);
-    schedule();
+    const before = { x, y, pinned: has };
+    const next = { x, y, pinned: !has };
+    applyPlacement(selectedId, next);
+    onPlacement?.(selectedId, next, before);
+  };
+  const finishDrag = (g: Gesture | undefined, cancelled = false) => {
+    if (!g?.moved || !g.node || !g.before) return;
+    const i = indices.get(g.node);
+    if (i === undefined) return;
+    if (cancelled) applyPlacement(g.node, g.before);
+    else
+      onPlacement?.(
+        g.node,
+        {
+          x: positions.current[i * 2],
+          y: positions.current[i * 2 + 1],
+          pinned: true,
+        },
+        g.before,
+      );
   };
   const selectedIndex = indices.get(selectedId || "");
   const filtered = nodes.length !== totalNodeCount;
@@ -511,23 +616,35 @@ export function Graph({
           ref={canvas}
           aria-label="Interactive knowledge graph. Search to select nodes; drag to pan, pinch to zoom, or drag a node to pin it."
           onPointerDown={(e) => {
+            completedTap.current = undefined;
             e.currentTarget.setPointerCapture(e.pointerId);
             const r = e.currentTarget.getBoundingClientRect();
             const x = e.clientX - r.left,
               y = e.clientY - r.top;
             pointers.current.set(e.pointerId, { x, y });
-            if (pointers.current.size === 1)
+            if (pointers.current.size === 1) {
+              const node = hit(x, y);
+              const i = indices.get(node || "");
               gesture.current = {
                 startX: x,
                 startY: y,
                 lastX: x,
                 lastY: y,
-                node: hit(x, y),
+                node,
                 moved: false,
+                before:
+                  node && i !== undefined
+                    ? {
+                        x: positions.current[i * 2],
+                        y: positions.current[i * 2 + 1],
+                        pinned: pinned.current.has(node),
+                      }
+                    : undefined,
               };
-            else {
+            } else {
               const a = [...pointers.current.values()];
               if (gesture.current) {
+                finishDrag(gesture.current, true);
                 gesture.current.pinch = Math.hypot(
                   a[0].x - a[1].x,
                   a[0].y - a[1].y,
@@ -564,11 +681,7 @@ export function Graph({
                 const c = camera.current;
                 const px = (x - size.current.w / 2 - c.x) / c.k,
                   py = (y - size.current.h / 2 - c.y) / c.k;
-                positions.current[i * 2] = px;
-                positions.current[i * 2 + 1] = py;
-                pinned.current.add(g.node);
-                positionCache.current.set(g.node, { x: px, y: py });
-                post({ type: "pin", id: g.node, x: px, y: py });
+                applyPlacement(g.node, { x: px, y: py, pinned: true });
               } else {
                 camera.current.x += x - g.lastX;
                 camera.current.y += y - g.lastY;
@@ -581,8 +694,11 @@ export function Graph({
           onPointerUp={(e) => {
             const g = gesture.current;
             pointers.current.delete(e.pointerId);
-            if (g && !g.moved && g.node && indices.has(g.node))
-              onSelect(g.node);
+            finishDrag(g);
+            completedTap.current =
+              g && !g.moved && g.node && indices.has(g.node)
+                ? g.node
+                : undefined;
             if (pointers.current.size) {
               const a = [...pointers.current.values()][0];
               gesture.current = {
@@ -599,9 +715,19 @@ export function Graph({
             schedule();
           }}
           onPointerCancel={(e) => {
+            completedTap.current = undefined;
+            finishDrag(gesture.current, true);
             pointers.current.delete(e.pointerId);
             gesture.current = undefined;
             setPinRevision((v) => v + 1);
+          }}
+          onClick={() => {
+            // Wait for the complete tap before opening the phone inspector.
+            // Changing panels on pointerup lets the following compatibility
+            // click activate a control newly displayed beneath the finger.
+            const id = completedTap.current;
+            completedTap.current = undefined;
+            if (id && indices.has(id)) onSelect(id);
           }}
         />
         <div className="graph-labels" aria-hidden="true">
@@ -615,6 +741,9 @@ export function Graph({
             >
               {l.node.latex && <MathText latex={l.node.latex} />}
               <span>{l.node.label}</span>
+              {(l.node.groupCount || 0) > 1 && (
+                <small>{l.node.groupCount} groups</small>
+              )}
             </div>
           ))}
         </div>
@@ -685,8 +814,9 @@ export function Graph({
         <small className="graph-weight-note">
           Graph weight: distinct visible neighbours; radius 4–10. Duplicate
           links and internal references add no weight. Placement is not
-          physical. Amber: app-authored; green: reference quantities; blue:
-          reference constants. Outlines: selection / pin.
+          physical. Group colour: first listed group; a white badge marks
+          multiple groups. Ungrouped: amber app-authored, green reference
+          quantities, blue reference constants. Outlines: selection / pin.
         </small>
       </div>
     </div>

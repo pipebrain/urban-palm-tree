@@ -7,13 +7,17 @@ import {
   type IDockviewPanelHeaderProps,
   type DockviewReadyEvent,
 } from "dockview-react";
-import type { Dataset } from "./domain/types";
+import type { Dataset, LearningNode } from "./domain/types";
 import { example, exampleEdges, intervalUnit } from "./domain/example";
+import { buildGraphIndex } from "./domain/semantics";
 import {
-  applyDisplayOverrides,
-  buildGraphIndex,
-  type DisplayOverrides,
-} from "./domain/semantics";
+  buildWorkspace,
+  createHistory,
+  executeCommand,
+  undo,
+  redo,
+  type AuthoringCommand,
+} from "./domain/authoring";
 import { parseDataset } from "./domain/validation";
 import { getClassification } from "./domain/classifications";
 import {
@@ -21,10 +25,7 @@ import {
   defaultFilters,
   type MapFilters,
 } from "./domain/browsing";
-import {
-  changeUnitPreference,
-  type UnitPreferences,
-} from "./domain/unit-preferences";
+import { changeUnitPreference } from "./domain/unit-preferences";
 import { WorkspaceContext, type Workspace } from "./workspace/context";
 import { LibraryPanel } from "./workspace/LibraryPanel";
 import { MapPanel } from "./workspace/MapPanel";
@@ -50,8 +51,12 @@ type Visit = {
 export function App() {
   const [data, setData] = useState<Dataset>();
   const [error, setError] = useState("");
-  const [overrides, setOverrides] = useState<DisplayOverrides>({});
-  const [preferences, setPreferences] = useState<UnitPreferences>({});
+  const [edits, setEdits] = useState(createHistory);
+  const editsRef = useRef(edits);
+  const [actionError, setActionError] = useState("");
+  const [actionMessage, setActionMessage] = useState("");
+  const [creating, setCreating] = useState<LearningNode["kind"]>();
+  const [groupFilter, setGroupFilter] = useState<string | null>(null);
   const [filters, setFilters] = useState<MapFilters>(defaultFilters);
   const [focusRequest, setFocusRequest] = useState<{
     id: string;
@@ -113,34 +118,123 @@ export function App() {
     () => new Map([...(data?.nodes || []), example].map((n) => [n.id, n])),
     [data],
   );
+  const baseline = useMemo(
+    () => ({
+      nodes: [...sourceNodes.values()],
+      edges: [...(data?.edges || []), ...exampleEdges],
+      units: [...(data?.units || []), intervalUnit],
+    }),
+    [data, sourceNodes],
+  );
+  const sourceUnits = useMemo(
+    () => new Map(baseline.units.map((u) => [u.id, u])),
+    [baseline],
+  );
+  const sourceEdges = useMemo(
+    () => new Map(baseline.edges.map((e) => [e.id, e])),
+    [baseline],
+  );
+  const authored = useMemo(
+    () => (data ? buildWorkspace(baseline, edits.present) : undefined),
+    [data, baseline, edits.present],
+  );
   const nodes = useMemo(
     () =>
-      applyDisplayOverrides([...sourceNodes.values()], overrides).map((n) =>
+      (authored?.nodes || []).map((n) =>
         n.kind === "quantity"
-          ? { ...n, classification: getClassification(n) }
+          ? { ...n, classification: n.classification || getClassification(n) }
           : n,
       ),
-    [sourceNodes, overrides],
+    [authored],
   );
-  const edges = useMemo(
-    () => [...(data?.edges || []), ...exampleEdges],
-    [data],
+  const edges = authored?.edges || [];
+  const units = authored?.units || [];
+  const preferences = edits.present.unitPreferences;
+  const groups = useMemo(
+    () => Object.values(edits.present.groups),
+    [edits.present.groups],
   );
-  const units = useMemo(() => [...(data?.units || []), intervalUnit], [data]);
+  useEffect(() => {
+    if (groupFilter && !edits.present.groups[groupFilter]) setGroupFilter(null);
+  }, [groupFilter, edits.present.groups]);
+  const perform = (command: AuthoringCommand, label: string) => {
+    try {
+      const next = executeCommand(baseline, editsRef.current, command, label);
+      editsRef.current = next;
+      setEdits(next);
+      setActionError("");
+      setActionMessage(label);
+      return true;
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : String(error));
+      return false;
+    }
+  };
+  const travelEdit = (direction: "undo" | "redo") => {
+    const current = editsRef.current;
+    const entry =
+      direction === "undo" ? current.past.at(-1) : current.future.at(-1);
+    if (!entry) return;
+    const next = direction === "undo" ? undo(current) : redo(current);
+    editsRef.current = next;
+    setEdits(next);
+    setActionError("");
+    setActionMessage(
+      `${direction === "undo" ? "Undid" : "Redid"}: ${entry.label}`,
+    );
+  };
+  useEffect(() => {
+    if (!edits.past.length) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [edits.past.length]);
+  useEffect(() => {
+    const key = (event: KeyboardEvent) => {
+      if (
+        !(event.metaKey || event.ctrlKey) ||
+        event.altKey ||
+        event.key.toLowerCase() !== "z"
+      )
+        return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("input, textarea, select, [contenteditable=true]"))
+        return;
+      event.preventDefault();
+      travelEdit(event.shiftKey ? "redo" : "undo");
+    };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  });
   // While loading, the example's participants do not exist yet; index only a complete dataset.
   const index = useMemo(
     () => (data ? buildGraphIndex(nodes, edges, units) : undefined),
     [data, nodes, edges, units],
   );
-  const view = useMemo(
-    () => browseGraph(nodes, edges, filters),
-    [nodes, edges, filters],
-  );
+  const view = useMemo(() => {
+    const excluded = new Set(edits.present.excludedNodeIds);
+    const group = groupFilter ? edits.present.groups[groupFilter] : undefined;
+    const eligible = nodes.filter(
+      (n) => !excluded.has(n.id) && (!group || group.nodeIds.includes(n.id)),
+    );
+    return browseGraph(eligible, authored?.visibleEdges || [], filters);
+  }, [
+    nodes,
+    authored,
+    filters,
+    edits.present.excludedNodeIds,
+    edits.present.groups,
+    groupFilter,
+  ]);
   const activate = (panel: string) => {
     setTab(panel);
     if (!mobile) dock.current?.getPanel(panel)?.api.setActive();
   };
   const navigate = (next: Visit) => {
+    setCreating(undefined);
     setHistory((old) => {
       const current = old.visits[old.index];
       if (
@@ -157,6 +251,7 @@ export function App() {
   const travel = (offset: number) => {
     const next = history.index + offset;
     if (next < 0 || next >= history.visits.length) return;
+    setCreating(undefined);
     setHistory({ ...history, index: next });
     activate(history.visits[next].panel);
   };
@@ -211,6 +306,31 @@ export function App() {
     units,
     index,
     sourceNodes,
+    sourceUnits,
+    sourceEdges,
+    authoring: edits.present,
+    perform,
+    groups,
+    groupFilter,
+    setGroupFilter,
+    excludedIds: edits.present.excludedNodeIds,
+    placements: edits.present.placements,
+    place: (id, placement, before) => {
+      perform(
+        { type: "placement.set", id, placement, before },
+        placement.pinned !== before.pinned
+          ? placement.pinned
+            ? "Pin concept"
+            : "Unpin concept"
+          : "Move concept",
+      );
+    },
+    creating,
+    startCreate: (kind) => {
+      setCreating(kind);
+      activate("inspector");
+    },
+    cancelCreate: () => setCreating(undefined),
     selectedId: visit.selectedId,
     unitId: visit.unitId,
     select: (id) =>
@@ -224,36 +344,52 @@ export function App() {
     focusRequest,
     resetMap: () => {
       setFilters(defaultFilters);
+      setGroupFilter(null);
       setFitRequest((n) => n + 1);
     },
     showOnMap: (id) => {
-      if (!view.nodes.some((n) => n.id === id)) setFilters(defaultFilters);
+      if (!view.nodes.some((n) => n.id === id)) {
+        setFilters(defaultFilters);
+        setGroupFilter(null);
+      }
       setFocusRequest((old) => ({ id, nonce: (old?.nonce || 0) + 1 }));
       activate("graph");
     },
     focus: (id, depth) => {
+      setGroupFilter(null);
       setFilters({ ...defaultFilters, focus: { id, depth } });
       setFitRequest((n) => n + 1);
       activate("graph");
     },
     preferences,
-    setPreference: (node, id) =>
-      setPreferences((old) =>
-        changeUnitPreference(old, node, id, index.unitsById),
-      ),
-    resetPreference: (id) =>
-      setPreferences((old) => {
-        const next = { ...old };
-        delete next[id];
-        return next;
-      }),
-    override: (id, value) =>
-      setOverrides((old) => {
-        const next = { ...old };
-        if (value) next[id] = value;
-        else delete next[id];
-        return next;
-      }),
+    setPreference: (node, id) => {
+      try {
+        changeUnitPreference(preferences, node, id, index.unitsById);
+        perform(
+          { type: "preference.set", id: node.id, unitId: id },
+          "Change preferred display unit",
+        );
+      } catch (error) {
+        setActionError(String(error));
+      }
+    },
+    resetPreference: (id) => {
+      perform({ type: "preference.reset", id }, "Restore default unit");
+    },
+    override: (id, value) => {
+      const source = sourceNodes.get(id);
+      if (value)
+        perform({ type: "node.edit", id, patch: value }, "Edit display");
+      else if (source)
+        perform(
+          {
+            type: "node.edit",
+            id,
+            patch: { label: source.label, latex: source.latex || "" },
+          },
+          "Restore source display",
+        );
+    },
   };
   return (
     <WorkspaceContext.Provider value={workspace}>
@@ -271,7 +407,7 @@ export function App() {
             </div>
           </div>
           <div className="header-meta">
-            <span className="prototype">M1 · BROWSE & CONNECT</span>
+            <span className="prototype">M2 · SHAPE YOUR ATLAS</span>
             <span>QUDT {data.source.version}</span>
           </div>
         </header>
@@ -300,8 +436,40 @@ export function App() {
               : index.nodesById.get(visit.selectedId || "")?.label ||
                 "Full reference universe"}
           </span>
-          <small>Session changes are temporary</small>
+          <small>Session only · refresh loses edits</small>
         </div>
+        <div className="authoring-toolbar" aria-label="Editing history">
+          <button
+            aria-label="Undo"
+            disabled={!edits.past.length}
+            title={edits.past.at(-1)?.label || "Nothing to undo"}
+            onClick={() => travelEdit("undo")}
+          >
+            Undo
+          </button>
+          <button
+            aria-label="Redo"
+            disabled={!edits.future.length}
+            title={edits.future.at(-1)?.label || "Nothing to redo"}
+            onClick={() => travelEdit("redo")}
+          >
+            Redo
+          </button>
+          <span
+            role="status"
+            data-testid="history-status"
+            data-undo-count={edits.past.length}
+            data-redo-count={edits.future.length}
+          >
+            Session only. {actionMessage || "Workspace saving arrives in M3."}
+          </span>
+        </div>
+        {actionError && (
+          <div className="authoring-error" role="alert">
+            <span>{actionError}</span>
+            <button onClick={() => setActionError("")}>Dismiss</button>
+          </div>
+        )}
         <div className="workspace">
           {mobile ? (
             <>

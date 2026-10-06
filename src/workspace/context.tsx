@@ -8,6 +8,12 @@ import type {
 import type { GraphIndex, DisplayOverride } from "../domain/semantics";
 import type { MapFilters } from "../domain/browsing";
 import type { UnitPreferences } from "../domain/unit-preferences";
+import type {
+  AuthoringState,
+  AuthoringCommand,
+  NodeGroup,
+  Placement,
+} from "../domain/authoring";
 export interface Workspace {
   data: Dataset;
   nodes: LearningNode[];
@@ -15,6 +21,19 @@ export interface Workspace {
   units: UnitReference[];
   index: GraphIndex;
   sourceNodes: Map<string, LearningNode>;
+  sourceUnits: Map<string, UnitReference>;
+  sourceEdges: Map<string, GraphEdge>;
+  authoring: AuthoringState;
+  perform: (command: AuthoringCommand, label: string) => boolean;
+  groups: NodeGroup[];
+  groupFilter: string | null;
+  setGroupFilter: (id: string | null) => void;
+  excludedIds: string[];
+  placements: Record<string, Placement>;
+  place: (id: string, next: Placement, before: Placement) => void;
+  creating?: LearningNode["kind"];
+  startCreate: (kind: LearningNode["kind"]) => void;
+  cancelCreate: () => void;
   selectedId?: string;
   unitId?: string;
   select: (id: string) => void;

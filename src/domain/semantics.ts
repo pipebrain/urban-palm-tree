@@ -115,7 +115,7 @@ const relationshipMeanings: Record<string, RelationshipMeaning> = {
     kind: "specialization",
     label: "specialization of",
     description:
-      "QUDT declares the source more specific than the target and commensurable with it. This is an upstream semantic assertion, not a calculation dependency.",
+      "The source is asserted to be more specific than the target and commensurable with it. The record's provenance identifies who made this assertion; it is not a calculation dependency.",
   },
   "http://www.w3.org/2004/02/skos/core#broader": {
     kind: "broader",
@@ -127,7 +127,7 @@ const relationshipMeanings: Record<string, RelationshipMeaning> = {
     kind: "organization",
     label: "organized under",
     description:
-      "QUDT organizes the source beneath the target without asserting interchangeable quantities or inherited units. This organizational link does not imply a physical law.",
+      "The source is organized beneath the target without asserting interchangeable quantities or inherited units. This organizational link does not imply a physical law.",
   },
   "http://qudt.org/schema/qudt/hasQuantityKind": {
     kind: "quantity-kind",

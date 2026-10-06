@@ -35,6 +35,13 @@ export interface LearningNode {
   latex?: string;
   symbol?: string;
   description?: string;
+  /** Authored Markdown. Internal links retain exact node/unit identities. */
+  notes?: string;
+  /** Editable references, separate from the immutable imported provenance. */
+  sourceUrls?: string[];
+  constantSubtype?: string;
+  valueStatus?: "exact" | "rounded" | "assumed";
+  derivation?: string;
   /** Explicitly used units, including units of a constant's recorded value. */
   unitIds: string[];
   /** Upstream applicable units are compatibility references, never use backlinks. */
@@ -62,6 +69,8 @@ export interface GraphEdge {
   predicate: string;
   label: string;
   provenance: Provenance;
+  notes?: string;
+  sourceUrls?: string[];
 }
 
 export interface UnitReference {
@@ -70,6 +79,8 @@ export interface UnitReference {
   symbol?: string;
   latex?: string;
   description?: string;
+  notes?: string;
+  sourceUrls?: string[];
   dimensionIds: string[];
   quantityKindIds: string[];
   /** Metadata only: not a promise that this app can convert the unit. */

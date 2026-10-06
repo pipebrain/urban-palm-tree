@@ -5,6 +5,8 @@ export interface ViewNode {
   classificationKind?: string;
   latex?: string;
   authored?: boolean;
+  color?: string;
+  groupCount?: number;
 }
 export interface ViewEdge {
   id: string;
@@ -14,6 +16,24 @@ export interface ViewEdge {
 export interface Position {
   x: number;
   y: number;
+}
+export interface ManualPlacement extends Position {
+  pinned: boolean;
+}
+
+// Group order is the explicit primary-colour rule. Overlapping membership is
+// retained independently of the one fill colour a node can display.
+export function groupStyles(
+  groups: readonly { color: string; nodeIds: readonly string[] }[],
+): Map<string, { color: string; groupCount: number }> {
+  const styles = new Map<string, { color: string; groupCount: number }>();
+  for (const group of groups)
+    for (const id of new Set(group.nodeIds)) {
+      const style = styles.get(id);
+      if (style) style.groupCount++;
+      else styles.set(id, { color: group.color, groupCount: 1 });
+    }
+  return styles;
 }
 
 // Only visible learning neighbours affect graph weight. Unit references,

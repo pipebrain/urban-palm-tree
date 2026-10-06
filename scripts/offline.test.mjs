@@ -165,7 +165,15 @@ test("missing retained assets remove readiness and never mix network releases in
 
 test("offline build is deterministic and activation does not force an open page to update", async (t) => {
   const app = await fixture(t);
+  await writeFile(join(app.directory, ".DS_Store"), "local Finder metadata");
+  await writeFile(join(app.directory, "data/.DS_Store"), "nested metadata");
   await run(process.execPath, ["scripts/prepare-offline.mjs", app.directory]);
+  await assert.rejects(readFile(join(app.directory, ".DS_Store")), {
+    code: "ENOENT",
+  });
+  await assert.rejects(readFile(join(app.directory, "data/.DS_Store")), {
+    code: "ENOENT",
+  });
   assert.equal(
     await readFile(join(app.directory, "sw.js"), "utf8"),
     app.source,

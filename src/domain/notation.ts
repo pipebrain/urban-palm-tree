@@ -63,7 +63,9 @@ export function plainMath(text: string): string {
     .map((c) => escapes[c] || c)
     .join("")}}`;
 }
-export function unitLatex(unit: UnitReference): string {
+export function unitLatex(unit: UnitReference, editedLatex?: string): string {
+  if (editedLatex !== undefined)
+    return editedLatex || plainMath(unit.symbol || unit.label);
   return (
     unitOverrides[unit.id] || unit.latex || plainMath(unit.symbol || unit.label)
   );

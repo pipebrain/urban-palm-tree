@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile, writeFile, rm } from "node:fs/promises";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -16,6 +16,11 @@ async function inventory(directory) {
   )) {
     const absolute = join(directory, entry.name);
     const path = relative(dist, absolute).split(sep).join("/");
+    // Finder metadata copied from public/ is not a distributable app asset.
+    if (entry.isFile() && entry.name === ".DS_Store") {
+      await rm(absolute);
+      continue;
+    }
     if (entry.isSymbolicLink())
       throw new Error(`Build assets must not be symlinks: ${path}`);
     if (entry.isDirectory()) files.push(...(await inventory(absolute)));

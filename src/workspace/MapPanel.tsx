@@ -1,18 +1,21 @@
 import { useMemo } from "react";
 import { Graph } from "../graph/Graph";
+import { groupStyles } from "../graph/model";
 import { describeRelationship } from "../domain/semantics";
 import type { MapFilters } from "../domain/browsing";
 import { useWorkspace } from "./context";
 export function MapPanel() {
   const w = useWorkspace();
+  const styles = useMemo(() => groupStyles(w.groups), [w.groups]);
   const nodes = useMemo(
     () =>
       w.view.nodes.map((n) => ({
         ...n,
         authored: n.provenance.origin === "authored",
         classificationKind: n.classification?.kind,
+        ...styles.get(n.id),
       })),
-    [w.view.nodes],
+    [w.view.nodes, styles],
   );
   const relations = useMemo(
     () =>
@@ -31,19 +34,37 @@ export function MapPanel() {
     w.filters.origin !== "all" ||
     w.filters.predicate !== "all" ||
     !w.filters.includeDeprecated ||
-    !!w.filters.focus;
+    !!w.filters.focus ||
+    !!w.groupFilter;
+  const curated = w.excludedIds.length > 0;
+  const selectedGroup = w.groups.find((g) => g.id === w.groupFilter);
   return (
     <div className="map-panel">
       <details className="map-filters">
         <summary>
           Map filters{" "}
           <span>
-            {filtered
+            {filtered || curated
               ? `${nodes.length.toLocaleString()} of ${w.nodes.length.toLocaleString()}`
               : "Full universe"}
           </span>
         </summary>
         <div className="map-filter-grid">
+          <label>
+            Group
+            <select
+              aria-label="Map group"
+              value={w.groupFilter || ""}
+              onChange={(e) => w.setGroupFilter(e.target.value || null)}
+            >
+              <option value="">All groups and ungrouped</option>
+              {w.groups.map((group) => (
+                <option key={group.id} value={group.id}>
+                  {group.name}
+                </option>
+              ))}
+            </select>
+          </label>
           <label>
             Type
             <select
@@ -116,7 +137,9 @@ export function MapPanel() {
         </label>
         <p className="muted">
           Filters change this view only. A relationship filter keeps matching
-          nodes, including isolates.
+          nodes, including isolates.{" "}
+          {curated &&
+            `${w.excludedIds.length} excluded nodes remain available in Search / Library.`}
         </p>
       </details>
       {filtered && (
@@ -124,7 +147,9 @@ export function MapPanel() {
           <span>
             {w.filters.focus
               ? `${w.filters.focus.depth}-hop neighbourhood · ${w.index.nodesById.get(w.filters.focus.id)?.label || "Missing concept"}`
-              : "Filtered map"}
+              : selectedGroup
+                ? `Group · ${selectedGroup.name}`
+                : "Filtered map"}
           </span>
           <button onClick={w.resetMap}>Reset map</button>
         </div>
@@ -135,13 +160,19 @@ export function MapPanel() {
           edges={w.view.edges}
           selectedId={w.selectedId}
           onSelect={w.select}
+          placements={w.placements}
+          onPlacement={w.place}
           totalNodeCount={w.nodes.length}
           viewDescription={
             w.filters.focus
               ? "Focused neighbourhood"
-              : filtered
-                ? "Filtered map"
-                : "Full imported universe"
+              : selectedGroup
+                ? `Group · ${selectedGroup.name}`
+                : filtered
+                  ? "Filtered map"
+                  : curated
+                    ? "Curated map · exclusions are reversible"
+                    : "Full imported universe"
           }
           focusRequest={w.focusRequest}
           fitRequest={w.fitRequest}
