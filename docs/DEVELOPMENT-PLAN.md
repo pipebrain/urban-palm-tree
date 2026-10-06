@@ -8,7 +8,7 @@ M1 status, 6 October 2026: Version 0.1.0 established browsing and the semantic f
 
 The published M1 **0.1.1** correction bundles pinned Inter 4.1, replaces UI glyphs with SVG, and sets explicit WebKit select appearance and a matching 44 px mobile height. All 37 tests, local Chrome/WebKit checks, and offline font checks pass. Commit `9ada4474` was published successfully, and live release assets match the verified build. Andrew subsequently reported that the correction passes on both Android and iOS phones, closing the M1 rendering follow-up. No device/version details or comprehensive offline/storage protocol were supplied. See [M1 deployment record](M1-PAGES-DEPLOYMENT.md) and [rendering correction](M1-IOS-RENDERING-FIX.md).
 
-M2 status, 6 October 2026: Andrew explicitly instructed Codex to proceed with M2 after the phone recheck. Version **0.2.0** implements editing, curation, groups, and action history. All 57 automated tests and the production browser checks pass, including Chrome/WebKit authoring and fresh offline authoring. Physical-phone M2 review remains outstanding. See [M2 results](M2-RESULTS.md). Andrew subsequently unpublished Pages and requested redeployment. M2 0.2.0 is published from `95684ad4`; live assets, Chrome/WebKit authoring, and fresh offline checks pass. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). M3 persistence remains outside this milestone.
+M2 status, 6 October 2026: Andrew explicitly instructed Codex to proceed with M2 after the phone recheck. Version **0.2.0** implements editing, curation, groups, and action history. All 57 automated tests and the production browser checks pass, including Chrome/WebKit authoring and fresh offline authoring. See [M2 results](M2-RESULTS.md). Andrew subsequently unpublished Pages and requested redeployment. M2 0.2.0 is published from `95684ad4`; live assets, Chrome/WebKit authoring, and fresh offline checks pass. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). Andrew then confirmed M2 complete against its Done when criteria; no detailed device/version or offline/storage protocol accompanied the confirmation. M3 persistence remains outside this milestone.
 
 ## M0 — Local foundation and feasibility
 
@@ -54,7 +54,7 @@ Add the full starting graph, equation-centred connections, bounded degree-based 
 
 ## M2 — Editing, curation, groups, and action history
 
-**Implementation and local verification complete; physical-phone review outstanding.** The user-reported Android/iOS pass applies to published M1 0.1.1, not the new M2 authoring controls.
+**Complete and accepted by Andrew against the Done when criteria.** After M2 publication, Andrew confirmed: “Confirming M2 is complete as per "done when".” The confirmation provides no detailed device/version or offline/storage protocol; it does not certify those broader targets.
 
 Implement authoring for structured fields, Markdown with images/internal links, and LaTeX with preview. Add node/relationship creation and editing, original/reference inspection, overrides, reversible exclusion, groups, and undo/redo.
 

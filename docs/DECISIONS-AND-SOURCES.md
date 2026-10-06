@@ -18,7 +18,7 @@ Planning baseline v0.2: 6 October 2026.
 - Offline reopening and authoring after complete initial online preparation is a development target, with actual device verification required.
 - A Reload from source menu action restores released defaults, with current-edit protection and an explicitly versioned cached fallback when offline.
 - Workspace saving preserves current content and layout only. Undo/redo is session-only and excluded from saved files and autosave; saving itself does not clear active history.
-- The chosen GitHub repository is `pipebrain/urban-palm-tree`. Andrew made it public and authorized a public GitHub Pages M0 feasibility preview, then M1 publication for iPhone and Android checks, on 6 October 2026. Later milestones and classroom alpha acceptance remain outstanding.
+- The chosen GitHub repository is `pipebrain/urban-palm-tree`. Andrew made it public and authorized a public GitHub Pages M0 feasibility preview, then M1 publication for iPhone and Android checks, on 6 October 2026. M2 was subsequently published and accepted against its Done when criteria; M3 onward and classroom alpha acceptance remain outstanding.
 - Source export that can reproduce curated data/defaults in future builds.
 - React, TypeScript, dockview-react, QUDT, and future CoolProp WASM.
 - M2 MacBook Air development, Android/iPhone authoring, Git, GitHub, and eventual GitHub Pages alpha.
@@ -39,7 +39,7 @@ The latest classification decision supersedes the earlier proposal to treat Quan
 
 ## M2 implementation decisions — 6 October 2026
 
-Andrew authorized M2 after the successful physical-phone recheck. Local source is **0.2.0, implemented and locally verified** with 57 passing tests and successful production browser checks. Physical-phone M2 review remains outstanding. Andrew subsequently unpublished Pages and explicitly requested redeployment; M2 0.2.0 is now published from `95684ad4`, with successful live asset, Chrome/WebKit authoring, and fresh offline verification. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). See [M2 results](M2-RESULTS.md).
+Andrew authorized M2 after the successful physical-phone recheck. Local source is **0.2.0, implemented and locally verified** with 57 passing tests and successful production browser checks. Andrew subsequently unpublished Pages and explicitly requested redeployment; M2 0.2.0 is now published from `95684ad4`, with successful live asset, Chrome/WebKit authoring, and fresh offline verification. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). See [M2 results](M2-RESULTS.md). Andrew then confirmed M2 complete against its Done when criteria; no detailed device/version or offline/storage protocol accompanied the confirmation.
 
 - One transactional authoring state holds custom nodes/relationships, source overrides, exclusions, groups, explicit placements, and unit preferences separately from the immutable baseline. IDs and original provenance remain intact. A failed command must preserve the previous state.
 - A completed Save, membership change, exclusion, or drag is one undoable action. Automatic layout ticks do not become history. Save applies a session edit; it does not write a workspace file. Autosave, portable files, source export, and Reload from source remain M3.
@@ -50,7 +50,7 @@ Andrew authorized M2 after the successful physical-phone recheck. Local source i
 
 ## Provisional implementation defaults
 
-These defaults guide remaining implementation. M1 choices and M2 implementation decisions are recorded above; M2 physical-phone acceptance remains outstanding.
+These defaults guide remaining implementation. M1 choices and M2 implementation decisions are recorded above; Andrew has accepted M2 against its Done when criteria.
 
 | Topic            | Working default                                                                                                                 | When to revisit                                      |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
@@ -100,7 +100,9 @@ These are primary source entry points. Verify the current release and relevant d
 
 ## Change log
 
-- M2 publication, 6 October 2026: Andrew reported that he unpublished GitHub Pages and requested redeployment after finding that the public site did not expose M2 editing. At that request, published M2 0.2.0 commit `95684ad4376cc32221962b34f8acc3699d55ea1a` through [Actions run 37479683546](https://github.com/pipebrain/urban-palm-tree/actions/runs/37479683546), after restoring Pages to workflow publishing. Every release asset matches verified build `a3ccb9ca6434f09fef63`; live Chrome/WebKit authoring and fresh offline checks pass. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). Physical-phone M2 acceptance remains outstanding.
+- M2 acceptance, 6 October 2026: Andrew confirmed, “Confirming M2 is complete as per "done when".” M2 is accepted against its milestone criteria. No detailed device/version or offline/storage protocol accompanied this confirmation. M3 remains the next planned milestone; implementation has not started.
+
+- M2 publication, 6 October 2026: Andrew reported that he unpublished GitHub Pages and requested redeployment after finding that the public site did not expose M2 editing. At that request, published M2 0.2.0 commit `95684ad4376cc32221962b34f8acc3699d55ea1a` through [Actions run 37479683546](https://github.com/pipebrain/urban-palm-tree/actions/runs/37479683546), after restoring Pages to workflow publishing. Every release asset matches verified build `a3ccb9ca6434f09fef63`; live Chrome/WebKit authoring and fresh offline checks pass. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). Acceptance was outstanding at publication; Andrew subsequently confirmed M2 complete against its Done when criteria.
 
 - M1 phone acceptance and M2 authorization, 6 October 2026: Andrew reports the corrected M1 0.1.1 release passes on Android and iOS phones and instructs Codex to proceed with M2. Local version 0.2.0 now implements editing, curation, groups, and action history; 57 tests and the production Chrome/WebKit authoring, graph, semantic, and offline checks pass. At implementation completion, the public site remained M1 0.1.1; the later redeployment request separately authorized M2 publication. This acceptance does not certify offline/storage behavior. See [M2 results](M2-RESULTS.md).
 - M1 rendering correction release, 6 October 2026: Published version 0.1.1, commit `9ada447447811f51000db92f9287fc45045e2e18`, through [Actions run 37454092024](https://github.com/pipebrain/urban-palm-tree/actions/runs/37454092024). The live index, service worker, inventory, Inter font, and license return HTTP 200 and match local build `fd67e8fbe52c3c3a5a13` byte for byte. The 37 tests, local Chrome/WebKit checks, and offline font checks pass. Actual-phone retesting was pending at publication and subsequently passed by Andrew's report; see [rendering correction](M1-IOS-RENDERING-FIX.md).

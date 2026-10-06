@@ -1,8 +1,8 @@
 # M2 — editing, curation, groups, and action history
 
-**Implementation and local verification complete; physical-phone review outstanding.** App version **0.2.0**, QUDT **3.5.2**, 6 October 2026. Andrew authorized M2 after reporting that the corrected M1 0.1.1 release passes on Android and iOS phones. That is M1 smoke acceptance, not verification of the new M2 authoring controls.
+**Complete and accepted by Andrew against the Done when criteria.** App version **0.2.0**, QUDT **3.5.2**, 6 October 2026. Andrew authorized M2 after reporting that the corrected M1 0.1.1 release passes on Android and iOS phones. That is M1 smoke acceptance, not verification of the new M2 authoring controls.
 
-Andrew subsequently reported that he unpublished GitHub Pages and explicitly requested redeployment. **M2 0.2.0 is published and verified** at the [GitHub Pages preview](https://pipebrain.github.io/urban-palm-tree/) from commit `95684ad4`. All live assets match the tested build, and public-URL Chrome/WebKit authoring and fresh offline checks pass; see the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). This report records the implemented M2 scope and local production-build verification. Physical-phone M2 testing remains outstanding.
+Andrew subsequently reported that he unpublished GitHub Pages and explicitly requested redeployment. **M2 0.2.0 is published and verified** at the [GitHub Pages preview](https://pipebrain.github.io/urban-palm-tree/) from commit `95684ad4`. All live assets match the tested build, and public-URL Chrome/WebKit authoring and fresh offline checks pass; see the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). This report records the implemented M2 scope and local production-build verification. Andrew subsequently confirmed: “Confirming M2 is complete as per "done when".” This accepts the milestone criteria; no detailed device/version or offline/storage protocol accompanied that confirmation.
 
 ## Implemented scope
 
@@ -82,6 +82,6 @@ Create groups from the Library/Search panel and manage membership in Inspector. 
 - Linked images and external sources may require connectivity. Embedded image portability cannot be claimed until workspace files exist.
 - Numerical unit conversion, general equation solving, CoolProp evaluation, flashcards, generated problems, and calculation visualizations remain outside M2.
 - Classification and reviewed unit coverage retain M1's limits. Source constants may be historical; no calculations use them.
-- M1 physical-phone acceptance does not certify M2. The authorized M2 deployment does not establish physical-device acceptance.
+- Andrew has accepted the M2 milestone. Detailed physical-device versions, prolonged memory behavior, and comprehensive offline/storage certification remain unreported.
 
-M2 implementation and local verification are complete. The next review is physical-phone testing of the requested M2 release. The next planned implementation milestone is **M3 — persistence and reusable content**; it has not been started.
+M2 implementation, verification, and user acceptance are complete. The next planned implementation milestone is **M3 — persistence and reusable content**; it has not been started.

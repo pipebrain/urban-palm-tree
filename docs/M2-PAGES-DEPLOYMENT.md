@@ -1,6 +1,6 @@
 # GitHub Pages — M2 0.2.0 release
 
-**Published and verified 6 October 2026.** On 6 October 2026, Andrew reported that he had unpublished GitHub Pages and requested redeployment. This releases the verified M2 authoring implementation for phone review; physical-device acceptance remains outstanding.
+**Published and verified 6 October 2026.** On 6 October 2026, Andrew reported that he had unpublished GitHub Pages and requested redeployment. This released the verified M2 authoring implementation for phone review. Andrew subsequently confirmed: “Confirming M2 is complete as per "done when".” The milestone is accepted; no detailed device/version or offline/storage protocol accompanied the confirmation.
 
 - Public site: [HVACR Knowledge Atlas](https://pipebrain.github.io/urban-palm-tree/).
 - Deployed source: [`95684ad4376cc32221962b34f8acc3699d55ea1a`](https://github.com/pipebrain/urban-palm-tree/commit/95684ad4376cc32221962b34f8acc3699d55ea1a), containing tested implementation `313984e3` and its verification documentation.
