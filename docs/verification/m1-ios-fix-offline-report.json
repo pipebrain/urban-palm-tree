@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-06T10:49:44.660Z",
+  "checkedAt": "2026-10-06T10:58:56.866Z",
   "baseURL": "http://127.0.0.1:4174/urban-palm-tree/",
   "engine": "Chromium via installed Google Chrome",
   "note": "Browser automation on the Mac; phone viewport/touch emulation is not an actual Android or iPhone device test.",
@@ -11,9 +11,10 @@
     "totalUnitReferences": 2933
   },
   "build": {
-    "originalAssetCount": 64,
-    "byteCount": 6661775,
+    "originalAssetCount": 66,
+    "byteCount": 7019236,
     "fonts": 59,
+    "interfaceFonts": 1,
     "workers": [
       "assets/layout.worker-jGecUQ0M.js"
     ]
@@ -33,12 +34,17 @@
           "fromServiceWorker": true
         },
         {
-          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-vrYvmulv.css",
+          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-B9ehDcvp.css",
           "status": 200,
           "fromServiceWorker": true
         },
         {
-          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-C78Isen1.js",
+          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/InterVariable-DiVDrmQJ.woff2",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-DsNTVXDc.js",
           "status": 200,
           "fromServiceWorker": true
         },
@@ -71,50 +77,51 @@
       "passed": true,
       "prepared": {
         "ready": true,
-        "buildId": "4bf6648386caf63b5319",
-        "assetCount": 65,
-        "byteCount": 6673052,
+        "buildId": "fd67e8fbe52c3c3a5a13",
+        "assetCount": 67,
+        "byteCount": 7030842,
         "cachedURLs": [
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/index-B9ehDcvp.css",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/InterVariable-DiVDrmQJ.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_AMS-Regular-DMm9YOAa.woff",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/index-vrYvmulv.css",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_AMS-Regular-DRggAlZN.ttf",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Regular-CB_wures.ttf",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Bold-Cx986IdX.woff2",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Bold-Jm3AIy58.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Bold-waoOVXN0.ttf",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Bold-Jm3AIy58.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Italic-3WenGoN9.ttf",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Italic-BMLOBm91.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Italic-BMLOBm91.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Regular-B22Nviop.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Regular-Dr94JaBh.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Main-Regular-ypZvNtVU.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/index-DsNTVXDc.js",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Math-Italic-DA0__PXp.woff",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Math-Italic-flOr_0UB.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Math-Italic-t53AETM-.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Math-Italic-flOr_0UB.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/index-C78Isen1.js",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf",
@@ -122,9 +129,9 @@
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Script-Regular-C5JkGWo-.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Script-Regular-D3wIWfF6.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Script-Regular-D5yQViql.woff",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size1-Regular-C195tn64.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size1-Regular-C195tn64.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size2-Regular-oD1tc_U0.woff",
@@ -136,16 +143,17 @@
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf",
-          "http://127.0.0.1:4174/urban-palm-tree/index.html",
           "http://127.0.0.1:4174/urban-palm-tree/assets/layout.worker-jGecUQ0M.js",
+          "http://127.0.0.1:4174/urban-palm-tree/index.html",
+          "http://127.0.0.1:4174/urban-palm-tree/licenses/inter-OFL.txt",
           "http://127.0.0.1:4174/urban-palm-tree/offline-inventory.json",
           "http://127.0.0.1:4174/urban-palm-tree/data/qudt-graph.json",
           "http://127.0.0.1:4174/urban-palm-tree/.hvacr-offline-ready"
         ],
         "controlledFirstPage": false,
-        "cacheName": "hvacr-m0-v1:http%3A%2F%2F127.0.0.1%3A4174%2Furban-palm-tree%2F:4bf6648386caf63b5319"
+        "cacheName": "hvacr-m0-v1:http%3A%2F%2F127.0.0.1%3A4174%2Furban-palm-tree%2F:fd67e8fbe52c3c3a5a13"
       },
-      "offlineStartupMs": 297,
+      "offlineStartupMs": 322,
       "unseenNode": {
         "id": "http://qudt.org/vocab/constant/AtomicMassConstant",
         "label": "atomic mass constant",
@@ -171,6 +179,12 @@
         },
         {
           "family": "KaTeX_Math",
+          "status": "loaded"
+        }
+      ],
+      "interfaceFonts": [
+        {
+          "family": "Inter",
           "status": "loaded"
         }
       ]
@@ -189,12 +203,17 @@
           "fromServiceWorker": true
         },
         {
-          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-vrYvmulv.css",
+          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-B9ehDcvp.css",
           "status": 200,
           "fromServiceWorker": true
         },
         {
-          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-C78Isen1.js",
+          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/InterVariable-DiVDrmQJ.woff2",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4174/urban-palm-tree/assets/index-DsNTVXDc.js",
           "status": 200,
           "fromServiceWorker": true
         },
@@ -227,14 +246,15 @@
       "passed": true,
       "prepared": {
         "ready": true,
-        "buildId": "4bf6648386caf63b5319",
-        "assetCount": 65,
-        "byteCount": 6673052,
+        "buildId": "fd67e8fbe52c3c3a5a13",
+        "assetCount": 67,
+        "byteCount": 7030842,
         "cachedURLs": [
+          "http://127.0.0.1:4174/urban-palm-tree/assets/InterVariable-DiVDrmQJ.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/index-B9ehDcvp.css",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_AMS-Regular-DMm9YOAa.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_AMS-Regular-DRggAlZN.ttf",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/index-vrYvmulv.css",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2",
@@ -271,12 +291,12 @@
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/index-DsNTVXDc.js",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Script-Regular-C5JkGWo-.ttf",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Script-Regular-D3wIWfF6.woff2",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/index-C78Isen1.js",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Script-Regular-D5yQViql.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size1-Regular-C195tn64.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf",
@@ -292,16 +312,17 @@
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2",
           "http://127.0.0.1:4174/urban-palm-tree/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf",
-          "http://127.0.0.1:4174/urban-palm-tree/assets/layout.worker-jGecUQ0M.js",
           "http://127.0.0.1:4174/urban-palm-tree/index.html",
+          "http://127.0.0.1:4174/urban-palm-tree/assets/layout.worker-jGecUQ0M.js",
+          "http://127.0.0.1:4174/urban-palm-tree/licenses/inter-OFL.txt",
           "http://127.0.0.1:4174/urban-palm-tree/offline-inventory.json",
           "http://127.0.0.1:4174/urban-palm-tree/data/qudt-graph.json",
           "http://127.0.0.1:4174/urban-palm-tree/.hvacr-offline-ready"
         ],
         "controlledFirstPage": false,
-        "cacheName": "hvacr-m0-v1:http%3A%2F%2F127.0.0.1%3A4174%2Furban-palm-tree%2F:4bf6648386caf63b5319"
+        "cacheName": "hvacr-m0-v1:http%3A%2F%2F127.0.0.1%3A4174%2Furban-palm-tree%2F:fd67e8fbe52c3c3a5a13"
       },
-      "offlineStartupMs": 305,
+      "offlineStartupMs": 289,
       "unseenNode": {
         "id": "http://qudt.org/vocab/constant/AtomicMassConstant",
         "label": "atomic mass constant",
@@ -327,6 +348,12 @@
         },
         {
           "family": "KaTeX_Math",
+          "status": "loaded"
+        }
+      ],
+      "interfaceFonts": [
+        {
+          "family": "Inter",
           "status": "loaded"
         }
       ]

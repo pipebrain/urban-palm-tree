@@ -52,6 +52,9 @@ const results = {
     fonts: inventory.assets.filter((asset) =>
       /KaTeX.*\.(woff2?|ttf)$/.test(asset.path),
     ).length,
+    interfaceFonts: inventory.assets.filter((asset) =>
+      /InterVariable.*\.woff2$/.test(asset.path),
+    ).length,
     workers: inventory.assets
       .filter((asset) => /worker.*\.js$/.test(asset.path))
       .map((asset) => asset.path),
@@ -365,6 +368,17 @@ try {
         .map((font) => ({ family: font.family, status: font.status })),
     );
     assert.ok(run.fonts.length, "At least one cached KaTeX font is loaded");
+    run.interfaceFonts = await reopened.evaluate(async () => {
+      await document.fonts.ready;
+      return Array.from(document.fonts)
+        .filter((font) => font.family === "Inter" && font.status === "loaded")
+        .map((font) => ({ family: font.family, status: font.status }));
+    });
+    assert.equal(
+      run.interfaceFonts.length,
+      1,
+      "Bundled Inter is loaded offline",
+    );
     assert.equal(
       run.errors.length,
       0,
@@ -383,6 +397,14 @@ try {
           response.fromServiceWorker,
       ),
       "Complete dataset served from worker",
+    );
+    assert.ok(
+      run.offlineResponses.some(
+        (response) =>
+          /InterVariable[^/]*\.woff2$/.test(response.url) &&
+          response.fromServiceWorker,
+      ),
+      "Interface font served from worker during offline reopening",
     );
     assert.ok(
       run.offlineResponses.every((response) => response.status < 400),

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: Inter;
+  src: url("./assets/fonts/InterVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
   font-family:
     Inter,
@@ -981,13 +989,20 @@ canvas {
 
 /* M1 browsing: the map is a reversible view over stable source identities. */
 select {
+  -webkit-appearance: none;
+  appearance: none;
   font: inherit;
+  line-height: 1.5;
   color: inherit;
-  background: #fff;
+  background-color: #fff;
+  background-image: url("./assets/chevron-down.svg");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
   border: 1px solid #cbd7cc;
   border-radius: 6px;
   min-height: 40px;
-  padding: 7px;
+  padding: 7px 32px 7px 10px;
   max-width: 100%;
 }
 button,
@@ -1255,6 +1270,7 @@ code {
     padding: 8px 12px;
   }
   .node-navigation button,
+  .node-navigation select,
   .action-row button {
     min-height: 44px;
   }
@@ -1270,4 +1286,12 @@ code {
 .unresolved-reference {
   padding: 6px 0;
   border-bottom: 1px solid #dce4d9;
+}
+
+@media (forced-colors: active) {
+  select {
+    -webkit-appearance: auto;
+    appearance: auto;
+    background-image: none;
+  }
 }

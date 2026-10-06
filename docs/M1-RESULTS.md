@@ -54,9 +54,11 @@ The final 0.1.0 offline build **`40ca6a39ad76d82a123f`** prepared **65 assets / 
 
 ## Physical-phone feedback — 6 October 2026
 
-Andrew reported that M1 passes on his iOS and Android phones apart from unexpected font/icon rendering in **iOS Safari and Chrome**. In particular, the site logo appears as an emoji instead of the intended arrow. His screenshot, `m1-ios-fonts-render-issue.png`, is retained in the local sibling `bugs` folder outside the public repository. It has not been published with the source.
+Andrew reported that M1 passes on his iOS and Android phones apart from UI rendering issues in **iOS Safari and Chrome**. He clarified that **KaTeX renders as expected, while other fonts appear missing**. The site logo appears as an emoji instead of the intended arrow. His first screenshot is `m1-ios-fonts-render-issue.png`; the second, `m1-ios-hop-select-render-issue.png`, shows a hop selector shorter than its adjacent control. Both remain in the local sibling `bugs` folder outside the public repository and have not been published with the source.
 
-This is user-reported physical-device smoke acceptance with a rendering exception. No device models, OS or browser versions, Android browser name, timings, or itemized test protocol were provided. It does not establish comprehensive offline reopening, storage durability, or every M1 control's behavior on these phones. Correcting the iOS rendering issue remains M1 work; the correction still needs a physical-phone retest. The original 0.1.0 automated and emulated measurements above remain historical evidence for that revision.
+This is user-reported physical-device smoke acceptance with rendering exceptions. No device models, OS or browser versions, Android browser name, timings, or itemized test protocol were provided. It does not establish comprehensive offline reopening, storage durability, or every M1 control's behavior on these phones. The original 0.1.0 automated and emulated measurements above remain historical evidence for that revision.
+
+The M1 **0.1.1 correction in progress** bundles pinned Inter 4.1 locally for interface text, replaces font-dependent UI icons with SVG, and sets the mobile hop selector's WebKit appearance to `none` with a matching **44 px** height. The public release remains 0.1.0 until deployment is verified. The correction still needs a physical-phone retest and does not begin M2; see the [rendering correction record](M1-IOS-RENDERING-FIX.md).
 
 ## Limits and next step
 

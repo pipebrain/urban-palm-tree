@@ -1,6 +1,6 @@
 {
   "baseURL": "http://127.0.0.1:4174/urban-palm-tree/",
-  "startedAt": "2026-10-06T10:48:35.696Z",
+  "startedAt": "2026-10-06T10:58:42.987Z",
   "note": "Desktop Chromium; phone viewports emulate touch and size, not physical devices.",
   "runs": [
     {
@@ -9,16 +9,16 @@
         "width": 1440,
         "height": 960
       },
-      "firstGraphMs": 350.78420900000003,
-      "frameIntervalMedianMs": 16.699999999999932,
+      "firstGraphMs": 424.3114170000001,
+      "frameIntervalMedianMs": 16.699999999999818,
       "frameIntervalP95Ms": 16.700000000000045,
       "metrics": {
         "testid": "graph",
         "nodeCount": "1556",
         "totalNodeCount": "1556",
         "ticks": "56",
-        "drawMs": "0.60",
-        "layoutMs": "1592",
+        "drawMs": "0.70",
+        "layoutMs": "1604",
         "pinRevision": "0",
         "layoutError": "false",
         "zoom": "0.157",
@@ -30,7 +30,7 @@
       },
       "runtime": {
         "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
-        "heapUsedBytes": 18422138,
+        "heapUsedBytes": 39932124,
         "horizontalOverflow": false
       },
       "errors": [],
@@ -60,16 +60,16 @@
         "width": 390,
         "height": 844
       },
-      "firstGraphMs": 328.2879589999993,
-      "frameIntervalMedianMs": 16.69999999999999,
+      "firstGraphMs": 329.16083399999934,
+      "frameIntervalMedianMs": 16.699999999999932,
       "frameIntervalP95Ms": 16.799999999999955,
       "metrics": {
         "testid": "graph",
         "nodeCount": "1556",
         "totalNodeCount": "1556",
         "ticks": "56",
-        "drawMs": "0.50",
-        "layoutMs": "1595",
+        "drawMs": "0.60",
+        "layoutMs": "1590",
         "pinRevision": "0",
         "layoutError": "false",
         "zoom": "0.109",
@@ -81,7 +81,7 @@
       },
       "runtime": {
         "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
-        "heapUsedBytes": 29219793,
+        "heapUsedBytes": 19921923,
         "horizontalOverflow": false
       },
       "errors": [],

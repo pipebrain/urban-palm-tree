@@ -1,0 +1,84 @@
+[
+  {
+    "baseURL": "https://pipebrain.github.io/urban-palm-tree/",
+    "beforeFonts": {
+      "sectionVisibility": "hidden",
+      "parentVisibility": "visible",
+      "parentClass": "mobile-panel",
+      "rect": {
+        "x": 0,
+        "y": 177,
+        "width": 440,
+        "height": 528,
+        "top": 177,
+        "right": 440,
+        "bottom": 705,
+        "left": 0
+      },
+      "selectVisibility": "hidden"
+    },
+    "afterFonts": {
+      "sectionVisibility": "hidden",
+      "parentVisibility": "visible",
+      "parentClass": "mobile-panel",
+      "rect": {
+        "x": 0,
+        "y": 177,
+        "width": 440,
+        "height": 528,
+        "top": 177,
+        "right": 440,
+        "bottom": 705,
+        "left": 0
+      },
+      "selectVisibility": "hidden"
+    },
+    "navigation": "- navigation \"Workspace panels\":\n  - button \"Map\"\n  - button \"Search\"\n  - button \"Inspector\" [pressed]\n  - button \"Units\"",
+    "point": {
+      "tag": "SELECT",
+      "class": "",
+      "text": "1 hop2 hops"
+    }
+  },
+  {
+    "baseURL": "http://127.0.0.1:4174/urban-palm-tree/",
+    "beforeFonts": {
+      "sectionVisibility": "hidden",
+      "parentVisibility": "visible",
+      "parentClass": "mobile-panel",
+      "rect": {
+        "x": 0,
+        "y": 177,
+        "width": 440,
+        "height": 528,
+        "top": 177,
+        "right": 440,
+        "bottom": 705,
+        "left": 0
+      },
+      "selectVisibility": "hidden"
+    },
+    "afterFonts": {
+      "sectionVisibility": "hidden",
+      "parentVisibility": "visible",
+      "parentClass": "mobile-panel",
+      "rect": {
+        "x": 0,
+        "y": 177,
+        "width": 440,
+        "height": 528,
+        "top": 177,
+        "right": 440,
+        "bottom": 705,
+        "left": 0
+      },
+      "selectVisibility": "hidden"
+    },
+    "navigation": "- navigation \"Workspace panels\":\n  - button \"Map\"\n  - button \"Search\"\n  - button \"Inspector\" [pressed]\n  - button \"Units\"",
+    "point": {
+      "tag": "SELECT",
+      "class": "",
+      "text": "1 hop2 hops"
+    }
+  }
+]
