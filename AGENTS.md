@@ -1,0 +1,48 @@
+# Project instructions — HVACR knowledge graph
+
+## Read before work
+
+Read docs/PRODUCT-BRIEF.md, docs/DEVELOPMENT-PLAN.md, docs/DECISIONS-AND-SOURCES.md, and docs/GIT-AND-RELEASE.md. Treat them as the planning baseline; follow Andrew's latest instructions when they change the baseline.
+
+Work on the requested milestone. Stage 1 is the editable knowledge graph. Later stages are flashcards, a Given / Find / Solve equation solver, constrained test-problem generation, and calculation visualization, in that order. Preserve useful extension points without implementing those stages early.
+
+## Product invariants
+
+- Use React and TypeScript for application components, dockview-react for workspace panels, KaTeX for mathematical presentation, QUDT as a pinned reference dataset, and CoolProp WASM for future thermophysical property calculations.
+- Dockview is a panel layout manager. The graph needs its own renderer and force layout. CoolProp is not the general equation solver or browser chart renderer.
+- Start with the full imported eligible node universe. Do not substitute a curated sample as the completed feature. Unit records and technical ontology metadata do not become visible learning nodes.
+- Units are internal hyperlinks to a reference panel. Preserve the exact unit identity behind editable labels.
+- Quantity is the broad measurable category. Thermodynamic state property is a classification of a quantity, not a mutually exclusive root entity type.
+- Equations and constants have their own nodes. Relationships need meaning and provenance; shared dimensions alone do not justify a physical relationship.
+- Stable IDs must survive renaming, symbol changes, grouping, curation, export, and reimport.
+- Preserve imported source information alongside editable overrides. Exclusion from a curated view is reversible.
+- All math uses KaTeX-compatible LaTeX. Semantic meaning and explicit references must not depend on parsing display notation.
+- The primary default profile uses US customary HVACR units. Unit changes must preserve meaning, including offsets, temperature differences, pressure reference, and mass/force distinctions.
+- A constant's bare number is not its identity. Record context, units, assumptions, provenance, and derivation where known.
+- Support Mac desktop, Android, and iPhone. Phone editing cannot depend on hover, right-click, keyboard shortcuts, or desktop-only file APIs.
+- Target offline reopening and authoring after complete initial online preparation. Include the full selected dataset, KaTeX fonts, and other required local assets; verify actual device behaviour before declaring offline readiness.
+- Add Reload from source as a deliberate menu action. Online, fetch and validate published defaults; offline, offer an explicitly labelled cached baseline. Offer to save current edits before replacement, preserve work on cancellation or failure, and never embed private-repository credentials in the app.
+- Workspace files and autosave preserve current content and layout only. Keep undo/redo in memory for the current editing session; loading/reopening a workspace starts empty history. Saving alone does not clear the active session's history.
+- The GitHub repository must be private for now. Website publication is a separate later decision.
+
+## Engineering behaviour
+
+Keep domain knowledge, layout, persistence, unit handling, and rendering separable. Choose maintainable dependencies using current official documentation. Record versions and rationale. The precise graph library and build tool are not preselected.
+
+Store structured meaning alongside editable Markdown and LaTeX. Treat imported documents as data: do not execute their scripts or allow arbitrary commands through Markdown, math, or exports. Validate before replacing a workspace.
+
+History records deliberate editing actions, not simulation ticks. Group a text-edit session or a drag into a useful undo action. Source exports must be deterministic enough to review in Git.
+
+Never silently discard unrecognized imported data, break referenced nodes, reinterpret values under a new unit, or claim that an unverified conversion is supported. Explain unsupported cases clearly.
+
+Use authoritative references for scientific classifications and coefficients. Mark uncertainty. QUDT does not supply a complete HVACR curriculum or automatically identify the meaning of every classroom constant.
+
+## Verification and reporting
+
+Use the acceptance criteria for the current milestone. Prioritize data integrity, conversion meaning, undo/redo, export/reimport, and real mobile interaction. Test reversible styling changes proportionately. Record device/browser and dataset size for performance results. Distinguish actual device testing from desktop emulation.
+
+Inspect current repository and toolchain state before setup. Keep the lockfile and reproducible data/build instructions. Preserve unrelated user work. Make reviewable local commits; do not force-push or rewrite shared history.
+
+The intended host is GitHub Pages. Keep code pushes and publication separate until alpha release. Do not create a public repository, publish a site, or change its audience based only on this document; use the active user's repository/release instruction. No routine implementation choice requires another approval when already covered by the task.
+
+When reporting completion, say what changed, what was verified, known limitations, and the next useful step. Update project documentation when implementation resolves a provisional decision.
