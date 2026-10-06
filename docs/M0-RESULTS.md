@@ -1,5 +1,7 @@
 # M0 results — 6 October 2026
 
+Repository follow-up: after the M0 implementation below, Andrew selected private `pipebrain/urban-palm-tree`. The M0 source was uploaded to [GitHub](https://github.com/pipebrain/urban-palm-tree); `main` tracks `origin/main`. This follow-up does not publish the website. The milestone measurements below describe the original local verification.
+
 The local foundation and feasibility implementation is complete, with physical-device acceptance explicitly still outstanding. The full imported universe renders and can be searched and inspected in the tested desktop and touch-emulated phone views. No app publication, GitHub remote, later-stage solver, flashcards, problem generator, or calculation visualization was created.
 
 ## Reproducible foundation

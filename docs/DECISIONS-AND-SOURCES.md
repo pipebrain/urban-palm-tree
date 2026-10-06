@@ -18,7 +18,7 @@ Planning baseline v0.2: 6 October 2026.
 - Offline reopening and authoring after complete initial online preparation is a development target, with actual device verification required.
 - A Reload from source menu action restores released defaults, with current-edit protection and an explicitly versioned cached fallback when offline.
 - Workspace saving preserves current content and layout only. Undo/redo is session-only and excluded from saved files and autosave; saving itself does not clear active history.
-- The GitHub repository stays private for now. Public site release is a separate later decision.
+- The chosen GitHub repository is `pipebrain/urban-palm-tree`, with private visibility. Public site release and website audience are separate later decisions.
 - Source export that can reproduce curated data/defaults in future builds.
 - React, TypeScript, dockview-react, QUDT, and future CoolProp WASM.
 - M2 MacBook Air development, Android/iPhone authoring, Git, GitHub, and eventual GitHub Pages alpha.
@@ -45,7 +45,7 @@ Offline use is now selected. The implementation must distinguish online preparat
 
 ## Questions to resolve at the relevant milestone
 
-1. Which GitHub account and repository name should be used for the private repository? Is a publicly reachable Pages alpha acceptable at the later release milestone?
+1. Is a publicly reachable Pages alpha acceptable at the later release milestone?
 2. What do ambiguous preferred labels mean in this project, especially g, gr, lb, oz, Ton, and gallon/water-column conventions?
 3. For each named engineering constant, what is its associated classroom equation, source, and intended units?
 4. What actual Android/iPhone models and browsers should define the performance baseline?
@@ -79,6 +79,7 @@ These are primary source entry points. Verify the current release and relevant d
 
 ## Change log
 
+- Repository selection, 6 October 2026: Andrew selected owner `pipebrain`, repository name `urban-palm-tree`, and private visibility. The private repository was created, connected as `origin`, and the M0 commits pushed to `main`; website publication and audience remain separate later decisions.
 - M0 implementation, 6 October 2026: Selected Vite, Canvas with a bounded KaTeX overlay, and d3-force in a Web Worker. Pinned QUDT 3.5.2 official OWL Turtle; generated the unavailable requested JSON-LD artifact deterministically. Inventoried all 1,555 eligible nodes, 1,734 relationships and 2,932 unit references. Added one clearly authored DOE-based equation with exact US unit identities and a separate Fahrenheit interval reference; no conversion execution. Evaluated full graph on desktop and touch-emulated phone viewport, plus closed-tab offline preview startup. See [M0 results](M0-RESULTS.md), [import inventory](QUDT-IMPORT.md), and [technical notes](M0-TECHNICAL-NOTES.md). Actual phone testing remains outstanding. No later milestone or public release was performed.
 - v0.2: Confirmed offline-use target with Reload from source, workspace content/layout saving without persisted undo/redo, and a private GitHub repository. Updated all affected requirements, acceptance criteria, and release guidance. No app implementation or deployment performed.
 - v0.1: Initial consolidated handoff. Captures accepted graph concept, corrected quantity/property taxonomy, contextual constants, portable authoring, and intended Mac/GitHub/Pages workflow. No app implementation or deployment performed.

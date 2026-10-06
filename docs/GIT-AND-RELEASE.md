@@ -14,11 +14,11 @@ Use a supported runtime compatible with the selected dependencies, record the ve
 
 Begin with a documentation commit, then small implementation commits for each useful milestone. Keep a readable default branch; use short-lived branches for larger changes. Commit messages should describe the behaviour changed. No complex branching scheme is required for one primary developer.
 
-M0 initialized local Git and recorded the original handoff before implementation. It uses the existing Codex-bundled Node/pnpm runtime without changing system tooling. Exact dependencies and source data are pinned and checked in. GitHub authentication, remote creation, and publication have not been performed; owner/name/audience remain later decisions. See [README](../README.md) for commands.
+M0 initialized local Git and recorded the original handoff before implementation. It uses the existing Codex-bundled Node/pnpm runtime without changing system tooling. Exact dependencies and source data are pinned and checked in. Andrew has selected `pipebrain/urban-palm-tree` with private visibility. The private repository was created and the M0 commits were pushed on 6 October 2026. Local `origin` is `https://github.com/pipebrain/urban-palm-tree.git`; `main` tracks `origin/main`. GitHub CLI 2.102.0 was installed through Homebrew and authenticated as `pipebrain` using its browser sign-in flow. Website publication and audience remain later decisions. See [README](../README.md) for commands.
 
 ## Connecting the remote
 
-The repository must be private for now. Andrew selects the account/owner and repository name. Inspect existing GitHub authentication on the Mac and use the supported sign-in flow if needed. Never embed an access token in the application or commit credentials. Do not change repository visibility to make deployment easier.
+The repository must be private for now. Andrew selected owner `pipebrain` and repository name `urban-palm-tree` on 6 October 2026. Inspect existing GitHub authentication on the Mac and use the supported sign-in flow if needed. Never embed an access token in the application or commit credentials. Do not change repository visibility to make deployment easier.
 
 Push local commits to the chosen repository. Do not create a duplicate repository when one already exists. Normal pushes preserve history; avoid force pushes to shared branches.
 

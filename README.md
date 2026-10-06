@@ -1,6 +1,6 @@
 # HVACR Knowledge Atlas — M0
 
-A local feasibility implementation of the HVACR knowledge graph. The starting universe is the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node and four participant links. Nothing has been published or pushed to GitHub.
+A local feasibility implementation of the HVACR knowledge graph. The starting universe is the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node and four participant links. Source is backed up in the private GitHub repository [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree). The website has not been published.
 
 ## Run on this Mac
 
@@ -20,7 +20,7 @@ APP_BASE=/hvacr-m0/ sh scripts/pnpm.sh build
 APP_BASE=/hvacr-m0/ sh scripts/pnpm.sh preview --port 4173
 ```
 
-Then open `http://127.0.0.1:4173/hvacr-m0/`. `APP_BASE` must start and end with `/`; use your eventual repository name when separately preparing a release. The default build base is `/`. No deploy workflow or remote repository has been created.
+Then open `http://127.0.0.1:4173/hvacr-m0/`. `APP_BASE` must start and end with `/`; use your eventual repository name when separately preparing a release. The default build base is `/`. The Git remote `origin` points to the private `pipebrain/urban-palm-tree` repository, with `main` tracking `origin/main`. No deploy workflow has been created.
 
 ## Explore
 
