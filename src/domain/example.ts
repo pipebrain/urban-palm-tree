@@ -10,7 +10,7 @@ export const intervalUnit: UnitReference = {
   latex: "\\Delta{}^{\\circ}\\mathrm{F}",
   symbol: "Δ°F",
   description:
-    "App-authored interval reference. A difference of 1 °F equals 5/9 K. No temperature-reading offset applies. This is separate from QUDT DEG_F, which represents temperature readings with an offset. M0 performs no conversions.",
+    "App-authored interval reference. A difference of 1 °F equals 5/9 K. No temperature-reading offset applies. This is separate from QUDT DEG_F, which represents temperature readings with an offset. This app performs no numerical conversions.",
   dimensionIds: [],
   quantityKindIds: [q("TemperatureDifference")],
   sourceTypes: [],
@@ -43,7 +43,7 @@ export const example: LearningNode = {
     "Specific heat at constant pressure is constant or represented by an appropriate mean.",
     "Negligible kinetic/potential-energy changes and shaft work. Positive heat enters the fluid; ΔT = outlet − inlet.",
     "App convention: Btu_IT/h, lbm/h, Btu_IT/(lbm·°F), and Fahrenheit temperature intervals. The DOE source does not distinguish the Btu variant.",
-    "No evaluation or automatic unit conversion is implemented in M0.",
+    "No evaluation or automatic unit conversion is implemented.",
   ],
   bindings: [
     {

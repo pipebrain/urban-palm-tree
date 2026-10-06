@@ -11,6 +11,11 @@ export interface Classification {
   status: "review-needed" | "reviewed";
   rationale: string;
   sourceUrls: string[];
+  /** An application review overlay, independent of the imported record's origin. */
+  origin?: "authored";
+  reviewedOn?: string;
+  /** Scope in which this quantity has the reviewed scientific role. */
+  context?: string;
 }
 
 export interface ConstantValue {
