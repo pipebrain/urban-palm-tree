@@ -1,6 +1,8 @@
 # M1 — browsing and semantic foundation
 
-Implemented and verified 6 October 2026, app **0.1.0**, QUDT **3.5.2**. The M1 source is ready for review and the next editing milestone. No M1 Pages deployment was triggered; the public site remains the separately published M0 preview. Andrew authorized M1 implementation after reporting acceptable rough performance on actual Android and iOS. Device/browser versions and a detailed protocol were not supplied; that feedback is M0 smoke evidence, not comprehensive M1 or offline device acceptance.
+Implemented and verified 6 October 2026, app **0.1.0**, QUDT **3.5.2**. The M1 source is ready for review and the next editing milestone. Andrew authorized M1 implementation after reporting acceptable rough performance on actual Android and iOS. Device/browser versions and a detailed protocol were not supplied; that feedback is M0 smoke evidence, not comprehensive M1 or offline device acceptance.
+
+Andrew then requested M1 publication for iPhone and Android testing. The manual Pages deployment of [`7fb7d539`](https://github.com/pipebrain/urban-palm-tree/commit/7fb7d5396a30a1dafeb57e156c6aa334a206c7e8) succeeded, and the [public URL](https://pipebrain.github.io/urban-palm-tree/) now serves M1. See [deployment evidence and phone-check guidance](M1-PAGES-DEPLOYMENT.md). Actual M1 phone results remain pending.
 
 Tested application source: [`b95c4ff`](https://github.com/pipebrain/urban-palm-tree/commit/b95c4ffadb47a7a35f3e844147f1c3b33d8da7bd); subsequent documentation commits preserve this verification record.
 
@@ -55,7 +57,7 @@ The final offline build **`40ca6a39ad76d82a123f`** prepared **65 assets / 6,671,
 - Session overrides, preferences, filters, navigation, and pins are temporary. Refresh loses them. Changing between the desktop and phone workspace layout remounts the canvas and resets its local positions/pins; applied semantic display choices remain in the active app session. Durable layout/content restoration belongs to M3.
 - Classifications and unit choices deliberately cover a reviewed subset. Unknown concepts remain browseable. Source constants may be historical; no calculations use them. This is not a complete HVACR curriculum.
 - Numerical conversion, general equations, CoolProp calculations, full authoring, groups, undo/redo, autosave, workspace files, source export, and Reload from source are not implemented by M1.
-- M1 needs a focused actual Android/iPhone smoke check after a separately authorized release. Record models/browser versions and revisit offline reopening, rotation, and storage behavior. Andrew's prior M0 report supports feasibility, not these new controls' device certification.
+- M1 is published for a focused actual Android/iPhone smoke check. Record models/browser versions and revisit offline reopening, rotation, and storage behavior. Andrew's prior M0 report supports feasibility, not these new controls' device certification.
 - The main JavaScript chunk remains approximately 944 kB minified / 259 kB gzip; Vite's size warning is retained. Full offline assets remain about 6.7 MB. Optimize using measured device constraints rather than reducing the required starting graph.
 
-Next implementation milestone: **M2 — full editing, reversible curation/groups, and action-level undo/redo**, building on the stable identities and immutable reference layer. Publishing M1 uses the existing manual Pages workflow only when Andrew requests that release.
+Next implementation milestone: **M2 — full editing, reversible curation/groups, and action-level undo/redo**, building on the stable identities and immutable reference layer. Future publication continues to use the manual Pages workflow under Andrew's release instruction.

@@ -2,11 +2,11 @@
 
 ## Intended workflow
 
-The MacBook Air holds the local development checkout. Git records changes locally. The public `pipebrain/urban-palm-tree` GitHub repository stores pushed commits and supports review/backups. GitHub Pages serves a built static version after an explicitly requested release. On 6 October 2026 Andrew authorized publication of the M0 feasibility preview before the full classroom alpha is ready.
+The MacBook Air holds the local development checkout. Git records changes locally. The public `pipebrain/urban-palm-tree` GitHub repository stores pushed commits and supports review/backups. GitHub Pages serves a built static version after an explicitly requested release. On 6 October 2026 Andrew authorized publication of the M0 feasibility preview, then requested M1 publication for iPhone and Android checks before the full classroom alpha is ready.
 
 These are separate operations. A code push should not publish an unfinished alpha automatically.
 
-Current status, 6 October 2026: the working source is M1 version 0.1.0. The public Pages artifact remains the M0 release at `85c174f0a1655db666e299afea436677fd0c0067`. M1 implementation and verification do not authorize or trigger a new deployment.
+Current status, 6 October 2026: the working source and public Pages preview are M1 version 0.1.0. The manually requested deployment of `7fb7d5396a30a1dafeb57e156c6aa334a206c7e8` succeeded in [Actions run 37448915597](https://github.com/pipebrain/urban-palm-tree/actions/runs/37448915597). See [M1 deployment record](M1-PAGES-DEPLOYMENT.md). Implementation and code pushes alone do not authorize or trigger a deployment.
 
 ## Local Mac setup
 
@@ -50,19 +50,21 @@ Reload from source retrieves the released app content/defaults from the deployme
 
 1. Develop and commit locally; push work to GitHub.
 2. Run the stage-specific checks and build verification without deploying.
-3. For the classroom alpha, complete the documented alpha acceptance checklist. The currently authorized M0 feasibility preview may be published earlier with its limitations clearly stated.
+3. For the classroom alpha, complete the documented alpha acceptance checklist. Earlier milestone previews may be published under a specific release instruction with their limitations clearly stated, as M0 and M1 were.
 4. Select a stable commit and identify the release version.
 5. When Andrew requests publication, run a separate GitHub Actions Pages deployment for that commit.
 6. Verify the resulting URL, record the commit, and provide tester instructions.
 7. For a regression, redeploy a known-good build; preserve user file compatibility.
 
-GitHub Actions is the build/deploy mechanism. `.github/workflows/pages.yml` is manually triggered with `workflow_dispatch`; it has no push trigger. Use **Actions → Deploy GitHub Pages → Run workflow** from workflow branch `main`. Enter the stable commit SHA in **Commit SHA, tag, or branch to publish** (`ref`, default `main`) to publish an authorized revision or roll back to a known-good one. The build uses `APP_BASE=/urban-palm-tree/`; the public URL is [https://pipebrain.github.io/urban-palm-tree/](https://pipebrain.github.io/urban-palm-tree/). The first deployment succeeded on 6 October 2026 and live browser checks passed; [the deployment record](PAGES-DEPLOYMENT.md) identifies its exact commit and verification. Repeat deployment and live-asset verification for future releases.
+GitHub Actions is the build/deploy mechanism. `.github/workflows/pages.yml` is manually triggered with `workflow_dispatch`; it has no push trigger. Use **Actions → Deploy GitHub Pages → Run workflow** from workflow branch `main`. Enter the stable commit SHA in **Commit SHA, tag, or branch to publish** (`ref`, default `main`) to publish an authorized revision or roll back to a known-good one. The build uses `APP_BASE=/urban-palm-tree/`; the public URL is [https://pipebrain.github.io/urban-palm-tree/](https://pipebrain.github.io/urban-palm-tree/). See the [current M1 deployment record](M1-PAGES-DEPLOYMENT.md) and [historical M0 deployment record](PAGES-DEPLOYMENT.md) for exact revisions and verification. Repeat deployment and live-asset verification for future releases.
 
 Before release, confirm the chosen public content and attribution. Reference links and original explanatory notes are suitable foundations; possession of classroom or handbook materials does not by itself make them public release content.
 
 ## Tester expectations
 
-The public **M0** preview supports exploration and a temporary example-editing probe. The current **M1** source adds typed relationships, reviewed classifications and exact unit preferences, filters/neighbourhoods, reference navigation, and temporary display overrides; run it using the [local preview instructions](../README.md). Neither version provides full authoring, undo/redo, autosave, workspace files, source export, or Reload from source. Refreshing discards session changes.
+The public **M1** preview adds typed relationships, reviewed classifications and exact unit preferences, filters/neighbourhoods, reference navigation, and temporary display overrides. It does not provide full authoring, undo/redo, autosave, workspace files, source export, or Reload from source. Refreshing discards session changes.
+
+For an older cached release, open the public URL online and let its update prepare, close all app tabs, then reopen. A waiting service worker does not replace an active release. M1 exposes four phone tabs (**Map, Search, Inspector, Units**) and the desktop header **M1 · BROWSE & CONNECT**. The [deployment record](M1-PAGES-DEPLOYMENT.md) provides a focused phone-check guide.
 
 Andrew reported acceptable performance during rough physical Android/iOS testing of M0 on 6 October 2026, without model/browser details or offline certification. M1's passing phone browser checks use touch emulation on the Mac; physical M1 testing remains outstanding. See [M0 results](M0-RESULTS.md) and [M1 results](M1-RESULTS.md). The following expectations apply to the later classroom alpha after its acceptance checks pass.
 

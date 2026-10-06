@@ -18,7 +18,7 @@ Planning baseline v0.2: 6 October 2026.
 - Offline reopening and authoring after complete initial online preparation is a development target, with actual device verification required.
 - A Reload from source menu action restores released defaults, with current-edit protection and an explicitly versioned cached fallback when offline.
 - Workspace saving preserves current content and layout only. Undo/redo is session-only and excluded from saved files and autosave; saving itself does not clear active history.
-- The chosen GitHub repository is `pipebrain/urban-palm-tree`. Andrew made it public and authorized a public GitHub Pages M0 feasibility preview on 6 October 2026. Later milestones and classroom alpha acceptance remain outstanding.
+- The chosen GitHub repository is `pipebrain/urban-palm-tree`. Andrew made it public and authorized a public GitHub Pages M0 feasibility preview, then M1 publication for iPhone and Android checks, on 6 October 2026. Later milestones and classroom alpha acceptance remain outstanding.
 - Source export that can reproduce curated data/defaults in future builds.
 - React, TypeScript, dockview-react, QUDT, and future CoolProp WASM.
 - M2 MacBook Air development, Android/iPhone authoring, Git, GitHub, and eventual GitHub Pages alpha.
@@ -33,7 +33,7 @@ The latest classification decision supersedes the earlier proposal to treat Quan
 - Unit preferences cover 46 reviewed concept identities. Mass/force, temperature reading/interval, pressure reference, gallon variants, and Btu variants stay distinct. Explicit uses, source applicability, and display preferences have separate backlinks. Preferences do not perform conversions or alter recorded values/equation conventions. See [unit decisions](M1-UNITS.md).
 - Layout degree counts distinct visible learning neighbours. Radius is `4 + min(6, sqrt(degree))`; one visible pair supplies one spring. Duplicate/reversed predicates, self-links, units, and metadata add no weight. Filtering preserves IDs and cached positions/pins; labels do not restart layout.
 - Andrew's rough physical Android/iOS test of M0 found performance acceptable. Models and browser versions were unspecified, and no comprehensive or offline certification was reported. This supports proceeding beyond M0; it is not physical-device evidence for M1.
-- M1 source is version 0.1.0 with 37 passing automated tests and three passing desktop/touch-emulated browser harnesses. The public Pages release remains M0 `85c174f0`; publication of M1 is separate.
+- M1 source is version 0.1.0 with 37 passing automated tests and three passing desktop/touch-emulated browser harnesses. Andrew subsequently requested M1 publication for physical-phone checks. The manual Pages deployment of `7fb7d539` succeeded; see [M1 deployment record](M1-PAGES-DEPLOYMENT.md). Physical M1 testing remains pending.
 
 ## Provisional implementation defaults
 
@@ -87,6 +87,7 @@ These are primary source entry points. Verify the current release and relevant d
 
 ## Change log
 
+- M1 Pages deployment, 6 October 2026: At Andrew's request for public iPhone and Android testing, published commit `7fb7d5396a30a1dafeb57e156c6aa334a206c7e8` through [manual Actions run 37448915597](https://github.com/pipebrain/urban-palm-tree/actions/runs/37448915597). See [M1 deployment record](M1-PAGES-DEPLOYMENT.md). This releases the verified browsing milestone without declaring physical-device acceptance or later milestones complete.
 - M1 implementation, 6 October 2026: Completed the semantic browsing foundation and recorded user-reported M0 Android/iOS smoke testing. [M1 results](M1-RESULTS.md) distinguish automated/browser evidence, remaining physical-device checks, and the separate M0 public deployment.
 - Pages deployment, 6 October 2026: Published M0 commit `85c174f0a1655db666e299afea436677fd0c0067` through the manual Actions workflow. HTTPS site and full-graph, touch-emulation, unit/math, and fresh-document offline checks passed at `https://pipebrain.github.io/urban-palm-tree/`. See [deployment evidence](PAGES-DEPLOYMENT.md). This does not complete physical-device or later-milestone acceptance.
 

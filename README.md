@@ -2,7 +2,7 @@
 
 A browsable semantic foundation for the HVACR knowledge graph. The starting universe remains the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node, four participant links, and a separate Fahrenheit-interval unit. Source is in [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree).
 
-The working source is **M1, version 0.1.0**. The public GitHub Pages site still serves the authorized **M0** release, commit `85c174f0`. Code pushes do not publish M1. See [M1 results](docs/M1-RESULTS.md) and [release guidance](docs/GIT-AND-RELEASE.md).
+The working source and public GitHub Pages preview are **M1, version 0.1.0**. Andrew authorized publishing commit `7fb7d539` for iPhone and Android checks on 6 October 2026. See [M1 results](docs/M1-RESULTS.md), [deployment record](docs/M1-PAGES-DEPLOYMENT.md), and [release guidance](docs/GIT-AND-RELEASE.md). Ordinary code pushes do not deploy the site.
 
 ## Run on this Mac
 
@@ -26,7 +26,9 @@ Then open [the local M1 preview](http://127.0.0.1:4174/urban-palm-tree/). `APP_B
 
 ## GitHub Pages preview
 
-The **M0** preview is live at [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). Its deployment and live browser checks passed on 6 October 2026; see [deployment record](docs/PAGES-DEPLOYMENT.md). The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`). M1 publication is a separate release step.
+The **M1** preview is live at [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). The [manual deployment](https://github.com/pipebrain/urban-palm-tree/actions/runs/37448915597) succeeded on 6 October 2026; see [deployment record](docs/M1-PAGES-DEPLOYMENT.md). The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`).
+
+If an existing browser still shows M0, open the site online, allow the update to prepare, then close **all** tabs for this app and reopen the URL. Updates wait for old tabs to close. M1 has four phone tabs: **Map, Search, Inspector, Units**; its desktop header says **M1 · BROWSE & CONNECT**. Session changes are temporary and disappear when the app closes or refreshes.
 
 ## Explore
 

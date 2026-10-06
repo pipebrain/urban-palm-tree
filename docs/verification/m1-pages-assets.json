@@ -1,0 +1,17 @@
+{
+  "index.html": {
+    "status": 200,
+    "sha256": "e4fc8fcf51bed9ce32e3e175fc443909cc74196c7e0d199496203139a5b09a5b",
+    "matchesLocal": true
+  },
+  "offline-inventory.json": {
+    "status": 200,
+    "sha256": "257a4dea83cd3bfb1bf55d34e07a45300bac298cd08135572b68d283ea949737",
+    "matchesLocal": true
+  },
+  "sw.js": {
+    "status": 200,
+    "sha256": "b2ef3c1c06101bf95ca359bd1bc96d34db94d232099b5fad352b84d98e76fbb0",
+    "matchesLocal": true
+  }
+}
