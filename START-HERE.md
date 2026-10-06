@@ -6,6 +6,8 @@ This package captures the accepted concept for a learning web app supporting 313
 
 **M0 has now been implemented.** Start with [README.md](README.md) to run the app and [M0 results](docs/M0-RESULTS.md) for evidence and limitations. The original planning handoff below remains the historical baseline. Andrew made [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree) public and authorized publishing the M0 feasibility preview with GitHub Pages on 6 October 2026. M1–M4 remain future work; publication does not establish classroom alpha readiness.
 
+The [M0 preview is live](https://pipebrain.github.io/urban-palm-tree/). See the [deployment record](docs/PAGES-DEPLOYMENT.md) for its source commit and live verification.
+
 ## What to do on your M2 MacBook Air
 
 1. Extract this package into a new project folder.

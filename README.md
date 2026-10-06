@@ -24,7 +24,7 @@ Then open `http://127.0.0.1:4173/hvacr-m0/`. `APP_BASE` must start and end with 
 
 ## GitHub Pages preview
 
-The planned public URL is [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). Deployment success must be verified in GitHub Actions and at that URL. The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`); ordinary pushes do not publish changes. See [Git and release workflow](docs/GIT-AND-RELEASE.md) for publication and verification guidance.
+The preview is live at [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). The first deployment and live browser checks passed on 6 October 2026; see [deployment record](docs/PAGES-DEPLOYMENT.md). The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`); ordinary pushes do not publish changes. See [Git and release workflow](docs/GIT-AND-RELEASE.md) for publication and verification guidance.
 
 ## Explore
 
