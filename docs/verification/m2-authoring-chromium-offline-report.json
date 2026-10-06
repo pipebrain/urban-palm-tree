@@ -1,0 +1,149 @@
+{
+  "checkedAt": "2026-10-06T13:05:17.698Z",
+  "baseURL": "http://127.0.0.1:4175/urban-palm-tree/",
+  "engine": "chromium",
+  "offlineFirst": true,
+  "browser": "154.0.8037.98",
+  "note": "Mac browser automation; phone is viewport/touch emulation, not physical-device acceptance.",
+  "runs": [
+    {
+      "viewport": "phone",
+      "checks": [
+        "create-stable-quantity",
+        "single-action-text-session",
+        "cancel-preserves-content-history",
+        "safe-Markdown-inline-display-math",
+        "preview-internal-links-preserve-unsaved-draft",
+        "embedded-image",
+        "internal-node-link",
+        "reversible-exclusion-retains-content",
+        "contextual-constant-value-source-assumptions",
+        "unit-change-refused-without-conversion",
+        "unit-edit-propagates-label-and-LaTeX-preserving-ID",
+        "unit-edit-undo-redo",
+        "explicit-equation-bindings-maintain-relationships",
+        "rename-preserves-reference-identity",
+        "authored-relationship-creation",
+        "referenced-deletion-refused",
+        "touch-canvas-selection-does-not-click-through",
+        "custom-delete-undo-redo",
+        "no-horizontal-overflow",
+        "fresh-document-offline-authoring"
+      ],
+      "errors": [],
+      "offlineResponses": [
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/index-BHnvHBtz.css",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/InterVariable-DiVDrmQJ.woff2",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/index-Y8RDnrK9.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/data/qudt-graph.json",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/KaTeX_Math-Italic-t53AETM-.woff2",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/KaTeX_Main-Regular-B22Nviop.woff2",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "url": "http://127.0.0.1:4175/urban-palm-tree/assets/layout.worker-DFcRXwoQ.js",
+          "status": 200,
+          "fromServiceWorker": true
+        }
+      ],
+      "passed": true
+    }
+  ]
+}

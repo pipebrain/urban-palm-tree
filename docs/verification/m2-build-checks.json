@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-10-06",
+  "implementationCommit": "313984e3d69f1f4ed54ba59eaf5e72f9b911feec",
+  "appVersion": "0.2.0",
+  "environment": {
+    "os": "macOS 27.0.1 arm64",
+    "node": "24.19.0",
+    "pnpm": "11.25.0",
+    "playwright": "1.63.0",
+    "chrome": "154.0.8037.98",
+    "webkit": "26.6"
+  },
+  "checks": [
+    {
+      "command": "sh scripts/pnpm.sh install --frozen-lockfile",
+      "passed": true
+    },
+    {
+      "command": "sh scripts/pnpm.sh data:check",
+      "passed": true,
+      "sourceVersion": "3.5.2",
+      "learningNodes": 1555,
+      "relationships": 1734,
+      "units": 2932,
+      "retainedSourceTriples": 132166
+    },
+    {
+      "command": "sh scripts/pnpm.sh typecheck",
+      "passed": true
+    },
+    {
+      "command": "sh scripts/pnpm.sh format:check",
+      "passed": true
+    },
+    {
+      "command": "sh scripts/pnpm.sh test",
+      "passed": true,
+      "tests": 57,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "command": "APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh build",
+      "passed": true,
+      "advisory": "Main JavaScript chunk exceeds Vite 500 kB advisory threshold."
+    }
+  ],
+  "offlineBuild": {
+    "buildId": "a3ccb9ca6434f09fef63",
+    "preparedAssetsIncludingInventory": 67,
+    "bytesIncludingInventory": 7206112,
+    "katexFonts": 59,
+    "interfaceFonts": 1,
+    "metadataExcluded": [
+      ".DS_Store"
+    ]
+  },
+  "publication": {
+    "m2Deployed": false,
+    "publicVersion": "0.1.1",
+    "publicSource": "9ada447447811f51000db92f9287fc45045e2e18"
+  },
+  "limits": [
+    "Browser profiles are Mac automation, not physical Android/iPhone tests.",
+    "M2 authoring and undo/redo are session-only; persistence remains M3.",
+    "No numerical conversion or solver is implemented."
+  ]
+}

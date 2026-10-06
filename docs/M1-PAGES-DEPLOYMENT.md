@@ -35,7 +35,7 @@ Useful smoke checks:
 3. Pan, pinch, select, drag, and pin a node; try a filter and restore it.
 4. For offline testing, first wait for **Offline preview prepared**, close all atlas tabs, disconnect, and reopen. Record the device, browser version, and what happened.
 
-M1's name/LaTeX overrides and unit preferences are temporary. Refresh/reopening loses session changes. Full authoring/undo remains M2; persistence and portable files remain M3. Andrew subsequently reported that M1 passes his physical Android/iOS checks except for iOS interface rendering. KaTeX renders correctly; body fonts, the logo arrow, and hop-selector sizing were the reported exceptions. See [feedback and patch verification](M1-IOS-RENDERING-FIX.md).
+M1's name/LaTeX overrides and unit preferences are temporary. Refresh/reopening loses session changes. Full authoring/undo remains M2; persistence and portable files remain M3. Andrew subsequently reported that M1 passes his physical Android/iOS checks except for iOS interface rendering. KaTeX renders correctly; body fonts, the logo arrow, and hop-selector sizing were the reported exceptions. Andrew then confirmed that the corrected 0.1.1 release passes on both phones and authorized M2. See [feedback and patch verification](M1-IOS-RENDERING-FIX.md).
 
 ## Future releases and rollback
 

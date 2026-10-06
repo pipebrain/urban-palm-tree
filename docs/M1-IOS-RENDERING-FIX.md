@@ -4,6 +4,8 @@ Published **6 October 2026** at [HVACR Knowledge Atlas](https://pipebrain.github
 
 Andrew reported on 6 October 2026 that M1 passes his iOS and Android phone checks except for unexpected iOS Safari/Chrome typography. He confirmed that KaTeX renders correctly while other fonts appear missing. Two screenshots show a blue emoji replacing the logo arrow and a hop selector shorter than the adjacent buttons. Device models, OS/browser versions, and detailed offline/storage checks were not supplied. Both screenshots remain in the local `bugs` folder outside the public repository.
 
+After publication, Andrew reported that **the corrected 0.1.1 release passes on both Android and iOS phones**, then authorized M2 implementation. This closes the reported rendering follow-up as user-reported smoke acceptance, without adding device/version details or comprehensive offline/storage certification. Local M2 version 0.2.0 is in development with verification pending; the public site remains this M1 0.1.1 release, and M2 publication is not authorized. See [M2 progress](M2-RESULTS.md).
+
 ## Cause and change
 
 The logo and several interface controls used Unicode text as icons. `↗` (U+2197) has both text and emoji presentation variants in the [Unicode variation data](https://www.unicode.org/Public/UCD/latest/ucd/emoji/emoji-variation-sequences.txt), so its appearance depended on platform font fallback. The screenshot shows the emoji form obscuring part of the H.
@@ -28,7 +30,7 @@ A focused check used **Playwright WebKit 26.6 on macOS**, build 2359, at **440×
 - Bundled KaTeX Main and Math font files return HTTP 200, load, and render the equation/unit views.
 - No page errors, failed requests, or horizontal overflow were recorded.
 
-Map and inspector screenshots were visually reviewed. [Focused WebKit report](verification/m1-ios-fix-webkit-report.json). These are macOS WebKit phone-viewport checks, not an actual iOS Safari or Chrome retest. The reported defect's physical-phone confirmation remains with Andrew.
+Map and inspector screenshots were visually reviewed. [Focused WebKit report](verification/m1-ios-fix-webkit-report.json). These are macOS WebKit phone-viewport checks, separate from Andrew's subsequent report that the corrected release passes on his Android and iOS phones.
 
 The focused WebKit run encountered stale computed `visibility: hidden` on an inspector that screenshots showed as painted and that pointer hit testing found interactive. The same condition reproduced on the unchanged public 0.1.0 release. The harness used observed pointer coordinates and forced native option selection only after hit-test checks; it did not mutate application styles or select values directly. This limits the automation's accessibility/visibility coverage; no product workaround was added. [Comparison evidence](verification/m1-ios-fix-webkit-automation-limitation.json).
 
@@ -38,8 +40,8 @@ The interaction, semantic, and complete offline harnesses all pass against the p
 
 A browser context prepared with public 0.1.0 before deployment confirmed that the old release stayed active while the complete 0.1.1 build became waiting. The existing page retained its old logo without an automatic navigation. After closing all its pages, the harness's immediate reopen timed out at navigation; that context was closed, so this attempt does **not** establish successful cached-release migration. Fresh preparation and offline reopening of 0.1.1 passed separately. [Partial live update report](verification/m1-ios-fix-pages-update-report.json).
 
-## Phone recheck
+## Phone recheck and acceptance
 
 Open the public site online and allow its update to prepare. If it still shows the old blue emoji, wait for **Preview update waiting**, close every atlas tab and any installed copy, then reopen. The corrected logo should show a small monochrome diagonal arrow beside the H. Regular interface text should use Inter, and the hop selector should match **Show on map** and **Focus neighbourhood** in height. Check selecting two hops, map filters, and unit preferences as well. KaTeX should retain its previous appearance.
 
-M1's broader phone acceptance is recorded as user-reported, with this rendering exception. M2 has not been started. Session changes remain temporary in this patch.
+Andrew subsequently reported that both Android and iOS phones pass with the correction, resolving the rendering exception in his smoke check. The report did not specify device models, OS/browser versions, or a detailed offline/storage protocol. He then instructed Codex to proceed with M2; that implementation is in progress and is not published. Session changes remain temporary in the public M1 patch, and persistence remains M3.

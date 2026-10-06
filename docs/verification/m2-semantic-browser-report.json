@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-10-06T13:00:20.739Z",
+  "baseURL": "http://127.0.0.1:4175/urban-palm-tree/",
+  "browser": "154.0.8037.98",
+  "note": "Mac Chromium; phone is touch/viewport emulation.",
+  "runs": [
+    {
+      "profile": "desktop",
+      "sameSymbolIds": [
+        "http://qudt.org/vocab/quantitykind/ElectricDipoleMoment",
+        "http://qudt.org/vocab/quantitykind/ForcePerArea"
+      ],
+      "unknownId": "http://qudt.org/vocab/quantitykind/AbsoluteTypographicMeasurement",
+      "checks": [
+        "classification-subtype",
+        "exact-unit-choice",
+        "preference-backlinks-separate",
+        "back-forward-navigation",
+        "temperature-interval",
+        "gauge-pressure-context",
+        "unknown-data-visible",
+        "missing-source-record",
+        "symbol-collision",
+        "rename-equation-links",
+        "fixed-equation-convention"
+      ],
+      "errors": []
+    },
+    {
+      "profile": "phone-emulation",
+      "sameSymbolIds": [
+        "http://qudt.org/vocab/quantitykind/ElectricDipoleMoment",
+        "http://qudt.org/vocab/quantitykind/ForcePerArea"
+      ],
+      "unknownId": "http://qudt.org/vocab/quantitykind/AbsoluteTypographicMeasurement",
+      "checks": [
+        "classification-subtype",
+        "exact-unit-choice",
+        "preference-backlinks-separate",
+        "back-forward-navigation",
+        "temperature-interval",
+        "gauge-pressure-context",
+        "unknown-data-visible",
+        "missing-source-record",
+        "symbol-collision",
+        "rename-equation-links",
+        "fixed-equation-convention"
+      ],
+      "errors": []
+    }
+  ],
+  "invalidBaselineRejected": true
+}

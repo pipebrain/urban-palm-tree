@@ -1,8 +1,8 @@
-# HVACR Knowledge Atlas — M1 · v0.1.1
+# HVACR Knowledge Atlas — M2 · v0.2.0
 
-A browsable semantic foundation for the HVACR knowledge graph. The starting universe remains the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node, four participant links, and a separate Fahrenheit-interval unit. Source is in [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree).
+An editable HVACR knowledge graph with semantic browsing, contextual constants, Markdown/math notes, overlapping groups, and session undo/redo. The starting universe remains the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node, four participant links, and a separate Fahrenheit-interval unit. Source is in [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree).
 
-The working source and public GitHub Pages preview are **M1, version 0.1.1**. Commit `9ada4474` publishes the interface-font, icon, and hop-selector corrections following Andrew's iPhone and Android checks on 6 October 2026. See [M1 results](docs/M1-RESULTS.md), [rendering correction](docs/M1-IOS-RENDERING-FIX.md), [deployment record](docs/M1-PAGES-DEPLOYMENT.md), and [release guidance](docs/GIT-AND-RELEASE.md). Ordinary code pushes do not deploy the site.
+The working source is **M2, version 0.2.0, implemented and locally verified**. Andrew reported that the M1 0.1.1 correction passes on Android and iOS and authorized M2 on 6 October 2026. The public GitHub Pages preview remains **M1 0.1.1**, commit `9ada4474`; M2 publication is not yet authorized. See [M2 results and verification](docs/M2-RESULTS.md), [M1 results](docs/M1-RESULTS.md), [rendering correction](docs/M1-IOS-RENDERING-FIX.md), and [release guidance](docs/GIT-AND-RELEASE.md). Ordinary code pushes do not deploy the site.
 
 ## Run on this Mac
 
@@ -22,7 +22,7 @@ APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh build
 APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh preview --port 4174
 ```
 
-Then open [the local M1 preview](http://127.0.0.1:4174/urban-palm-tree/). `APP_BASE` must start and end with `/`; this path matches the Pages deployment. The default build base is `/`. The Git remote `origin` points to `pipebrain/urban-palm-tree`.
+Then open [the local preview](http://127.0.0.1:4174/urban-palm-tree/). This serves the locally built revision, currently M2 0.2.0, rather than the public M1 release. `APP_BASE` must start and end with `/`; this path matches the Pages deployment. The default build base is `/`. The Git remote `origin` points to `pipebrain/urban-palm-tree`.
 
 ## GitHub Pages preview
 
@@ -30,7 +30,7 @@ The **M1 0.1.1** preview is live at [pipebrain.github.io/urban-palm-tree](https:
 
 If an existing browser still shows M0, open the site online, allow the update to prepare, then close **all** tabs for this app and reopen the URL. Updates wait for old tabs to close. M1 has four phone tabs: **Map, Search, Inspector, Units**; its desktop header says **M1 · BROWSE & CONNECT**. Session changes are temporary and disappear when the app closes or refreshes.
 
-## Explore
+## Explore the M1 foundation
 
 - Use **Search** (phone) or **Library** (desktop) to select a concept. Search narrows only the result list; it does not remove graph nodes.
 - Drag empty graph space to pan. Pinch, scroll, or use `+`/`−` to zoom. **Fit all** follows the full layout while it settles. Selecting a concept or manually navigating stops automatic fitting.
@@ -44,6 +44,12 @@ The default view includes all learning nodes. KaTeX labels appear at useful zoom
 
 Source provenance, typed relationship meanings, four missing upstream subjects, and known unit-description disagreements are inspectable. See [semantic boundary](docs/M1-SEMANTICS.md) and [unit choices](docs/M1-UNITS.md).
 
+## Author in M2
+
+The local 0.2.0 source adds editors for quantities, equations, contextual constants, unit notation and notes, and typed relationships. Equations use explicit participant bindings; source records remain separate from local overrides. Markdown notes support KaTeX, embedded images, and internal concept/unit links. Groups can overlap, and excluding content is reversible. Save, group changes, pinning, and completed drags enter session undo/redo as deliberate actions; force ticks do not.
+
+All 57 automated tests and the production browser checks pass, including Chrome and WebKit authoring on desktop and emulated phone layouts. Physical-phone M2 acceptance remains outstanding. **Save applies an edit to this session; it does not save a workspace file.** Refreshing or closing loses authored work and history. Autosave, portable workspace files, source export, and Reload from source remain M3. See [M2 results and checks](docs/M2-RESULTS.md).
+
 ## Reproduce data and verification
 
 ```sh
@@ -55,21 +61,25 @@ sh scripts/pnpm.sh typecheck
 sh scripts/pnpm.sh format:check
 sh scripts/pnpm.sh test:browser
 sh scripts/pnpm.sh test:semantic-browser
+sh scripts/pnpm.sh test:authoring-browser
+BROWSER_ENGINE=webkit sh scripts/pnpm.sh test:authoring-browser
+OFFLINE_FIRST=1 sh scripts/pnpm.sh test:authoring-browser
+sh scripts/pnpm.sh test:authoring-graph
 sh scripts/pnpm.sh test:offline-browser
 ```
 
-The 37 automated tests and all three browser harnesses passed for M1. Browser tests require the production preview above. They use installed Google Chrome on macOS by default; override `CHROME_PATH` and `PREVIEW_URL` if needed. Screenshots and machine-readable reports are written to ignored `test-results/`; retained milestone evidence is linked from [M1 results](docs/M1-RESULTS.md). Phone browser tests are **viewport/touch emulation on the Mac**, not actual Android/iPhone testing. Use the matching source revision when reproducing historical M0 checks.
+M2 passes 57 automated tests and all production browser harnesses; see [M2 results](docs/M2-RESULTS.md). The WebKit run requires the matching Playwright browser (`sh scripts/pnpm.sh exec playwright install webkit`). Browser tests require the matching production preview. They use installed Google Chrome on macOS by default; override `CHROME_PATH` and `PREVIEW_URL` if needed. Screenshots and machine-readable reports are written to ignored `test-results/`; retained milestone evidence is linked from [M2 results](docs/M2-RESULTS.md). Phone browser tests are **viewport/touch emulation on the Mac**, separate from Andrew's physical-phone reports. Use the matching source revision when reproducing historical milestone checks.
 
 The requested `qudt-all.jsonld` was not available as an upstream release artifact. The exact official Turtle is retained, and the importer generates expanded JSON-LD without dropping any RDF assertions. See [source inventory and licensing](docs/QUDT-IMPORT.md). Repeated names/symbols do not merge identities, deprecated records are retained, and dimensions alone never create relationships.
 
 ## Scope and next work
 
-M1 adds semantic browsing, reviewed classifications and display-unit choices, reference navigation, reversible view filters, and immutable source/display separation. Offline checks cover fresh baseline reopening and in-session browsing/preferences. Refreshing discards display overrides, preferences, and other session changes. Complete authoring, curation, groups, and undo/redo are **M2**; autosave, workspace files, source export, and Reload from source remain **M3**. CoolProp has an explicit uninstalled service boundary; there is no substituted engine or solver.
+M1 established semantic browsing, reviewed classifications and display-unit choices, reference navigation, reversible view filters, and immutable source/display separation. Its offline checks cover fresh baseline reopening and in-session browsing/preferences. Authoring, curation, groups, and undo/redo are implemented and locally verified in **M2**; autosave, workspace files, source export, and Reload from source remain **M3**. CoolProp has an explicit uninstalled service boundary; there is no substituted engine or solver.
 
 On 6 October 2026 Andrew reported that **M1 passes on physical iOS and Android phones, apart from iOS UI rendering issues**. He clarified that **KaTeX renders as expected**, while other fonts appear missing in iOS Safari and Chrome. The logo arrow appears as an emoji, and a second screenshot shows the hop selector shorter than its adjacent control. Both screenshots remain local outside this public repository. Device models, OS/browser versions, the Android browser, and detailed measurements were not supplied. This is user-reported smoke acceptance with those rendering exceptions, not comprehensive or offline/storage certification.
 
-The live M1 **0.1.1 correction** bundles pinned Inter 4.1 for interface text, replaces font-dependent UI icons with SVG, and gives the mobile hop selector explicit WebKit appearance and a matching 44 px height. The 37 tests, local Chrome/WebKit checks, and offline font checks pass; live release assets match the verified build. The correction still needs an actual-phone retest. See [M1 results](docs/M1-RESULTS.md) and [rendering correction](docs/M1-IOS-RENDERING-FIX.md).
+The live M1 **0.1.1 correction** bundles pinned Inter 4.1 for interface text, replaces font-dependent UI icons with SVG, and gives the mobile hop selector explicit WebKit appearance and a matching 44 px height. The 37 tests, local Chrome/WebKit checks, and offline font checks pass; live release assets match the verified build. Andrew subsequently confirmed that the correction **passes on both Android and iOS phones**, then authorized M2. That report closes the M1 rendering follow-up; it supplies no device/version details or comprehensive offline/storage certification. See [M1 results](docs/M1-RESULTS.md) and [rendering correction](docs/M1-IOS-RENDERING-FIX.md).
 
-Andrew's earlier rough M0 phone testing found performance acceptable. Mobile storage eviction, prolonged memory behavior, and a detailed physical-device offline reopening protocol remain unverified. The UI says *preview prepared*, not device-certified offline authoring. See [offline scope and protocol](docs/M0-OFFLINE.md) and [M0 results](docs/M0-RESULTS.md). The next implementation milestone after this M1 correction is **M2: editing, curation, groups, and action history**.
+Andrew's earlier rough M0 phone testing found performance acceptable. Mobile storage eviction, prolonged memory behavior, and a detailed physical-device offline reopening protocol remain unverified. The UI says *preview prepared*, not device-certified offline authoring. See [offline scope and protocol](docs/M0-OFFLINE.md) and [M0 results](docs/M0-RESULTS.md). **M2 implementation is ready for physical-phone review.** The next planned milestone is **M3: persistence and reusable content**, subject to Andrew’s instruction.
 
 QUDT attribution: QUDT.org, QUDT 3.5.2, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); browser projection and generated JSON-LD are adaptations. Original source, license and checksums are in `data/qudt/`. DOE example provenance is attached to the example in the app. Third-party code retains its package licenses in the dependency installation.
