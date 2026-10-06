@@ -2,7 +2,7 @@
 
 Implemented and verified 6 October 2026, app **0.1.0**, QUDT **3.5.2**. The M1 source is ready for review and the next editing milestone. Andrew authorized M1 implementation after reporting acceptable rough performance on actual Android and iOS. Device/browser versions and a detailed protocol were not supplied; that feedback is M0 smoke evidence, not comprehensive M1 or offline device acceptance.
 
-Andrew then requested M1 publication for iPhone and Android testing. The manual Pages deployment of [`7fb7d539`](https://github.com/pipebrain/urban-palm-tree/commit/7fb7d5396a30a1dafeb57e156c6aa334a206c7e8) succeeded, and the [public URL](https://pipebrain.github.io/urban-palm-tree/) now serves M1. See [deployment evidence and phone-check guidance](M1-PAGES-DEPLOYMENT.md). Actual M1 phone results remain pending.
+Andrew then requested M1 publication for iPhone and Android testing. The manual Pages deployment of [`7fb7d539`](https://github.com/pipebrain/urban-palm-tree/commit/7fb7d5396a30a1dafeb57e156c6aa334a206c7e8) succeeded, and the [public URL](https://pipebrain.github.io/urban-palm-tree/) serves M1. See [deployment evidence and phone-check guidance](M1-PAGES-DEPLOYMENT.md). His physical-phone feedback is recorded below.
 
 Tested application source: [`b95c4ff`](https://github.com/pipebrain/urban-palm-tree/commit/b95c4ffadb47a7a35f3e844147f1c3b33d8da7bd); subsequent documentation commits preserve this verification record.
 
@@ -34,7 +34,7 @@ Name/LaTeX overrides are a small identity demonstration: Apply display changes o
 | Equation connections have no fixed solve direction | Typed relationship explanations and explicit participant bindings; tested without parsing display math |
 | Exact compatible unit preferences, KaTeX | Ten unit tests, strict KaTeX rendering, browser reading/interval and gauge-reference checks |
 | Honest unknown/missing records and conversions | Unreviewed concepts, absent descriptions, unresolved source subjects, missing metadata; invalid-baseline UI check |
-| Desktop and touch-only browsing/navigation | Desktop and phone-emulated search, canvas tap, pan, pinch, drag, filters, units, and reference history; physical M1 follow-up remains |
+| Desktop and touch-only browsing/navigation | Desktop and phone-emulated search, canvas tap, pan, pinch, drag, filters, units, and reference history; Andrew reports M1 passes on physical iOS/Android with an iOS rendering exception |
 
 **37 automated tests pass**: seven full-source/import tests, four service-worker integrity tests, three view-projection tests, four layout/weight tests, nine semantic-boundary tests, and ten unit tests. TypeScript, formatting, deterministic data generation/checks, the production subpath build, and an offline frozen-lockfile install pass. No dependencies were added or upgraded.
 
@@ -50,14 +50,20 @@ Three browser harnesses passed at `http://127.0.0.1:4174/urban-palm-tree/`: inte
 
 These are single local observations, not phone/network performance guarantees. rAF timing is not a continuous gesture/compositing benchmark; heap excludes worker/GPU/process memory. No long-duration memory/thermal test was performed. Interaction measurements precede the final source-warning text and reference-scroll additions; the final semantic and offline checks include those additions. Selecting a different concept or unit resets its inspector scroll to the heading. See [interaction report](verification/m1-browser-report.json), [semantic browser report](verification/m1-semantic-browser-report.json), and [offline report](verification/m1-offline-report.json).
 
-The final offline build **`40ca6a39ad76d82a123f`** prepared **65 assets / 6,671,900 bytes**, including the full node/unit index and **59 font files**. The harness verifies every asset against that inventory, closes every app tab, disables network, then opens a new page. It inspects previously unviewed constant/unit/math, changes reading and interval display preferences, and verifies that source uses and equation conventions remain unchanged. This establishes fresh-document startup within the browser context, not survival through process restart, reboot, eviction, or private-browsing policies.
+The final 0.1.0 offline build **`40ca6a39ad76d82a123f`** prepared **65 assets / 6,671,900 bytes**, including the full node/unit index and **59 font files**. The harness verifies every asset against that inventory, closes every app tab, disables network, then opens a new page. It inspects previously unviewed constant/unit/math, changes reading and interval display preferences, and verifies that source uses and equation conventions remain unchanged. This establishes fresh-document startup within the browser context, not survival through process restart, reboot, eviction, or private-browsing policies.
+
+## Physical-phone feedback — 6 October 2026
+
+Andrew reported that M1 passes on his iOS and Android phones apart from unexpected font/icon rendering in **iOS Safari and Chrome**. In particular, the site logo appears as an emoji instead of the intended arrow. His screenshot, `m1-ios-fonts-render-issue.png`, is retained in the local sibling `bugs` folder outside the public repository. It has not been published with the source.
+
+This is user-reported physical-device smoke acceptance with a rendering exception. No device models, OS or browser versions, Android browser name, timings, or itemized test protocol were provided. It does not establish comprehensive offline reopening, storage durability, or every M1 control's behavior on these phones. Correcting the iOS rendering issue remains M1 work; the correction still needs a physical-phone retest. The original 0.1.0 automated and emulated measurements above remain historical evidence for that revision.
 
 ## Limits and next step
 
 - Session overrides, preferences, filters, navigation, and pins are temporary. Refresh loses them. Changing between the desktop and phone workspace layout remounts the canvas and resets its local positions/pins; applied semantic display choices remain in the active app session. Durable layout/content restoration belongs to M3.
 - Classifications and unit choices deliberately cover a reviewed subset. Unknown concepts remain browseable. Source constants may be historical; no calculations use them. This is not a complete HVACR curriculum.
 - Numerical conversion, general equations, CoolProp calculations, full authoring, groups, undo/redo, autosave, workspace files, source export, and Reload from source are not implemented by M1.
-- M1 is published for a focused actual Android/iPhone smoke check. Record models/browser versions and revisit offline reopening, rotation, and storage behavior. Andrew's prior M0 report supports feasibility, not these new controls' device certification.
+- Andrew reports M1 passes his physical Android/iPhone smoke check with the iOS rendering exception above. Retest the correction on iOS Safari and Chrome; record models/browser versions when available and revisit offline reopening, rotation, and storage behavior. Neither his M0 nor M1 report is comprehensive device certification.
 - The main JavaScript chunk remains approximately 944 kB minified / 259 kB gzip; Vite's size warning is retained. Full offline assets remain about 6.7 MB. Optimize using measured device constraints rather than reducing the required starting graph.
 
-Next implementation milestone: **M2 — full editing, reversible curation/groups, and action-level undo/redo**, building on the stable identities and immutable reference layer. Future publication continues to use the manual Pages workflow under Andrew's release instruction.
+The current follow-up is the M1 iOS rendering correction. The next implementation milestone is **M2 — full editing, reversible curation/groups, and action-level undo/redo**, building on the stable identities and immutable reference layer. Future publication continues to use the manual Pages workflow under Andrew's release instruction.

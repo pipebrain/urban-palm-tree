@@ -1,3 +1,4 @@
+import { Icon } from "../components/Icon";
 import { useMemo, useState } from "react";
 import { MathText } from "../components/Math";
 import { matchesSearch } from "../domain/browsing";
@@ -51,7 +52,7 @@ export function LibraryPanel() {
         </button>
       </div>
       <label className="search">
-        <span>⌕</span>
+        <Icon name="search" />
         <input
           aria-label={
             dictionary ? "Search unit dictionary" : "Search all nodes"
@@ -103,7 +104,9 @@ export function LibraryPanel() {
                   <small>{shortId(u.id)}</small>
                   <MathText latex={unitLatex(u)} />
                 </span>
-                <span className="row-arrow">↗</span>
+                <span className="row-arrow">
+                  <Icon name="arrow-up-right" />
+                </span>
               </button>
             ))
           : matches.slice(0, limit).map((n) => (
@@ -129,7 +132,9 @@ export function LibraryPanel() {
                   </small>
                   <small className="identity-hint">{shortId(n.id)}</small>
                 </span>
-                <span className="row-arrow">↗</span>
+                <span className="row-arrow">
+                  <Icon name="arrow-up-right" />
+                </span>
               </button>
             ))}
       </div>

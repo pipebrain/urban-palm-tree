@@ -1,3 +1,4 @@
+import { Icon } from "../components/Icon";
 import { useEffect, useRef, useState } from "react";
 import { MathText } from "../components/Math";
 import { EXAMPLE_ID, example } from "../domain/example";
@@ -147,9 +148,9 @@ function Welcome() {
       </h2>
       <div className="welcome-diagram">
         <span>Energy</span>
-        <b>↔</b>
+        <Icon name="arrow-both" />
         <span>Flow</span>
-        <b>↔</b>
+        <Icon name="arrow-both" />
         <span>Temperature</span>
       </div>
       <p>
@@ -160,7 +161,7 @@ function Welcome() {
         <span className="eyebrow">TRY THE HVACR EXAMPLE</span>
         <MathText latex={example.latex!} />
         <strong>
-          Sensible heat transfer <span>↗</span>
+          Sensible heat transfer <Icon name="arrow-up-right" />
         </strong>
         <small>App-authored · DOE reference</small>
       </button>
@@ -216,7 +217,8 @@ function Welcome() {
         </p>
       </details>
       <a href={w.data.source.releaseUrl} target="_blank" rel="noreferrer">
-        QUDT {w.data.source.version} · source release ↗
+        QUDT {w.data.source.version} · source release{" "}
+        <Icon name="arrow-up-right" />
       </a>
       <p className="attribution">
         {w.data.source.attribution}{" "}
@@ -433,7 +435,10 @@ export function InspectorPanel() {
         return (
           <div className="relationship" key={e.id}>
             <button className="related" onClick={() => w.select(id)}>
-              <span>{w.index.nodesById.get(id)?.label || shortId(id)} ↗</span>
+              <span>
+                {w.index.nodesById.get(id)?.label || shortId(id)}{" "}
+                <Icon name="arrow-up-right" />
+              </span>
               <small>
                 {w.index.nodesById.get(e.source)?.label} → {meaning.label} →{" "}
                 {w.index.nodesById.get(e.target)?.label} · {e.provenance.origin}
@@ -445,7 +450,7 @@ export function InspectorPanel() {
               <code>{e.predicate}</code>
               <p className="muted">Relationship ID: {e.id}</p>
               <a href={e.provenance.sourceUrl} target="_blank" rel="noreferrer">
-                Relationship source ↗
+                Relationship source <Icon name="arrow-up-right" />
               </a>
             </details>
           </div>
@@ -481,7 +486,7 @@ export function InspectorPanel() {
         {authored
           ? "DOE Fundamentals Handbook · equation (2-15)"
           : "Open QUDT reference"}{" "}
-        ↗
+        <Icon name="arrow-up-right" />
       </a>
     </section>
   );

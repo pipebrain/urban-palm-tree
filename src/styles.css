@@ -109,8 +109,9 @@ header {
   position: relative;
   color: #d5deb8;
 }
-.brand-mark > span {
-  font: 14px sans-serif;
+.brand-mark > .icon {
+  width: 14px;
+  height: 14px;
   position: absolute;
   right: 3px;
   top: 4px;
@@ -194,6 +195,13 @@ h1 > span {
   font-weight: 650;
   color: #748275;
 }
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+}
 .search {
   display: flex;
   align-items: center;
@@ -203,8 +211,8 @@ h1 > span {
   padding: 0 10px;
   gap: 7px;
 }
-.search > span {
-  font-size: 24px;
+.search > .icon {
+  font-size: 20px;
   color: #698571;
 }
 input,
@@ -498,8 +506,7 @@ canvas {
   border-bottom: 1px solid #abbea5;
   padding: 3px;
 }
-.welcome-diagram b {
-  font-weight: 400;
+.welcome-diagram > .icon {
   color: #a3b49b;
 }
 .example-card {

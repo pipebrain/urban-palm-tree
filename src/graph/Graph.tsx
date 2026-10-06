@@ -1,3 +1,4 @@
+import { Icon } from "../components/Icon";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MathText } from "../components/Math";
 import {
@@ -490,7 +491,8 @@ export function Graph({
             post({ type: pausedRef.current ? "pause" : "resume" });
           }}
         >
-          {paused ? "▶ Resume" : "Ⅱ Pause"}
+          <Icon name={paused ? "play" : "pause"} />{" "}
+          {paused ? "Resume" : "Pause"}
         </button>
       </div>
       <div

@@ -1,3 +1,4 @@
+import { Icon } from "../components/Icon";
 import { MathText } from "../components/Math";
 import { plainMath, unitLatex } from "../domain/notation";
 import { useWorkspace } from "./context";
@@ -36,8 +37,9 @@ export function NodeLink({ id }: { id: string }) {
   const w = useWorkspace();
   const node = w.index.nodesById.get(id);
   return (
-    <button className="related" onClick={() => w.select(id)}>
-      {node?.label || shortId(id)} ↗<small>{id}</small>
+    <button className="related" data-node-id={id} onClick={() => w.select(id)}>
+      {node?.label || shortId(id)} <Icon name="arrow-up-right" />
+      <small>{id}</small>
     </button>
   );
 }
@@ -47,7 +49,7 @@ export function SourceLinks({ urls }: { urls: string[] }) {
       {[...new Set(urls)].map((url, i) => (
         <li key={url}>
           <a href={url} target="_blank" rel="noreferrer">
-            Reference {i + 1} ↗
+            Reference {i + 1} <Icon name="arrow-up-right" />
           </a>
         </li>
       ))}

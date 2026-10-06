@@ -1,3 +1,4 @@
+import { Icon } from "../components/Icon";
 import { useEffect, useMemo, useRef } from "react";
 import { MathText } from "../components/Math";
 import { unitLatex } from "../domain/notation";
@@ -35,7 +36,7 @@ export function UnitPanel() {
       data-testid="unit-inspector"
     >
       <button className="text-button" onClick={w.showInspector}>
-        ← Back to concept
+        <Icon name="arrow-left" /> Back to concept
       </button>
       <span className="eyebrow">UNIT REFERENCE</span>
       {!unit ? (
@@ -141,7 +142,7 @@ export function UnitPanel() {
             </p>
           </details>
           <a href={unit.provenance.sourceUrl} target="_blank" rel="noreferrer">
-            Open reference ↗
+            Open reference <Icon name="arrow-up-right" />
           </a>
         </>
       )}

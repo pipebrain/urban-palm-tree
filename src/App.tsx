@@ -1,3 +1,4 @@
+import { Icon } from "./components/Icon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   DockviewReact,
@@ -260,7 +261,7 @@ export function App() {
         <header>
           <div className="brand">
             <span className="brand-mark">
-              H<span>↗</span>
+              H<Icon name="arrow-up-right" />
             </span>
             <div>
               <h1>
@@ -282,7 +283,7 @@ export function App() {
               disabled={history.index === 0}
               onClick={() => travel(-1)}
             >
-              ←
+              <Icon name="arrow-left" />
             </button>
             <button
               aria-label="Next reference"
@@ -290,7 +291,7 @@ export function App() {
               disabled={history.index === history.visits.length - 1}
               onClick={() => travel(1)}
             >
-              →
+              <Icon name="arrow-right" />
             </button>
           </div>
           <span>

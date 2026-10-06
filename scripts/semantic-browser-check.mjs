@@ -88,7 +88,9 @@ try {
     assert.match(await units.innerText(), /No explicit uses/);
     await units.getByText(/^Display preferences ·/).click();
     assert.ok(
-      await units.getByRole("button", { name: /^Temperature ↗/ }).count(),
+      await units
+        .locator(`.related[data-node-id="${q("Temperature")}"]`)
+        .count(),
     );
     await page
       .getByRole("button", { name: "Previous reference", exact: true })
