@@ -6,7 +6,7 @@ The MacBook Air holds the local development checkout. Git records changes locall
 
 These are separate operations. A code push should not publish an unfinished alpha automatically.
 
-Current status, 6 October 2026: the working source and public Pages preview are M1 version 0.1.0. The manually requested deployment of `7fb7d5396a30a1dafeb57e156c6aa334a206c7e8` succeeded in [Actions run 37448915597](https://github.com/pipebrain/urban-palm-tree/actions/runs/37448915597). See [M1 deployment record](M1-PAGES-DEPLOYMENT.md). Implementation and code pushes alone do not authorize or trigger a deployment.
+Current status, 6 October 2026: the working source and public Pages preview are **M1 version 0.1.1**. The rendering correction at `9ada447447811f51000db92f9287fc45045e2e18` was published successfully in [Actions run 37454092024](https://github.com/pipebrain/urban-palm-tree/actions/runs/37454092024). Live release assets match the verified local build. See [M1 deployment record](M1-PAGES-DEPLOYMENT.md) and [rendering correction](M1-IOS-RENDERING-FIX.md). Implementation and code pushes alone do not authorize or trigger a deployment.
 
 ## Local Mac setup
 
@@ -68,7 +68,7 @@ For an older cached release, open the public URL online and let its update prepa
 
 Andrew reported acceptable performance during rough physical Android/iOS testing of M0 on 6 October 2026. Following M1 publication that day, he reported that M1 passes on physical iOS and Android phones except for UI rendering issues in iOS Safari and Chrome. KaTeX renders as expected; other fonts appear missing, the logo arrow appears as an emoji, and the hop selector is shorter than its adjacent control. Device models, OS/browser versions, the Android browser, and a detailed protocol were not supplied. This is physical smoke acceptance with rendering exceptions, not comprehensive offline/storage certification.
 
-The pending M1 0.1.1 correction includes bundled Inter 4.1, SVG UI icons, and explicit WebKit select appearance with a matching 44 px mobile height. Public deployment remains 0.1.0 until a separate deployment succeeds and is verified. The correction needs a physical-phone retest; this work does not start M2 or certify the later classroom alpha. See [M0 results](M0-RESULTS.md), [M1 results](M1-RESULTS.md), and [rendering correction](M1-IOS-RENDERING-FIX.md). The following expectations apply to the later classroom alpha after its acceptance checks pass.
+The live M1 0.1.1 correction includes bundled Inter 4.1, SVG UI icons, and explicit WebKit select appearance with a matching 44 px mobile height. The manual deployment succeeded and live release assets match the verified build; local Chrome/WebKit and offline font checks pass. The correction needs a physical-phone retest; this work does not start M2 or certify the later classroom alpha. See [M0 results](M0-RESULTS.md), [M1 results](M1-RESULTS.md), and [rendering correction](M1-IOS-RENDERING-FIX.md). The following expectations apply to the later classroom alpha after its acceptance checks pass.
 
 The alpha supports individual exploration and authoring. Edits are local until exported. Reopening the site should recover local work where storage remains available, and explicit workspace files provide a portable backup. Transferring a file is manual synchronization.
 

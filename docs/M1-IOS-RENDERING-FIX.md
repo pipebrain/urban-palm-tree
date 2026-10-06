@@ -1,5 +1,7 @@
 # M1 iOS rendering fix — 0.1.1
 
+Published **6 October 2026** at [HVACR Knowledge Atlas](https://pipebrain.github.io/urban-palm-tree/), source [`9ada447447811f51000db92f9287fc45045e2e18`](https://github.com/pipebrain/urban-palm-tree/commit/9ada447447811f51000db92f9287fc45045e2e18). [Manual workflow 37454092024](https://github.com/pipebrain/urban-palm-tree/actions/runs/37454092024) passed its 37 tests, deterministic import check, formatting, TypeScript, and production build; deployment completed at **11:06:11 UTC**. The public HTML, service worker, offline inventory, Inter font, and license return HTTP 200 and match the verified local artifacts byte for byte. [Asset comparison](verification/m1-ios-fix-pages-assets.json). Ordinary code/documentation pushes still do not deploy.
+
 Andrew reported on 6 October 2026 that M1 passes his iOS and Android phone checks except for unexpected iOS Safari/Chrome typography. He confirmed that KaTeX renders correctly while other fonts appear missing. Two screenshots show a blue emoji replacing the logo arrow and a hop selector shorter than the adjacent buttons. Device models, OS/browser versions, and detailed offline/storage checks were not supplied. Both screenshots remain in the local `bugs` folder outside the public repository.
 
 ## Cause and change
@@ -30,8 +32,14 @@ Map and inspector screenshots were visually reviewed. [Focused WebKit report](ve
 
 The focused WebKit run encountered stale computed `visibility: hidden` on an inspector that screenshots showed as painted and that pointer hit testing found interactive. The same condition reproduced on the unchanged public 0.1.0 release. The harness used observed pointer coordinates and forced native option selection only after hit-test checks; it did not mutate application styles or select values directly. This limits the automation's accessibility/visibility coverage; no product workaround was added. [Comparison evidence](verification/m1-ios-fix-webkit-automation-limitation.json).
 
+## Public-site checks
+
+The interaction, semantic, and complete offline harnesses all pass against the public HTTPS URL on Chrome 154.0.8037.98, both desktop and touch-emulated phone. Fresh offline pages load the full graph, unseen math/unit references, and Inter from the service worker (320 ms desktop / 285 ms phone emulation in this run). The focused WebKit checks also pass on the public URL at both phone viewports with the automation limitation described above. [Interaction](verification/m1-ios-fix-pages-browser-report.json), [semantics](verification/m1-ios-fix-pages-semantic-report.json), [offline](verification/m1-ios-fix-pages-offline-report.json), [WebKit](verification/m1-ios-fix-pages-webkit-report.json).
+
+A browser context prepared with public 0.1.0 before deployment confirmed that the old release stayed active while the complete 0.1.1 build became waiting. The existing page retained its old logo without an automatic navigation. After closing all its pages, the harness's immediate reopen timed out at navigation; that context was closed, so this attempt does **not** establish successful cached-release migration. Fresh preparation and offline reopening of 0.1.1 passed separately. [Partial live update report](verification/m1-ios-fix-pages-update-report.json).
+
 ## Phone recheck
 
-After the patch is published, open the public site online and allow its update to prepare. If it still shows the old blue emoji, wait for **Preview update waiting**, close every atlas tab and any installed copy, then reopen. The corrected logo should show a small monochrome diagonal arrow beside the H. Regular interface text should use Inter, and the hop selector should match **Show on map** and **Focus neighbourhood** in height. Check selecting two hops, map filters, and unit preferences as well. KaTeX should retain its previous appearance.
+Open the public site online and allow its update to prepare. If it still shows the old blue emoji, wait for **Preview update waiting**, close every atlas tab and any installed copy, then reopen. The corrected logo should show a small monochrome diagonal arrow beside the H. Regular interface text should use Inter, and the hop selector should match **Show on map** and **Focus neighbourhood** in height. Check selecting two hops, map filters, and unit preferences as well. KaTeX should retain its previous appearance.
 
 M1's broader phone acceptance is recorded as user-reported, with this rendering exception. M2 has not been started. Session changes remain temporary in this patch.

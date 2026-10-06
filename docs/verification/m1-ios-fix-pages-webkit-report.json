@@ -1,0 +1,344 @@
+{
+  "buildId": "fd67e8fbe52c3c3a5a13",
+  "supersedes": "Earlier local report covered SVG icons before bundled Inter and native-select reset.",
+  "baseURL": "https://pipebrain.github.io/urban-palm-tree/",
+  "startedAt": "2026-10-06T11:07:05.387Z",
+  "note": "Playwright WebKit on macOS with phone viewport/touch emulation. This is not physical iOS Safari or Chrome verification.",
+  "installation": "Playwright WebKit build 2359 (26.6), browser-cache installation only",
+  "runs": [
+    {
+      "viewport": {
+        "width": 440,
+        "height": 736
+      },
+      "errors": [],
+      "requestFailures": [],
+      "fontResponses": [
+        {
+          "url": "https://pipebrain.github.io/urban-palm-tree/assets/InterVariable-DiVDrmQJ.woff2",
+          "status": 200
+        },
+        {
+          "url": "https://pipebrain.github.io/urban-palm-tree/assets/KaTeX_Main-Regular-B22Nviop.woff2",
+          "status": 200
+        },
+        {
+          "url": "https://pipebrain.github.io/urban-palm-tree/assets/KaTeX_Math-Italic-t53AETM-.woff2",
+          "status": 200
+        }
+      ],
+      "checks": [
+        "bundled-inter-font-loaded",
+        "full-graph",
+        "accessible-navigation-and-zoom-names",
+        "pause-and-resume-svg-controls",
+        "brand-monochrome-svg",
+        "emoji-font-change-does-not-change-brand-pixels",
+        "map-dropdown-style-and-selection",
+        "hop-select-and-buttons-all-44px",
+        "two-hop-option-selects",
+        "search-svg",
+        "result-link-svg",
+        "bundled-katex-fonts-and-equation",
+        "unit-reference-and-back-svg",
+        "source-link-svg",
+        "preference-dropdown-style-and-watt-selection",
+        "no-horizontal-overflow",
+        "no-page-or-request-errors"
+      ],
+      "loadedInter": true,
+      "brand": {
+        "text": "H",
+        "svgText": "",
+        "namespace": "http://www.w3.org/2000/svg",
+        "color": "rgb(213, 222, 184)",
+        "stroke": "rgb(213, 222, 184)",
+        "fill": "none",
+        "width": 14,
+        "height": 14,
+        "ariaHidden": "true",
+        "focusable": "false"
+      },
+      "emojiFontStress": {
+        "beforeSha256": "bdbe3e642ef32df205d775cb2a6bcc090b8289329f7685141462e3a56d56c5fa",
+        "afterSha256": "bdbe3e642ef32df205d775cb2a6bcc090b8289329f7685141462e3a56d56c5fa",
+        "equal": true
+      },
+      "mapSelects": [
+        {
+          "name": "Map node type",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "name": "Map classification",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "name": "Map source",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "name": "Map relationship",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        }
+      ],
+      "fonts": [
+        {
+          "family": "KaTeX_Main",
+          "status": "loaded",
+          "weight": "400",
+          "style": "normal"
+        },
+        {
+          "family": "KaTeX_Math",
+          "status": "loaded",
+          "weight": "400",
+          "style": "italic"
+        },
+        {
+          "family": "Inter",
+          "status": "loaded",
+          "weight": "100 900",
+          "style": "normal"
+        }
+      ],
+      "hopControls": [
+        {
+          "tag": "BUTTON",
+          "text": "Show on map",
+          "height": 44,
+          "appearance": "auto",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "tag": "SELECT",
+          "text": "1 hop2 hops",
+          "height": 44,
+          "appearance": "none",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Focus neighbourhood",
+          "height": 44,
+          "appearance": "auto",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        }
+      ],
+      "hopHit": true,
+      "preferenceSelect": {
+        "height": 40,
+        "appearance": "none",
+        "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+        "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+        "options": [
+          {
+            "value": "http://qudt.org/vocab/unit/BTU_IT-PER-HR",
+            "text": "Btu{IT}/h — British Thermal Unit (international Definition) per Hour"
+          },
+          {
+            "value": "http://qudt.org/vocab/unit/W",
+            "text": "W — Watt"
+          },
+          {
+            "value": "http://qudt.org/vocab/unit/KiloW",
+            "text": "kW — Kilowatt"
+          },
+          {
+            "value": "http://qudt.org/vocab/unit/TON_FG",
+            "text": "ton of refrigeration — heat-transfer rate"
+          }
+        ]
+      },
+      "preferenceHit": true,
+      "layout": {
+        "viewportWidth": 440,
+        "documentWidth": 440,
+        "overflow": false,
+        "rootFont": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15"
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "errors": [],
+      "requestFailures": [],
+      "fontResponses": [
+        {
+          "url": "https://pipebrain.github.io/urban-palm-tree/assets/InterVariable-DiVDrmQJ.woff2",
+          "status": 200
+        },
+        {
+          "url": "https://pipebrain.github.io/urban-palm-tree/assets/KaTeX_Main-Regular-B22Nviop.woff2",
+          "status": 200
+        },
+        {
+          "url": "https://pipebrain.github.io/urban-palm-tree/assets/KaTeX_Math-Italic-t53AETM-.woff2",
+          "status": 200
+        }
+      ],
+      "checks": [
+        "bundled-inter-font-loaded",
+        "full-graph",
+        "accessible-navigation-and-zoom-names",
+        "pause-and-resume-svg-controls",
+        "brand-monochrome-svg",
+        "emoji-font-change-does-not-change-brand-pixels",
+        "map-dropdown-style-and-selection",
+        "hop-select-and-buttons-all-44px",
+        "two-hop-option-selects",
+        "search-svg",
+        "result-link-svg",
+        "bundled-katex-fonts-and-equation",
+        "unit-reference-and-back-svg",
+        "source-link-svg",
+        "preference-dropdown-style-and-watt-selection",
+        "no-horizontal-overflow",
+        "no-page-or-request-errors"
+      ],
+      "loadedInter": true,
+      "brand": {
+        "text": "H",
+        "svgText": "",
+        "namespace": "http://www.w3.org/2000/svg",
+        "color": "rgb(213, 222, 184)",
+        "stroke": "rgb(213, 222, 184)",
+        "fill": "none",
+        "width": 14,
+        "height": 14,
+        "ariaHidden": "true",
+        "focusable": "false"
+      },
+      "emojiFontStress": {
+        "beforeSha256": "bdbe3e642ef32df205d775cb2a6bcc090b8289329f7685141462e3a56d56c5fa",
+        "afterSha256": "bdbe3e642ef32df205d775cb2a6bcc090b8289329f7685141462e3a56d56c5fa",
+        "equal": true
+      },
+      "mapSelects": [
+        {
+          "name": "Map node type",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "name": "Map classification",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "name": "Map source",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "name": "Map relationship",
+          "height": 40,
+          "appearance": "none",
+          "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        }
+      ],
+      "fonts": [
+        {
+          "family": "KaTeX_Main",
+          "status": "loaded",
+          "weight": "400",
+          "style": "normal"
+        },
+        {
+          "family": "KaTeX_Math",
+          "status": "loaded",
+          "weight": "400",
+          "style": "italic"
+        },
+        {
+          "family": "Inter",
+          "status": "loaded",
+          "weight": "100 900",
+          "style": "normal"
+        }
+      ],
+      "hopControls": [
+        {
+          "tag": "BUTTON",
+          "text": "Show on map",
+          "height": 44,
+          "appearance": "auto",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "tag": "SELECT",
+          "text": "1 hop2 hops",
+          "height": 44,
+          "appearance": "none",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Focus neighbourhood",
+          "height": 44,
+          "appearance": "auto",
+          "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+        }
+      ],
+      "hopHit": true,
+      "preferenceSelect": {
+        "height": 40,
+        "appearance": "none",
+        "chevron": "url(\"data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%2320382f'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='m6%209%206%206%206-6'/%3e%3c/svg%3e\")",
+        "font": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+        "options": [
+          {
+            "value": "http://qudt.org/vocab/unit/BTU_IT-PER-HR",
+            "text": "Btu{IT}/h — British Thermal Unit (international Definition) per Hour"
+          },
+          {
+            "value": "http://qudt.org/vocab/unit/W",
+            "text": "W — Watt"
+          },
+          {
+            "value": "http://qudt.org/vocab/unit/KiloW",
+            "text": "kW — Kilowatt"
+          },
+          {
+            "value": "http://qudt.org/vocab/unit/TON_FG",
+            "text": "ton of refrigeration — heat-transfer rate"
+          }
+        ]
+      },
+      "preferenceHit": true,
+      "layout": {
+        "viewportWidth": 390,
+        "documentWidth": 390,
+        "overflow": false,
+        "rootFont": "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15"
+      }
+    }
+  ],
+  "automationLimitation": "WebKit 26.6 sometimes reports cached visibility:hidden for a painted/hit-testable inspector descendant after filter navigation; also reproduced on unchanged public M1. Hop and preference selection use label locators with forced selectOption only after hit-test checks. Pointer actions use observed element coordinates where necessary; no application styles or values are directly mutated.",
+  "browser": "26.6",
+  "passed": true,
+  "finishedAt": "2026-10-06T11:07:10.292Z"
+}

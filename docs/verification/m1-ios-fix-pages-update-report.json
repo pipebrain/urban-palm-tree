@@ -1,0 +1,44 @@
+{
+  "startedAt": "2026-10-06T11:04:49.640Z",
+  "url": "https://pipebrain.github.io/urban-palm-tree/",
+  "expected": {
+    "oldBuild": "40ca6a39ad76d82a123f",
+    "newBuild": "fd67e8fbe52c3c3a5a13"
+  },
+  "errors": [],
+  "passed": false,
+  "note": "Installed Mac Chrome with phone viewport; service workers allowed. Real public deployment upgrade, not physical iOS.",
+  "browser": "154.0.8037.98",
+  "original": {
+    "active": {
+      "ready": true,
+      "buildId": "40ca6a39ad76d82a123f",
+      "assetCount": 65,
+      "byteCount": 6671900
+    },
+    "waiting": null,
+    "controller": false,
+    "state": "ready"
+  },
+  "originalBrand": "H↗",
+  "waiting": {
+    "active": {
+      "ready": true,
+      "buildId": "40ca6a39ad76d82a123f",
+      "assetCount": 65,
+      "byteCount": 6671900
+    },
+    "waiting": {
+      "ready": true,
+      "buildId": "fd67e8fbe52c3c3a5a13",
+      "assetCount": 67,
+      "byteCount": 7030842
+    },
+    "controller": false,
+    "state": "update-available"
+  },
+  "navigationsWhileWaiting": 0,
+  "brandWhileWaiting": "H↗",
+  "failure": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://pipebrain.github.io/urban-palm-tree/\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /Users/poo/Documents/HVACRbuild-app/HVACR-Codex-Handoff/test-results/ios-icon-update-check.mjs:49:17",
+  "finishedAt": "2026-10-06T11:07:30.003Z"
+}

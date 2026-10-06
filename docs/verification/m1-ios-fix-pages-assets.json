@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-06T11:06:35.935Z",
+  "baseURL": "https://pipebrain.github.io/urban-palm-tree/",
+  "sourceCommit": "9ada447447811f51000db92f9287fc45045e2e18",
+  "files": [
+    {
+      "path": "index.html",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 790,
+      "sha256": "96630b67d06c8553bd033a6c90c1cec3aa9a49ea8e41f9bd154b92da77406d3b",
+      "matchesLocal": true
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "bytes": 13615,
+      "sha256": "8e02a354aad33ba804e47cba7ff568ad8d8234339a734ea9a1e688bf6090a910",
+      "matchesLocal": true
+    },
+    {
+      "path": "offline-inventory.json",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "bytes": 11606,
+      "sha256": "4af7b1d740b557ce5ad33bb6691dc8ca36b04c48f4daaed6546d772cd037831d",
+      "matchesLocal": true
+    },
+    {
+      "path": "assets/InterVariable-DiVDrmQJ.woff2",
+      "status": 200,
+      "contentType": "font/woff2",
+      "bytes": 352240,
+      "sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+      "matchesLocal": true
+    },
+    {
+      "path": "licenses/inter-OFL.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 4380,
+      "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a",
+      "matchesLocal": true
+    }
+  ],
+  "passed": true
+}

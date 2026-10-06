@@ -1,8 +1,8 @@
-# HVACR Knowledge Atlas — M1 · v0.1.0
+# HVACR Knowledge Atlas — M1 · v0.1.1
 
 A browsable semantic foundation for the HVACR knowledge graph. The starting universe remains the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node, four participant links, and a separate Fahrenheit-interval unit. Source is in [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree).
 
-The working source and public GitHub Pages preview are **M1, version 0.1.0**. Andrew authorized publishing commit `7fb7d539` for iPhone and Android checks on 6 October 2026. See [M1 results](docs/M1-RESULTS.md), [deployment record](docs/M1-PAGES-DEPLOYMENT.md), and [release guidance](docs/GIT-AND-RELEASE.md). Ordinary code pushes do not deploy the site.
+The working source and public GitHub Pages preview are **M1, version 0.1.1**. Commit `9ada4474` publishes the interface-font, icon, and hop-selector corrections following Andrew's iPhone and Android checks on 6 October 2026. See [M1 results](docs/M1-RESULTS.md), [rendering correction](docs/M1-IOS-RENDERING-FIX.md), [deployment record](docs/M1-PAGES-DEPLOYMENT.md), and [release guidance](docs/GIT-AND-RELEASE.md). Ordinary code pushes do not deploy the site.
 
 ## Run on this Mac
 
@@ -26,7 +26,7 @@ Then open [the local M1 preview](http://127.0.0.1:4174/urban-palm-tree/). `APP_B
 
 ## GitHub Pages preview
 
-The **M1** preview is live at [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). The [manual deployment](https://github.com/pipebrain/urban-palm-tree/actions/runs/37448915597) succeeded on 6 October 2026; see [deployment record](docs/M1-PAGES-DEPLOYMENT.md). The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`).
+The **M1 0.1.1** preview is live at [pipebrain.github.io/urban-palm-tree](https://pipebrain.github.io/urban-palm-tree/). The [manual deployment](https://github.com/pipebrain/urban-palm-tree/actions/runs/37454092024) succeeded on 6 October 2026, and live release assets match the verified build; see [deployment record](docs/M1-PAGES-DEPLOYMENT.md). The `.github/workflows/pages.yml` workflow runs only through **Actions → Deploy GitHub Pages → Run workflow** (`workflow_dispatch`).
 
 If an existing browser still shows M0, open the site online, allow the update to prepare, then close **all** tabs for this app and reopen the URL. Updates wait for old tabs to close. M1 has four phone tabs: **Map, Search, Inspector, Units**; its desktop header says **M1 · BROWSE & CONNECT**. Session changes are temporary and disappear when the app closes or refreshes.
 
@@ -68,7 +68,7 @@ M1 adds semantic browsing, reviewed classifications and display-unit choices, re
 
 On 6 October 2026 Andrew reported that **M1 passes on physical iOS and Android phones, apart from iOS UI rendering issues**. He clarified that **KaTeX renders as expected**, while other fonts appear missing in iOS Safari and Chrome. The logo arrow appears as an emoji, and a second screenshot shows the hop selector shorter than its adjacent control. Both screenshots remain local outside this public repository. Device models, OS/browser versions, the Android browser, and detailed measurements were not supplied. This is user-reported smoke acceptance with those rendering exceptions, not comprehensive or offline/storage certification.
 
-The M1 **0.1.1 correction in progress** bundles pinned Inter 4.1 for interface text, replaces font-dependent UI icons with SVG, and gives the mobile hop selector explicit WebKit appearance and a matching 44 px height. The public release remains 0.1.0 until deployment is verified; the correction still needs an actual-phone retest. See [M1 results](docs/M1-RESULTS.md) and [rendering correction](docs/M1-IOS-RENDERING-FIX.md).
+The live M1 **0.1.1 correction** bundles pinned Inter 4.1 for interface text, replaces font-dependent UI icons with SVG, and gives the mobile hop selector explicit WebKit appearance and a matching 44 px height. The 37 tests, local Chrome/WebKit checks, and offline font checks pass; live release assets match the verified build. The correction still needs an actual-phone retest. See [M1 results](docs/M1-RESULTS.md) and [rendering correction](docs/M1-IOS-RENDERING-FIX.md).
 
 Andrew's earlier rough M0 phone testing found performance acceptable. Mobile storage eviction, prolonged memory behavior, and a detailed physical-device offline reopening protocol remain unverified. The UI says *preview prepared*, not device-certified offline authoring. See [offline scope and protocol](docs/M0-OFFLINE.md) and [M0 results](docs/M0-RESULTS.md). The next implementation milestone after this M1 correction is **M2: editing, curation, groups, and action history**.
 

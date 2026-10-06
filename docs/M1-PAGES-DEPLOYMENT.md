@@ -1,4 +1,6 @@
-# GitHub Pages — M1 release
+# GitHub Pages — original M1 0.1.0 release
+
+Historical record: the current public version is **0.1.1**, which corrects iOS interface fonts, icons, and select sizing. See the [patch deployment and verification record](M1-IOS-RENDERING-FIX.md). The measurements below describe the original 0.1.0 release.
 
 Published and verified **6 October 2026**, following Andrew's explicit request to publish M1 for iPhone and Android testing. This replaces the [M0 preview](PAGES-DEPLOYMENT.md); it does not complete the later classroom-alpha criteria.
 
@@ -33,7 +35,7 @@ Useful smoke checks:
 3. Pan, pinch, select, drag, and pin a node; try a filter and restore it.
 4. For offline testing, first wait for **Offline preview prepared**, close all atlas tabs, disconnect, and reopen. Record the device, browser version, and what happened.
 
-M1's name/LaTeX overrides and unit preferences are temporary. Refresh/reopening loses session changes. Full authoring/undo remains M2; persistence and portable files remain M3. The user-reported acceptable Android/iOS M0 smoke performance does not certify these M1 changes. Physical M1 feedback remains pending.
+M1's name/LaTeX overrides and unit preferences are temporary. Refresh/reopening loses session changes. Full authoring/undo remains M2; persistence and portable files remain M3. Andrew subsequently reported that M1 passes his physical Android/iOS checks except for iOS interface rendering. KaTeX renders correctly; body fonts, the logo arrow, and hop-selector sizing were the reported exceptions. See [feedback and patch verification](M1-IOS-RENDERING-FIX.md).
 
 ## Future releases and rollback
 

@@ -1,10 +1,10 @@
 # GitHub Pages — M0 preview
 
-Historical release record. The current public site was updated to [M1 on 6 October 2026](M1-PAGES-DEPLOYMENT.md); the measurements below remain specific to M0.
+Historical release record. The current public site is [M1 0.1.1](M1-IOS-RENDERING-FIX.md), following the [original M1 deployment on 6 October 2026](M1-PAGES-DEPLOYMENT.md); the measurements below remain specific to M0.
 
 Published and verified 6 October 2026 (America/Toronto), after Andrew made the repository public and explicitly requested Pages enablement. This publishes the feasibility preview, not a completed classroom alpha.
 
-Later status, 6 October 2026: Andrew reported acceptable performance during rough physical Android/iOS testing of M0. Models, browser versions, and comprehensive/offline verification were not supplied. M1 source is now version 0.1.0 with separate local verification, but **no M1 deployment has occurred**; the deployed M0 revision and measurements below remain unchanged.
+Feedback after this release, 6 October 2026: Andrew reported acceptable performance during rough physical Android/iOS testing of M0. Models, browser versions, and comprehensive/offline verification were not supplied. M1 was subsequently implemented and published separately; the M0 revision and measurements below remain unchanged.
 
 - Site: [https://pipebrain.github.io/urban-palm-tree/](https://pipebrain.github.io/urban-palm-tree/)
 - Repository: [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree), verified public.
