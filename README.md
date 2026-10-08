@@ -1,8 +1,8 @@
-# HVACR Knowledge Atlas — M2 · v0.2.0
+# HVACRbuild.app — GUI refinement · v0.2.1
 
 An editable HVACR knowledge graph with semantic browsing, contextual constants, Markdown/math notes, overlapping groups, and session undo/redo. The starting universe remains the full eligible QUDT 3.5.2 import: **1,555 upstream nodes**, **1,734 explicit relationships**, and **2,932 internal unit references**. One clearly marked app-authored sensible-heat equation adds one node, four participant links, and a separate Fahrenheit-interval unit. Source is in [pipebrain/urban-palm-tree](https://github.com/pipebrain/urban-palm-tree).
 
-The working source is **M2, version 0.2.0, implemented, verified, and accepted by Andrew against its Done when criteria**. Andrew reported that the M1 0.1.1 correction passes on Android and iOS and authorized M2 on 6 October 2026. Andrew subsequently unpublished Pages and requested redeployment. **M2 0.2.0 is now published and verified** from commit `95684ad4`; see the [M2 deployment record](docs/M2-PAGES-DEPLOYMENT.md). See [M2 results and verification](docs/M2-RESULTS.md), [M1 results](docs/M1-RESULTS.md), [rendering correction](docs/M1-IOS-RENDERING-FIX.md), and [release guidance](docs/GIT-AND-RELEASE.md). Ordinary code pushes do not deploy the site.
+The working source is **version 0.2.1, a GUI refinement requested on 7 October 2026 before M3**. It defaults to browsing and places editing, session history, and window controls in an application menu. See the [GUI refinement record](docs/GUI-REFINEMENT.md) for the current scope and verification. **M2 0.2.0 remains the published release**, from commit `95684ad4`, and Andrew has accepted that milestone against its Done when criteria. The GUI refinement has not been authorized for deployment. See the [M2 deployment record](docs/M2-PAGES-DEPLOYMENT.md), [M2 results](docs/M2-RESULTS.md), and [release guidance](docs/GIT-AND-RELEASE.md). Ordinary code pushes do not deploy the site.
 
 ## Run on this Mac
 
@@ -22,7 +22,7 @@ APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh build
 APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh preview --port 4174
 ```
 
-Then open [the local preview](http://127.0.0.1:4174/urban-palm-tree/). This serves the locally built revision, currently M2 0.2.0. `APP_BASE` must start and end with `/`; this path matches the Pages deployment. The default build base is `/`. The Git remote `origin` points to `pipebrain/urban-palm-tree`.
+Then open [the local preview](http://127.0.0.1:4174/urban-palm-tree/). This serves the locally built revision, currently GUI version 0.2.1. `APP_BASE` must start and end with `/`; this path matches the Pages deployment. The default build base is `/`. The Git remote `origin` points to `pipebrain/urban-palm-tree`.
 
 ## GitHub Pages preview
 
@@ -30,15 +30,19 @@ Then open [the local preview](http://127.0.0.1:4174/urban-palm-tree/). This serv
 
 If an existing browser still shows M1, open the site online, allow the update to prepare, then close **all** tabs for this app and reopen the URL. Updates wait for old tabs to close. M2 has four phone tabs: **Map, Search, Inspector, Units**; its desktop header says **M2 · SHAPE YOUR ATLAS**. The visible **Undo/Redo** controls and **Create concept** button identify the authoring release. Session changes are temporary and disappear when the app closes or refreshes.
 
-## Explore the M1 foundation
+## Browse and use the local GUI
+
+Version 0.2.1 starts in **Browse mode**. The application menu provides **HVACRbuild.app, File, Edit, View, Develop, Window**. **Develop → Enter Edit Mode** reveals authoring controls; **View → Show status bar** toggles the status display. **Window → Close all tabs** retains session content, and **Restore tabs** reopens the panels. On desktop, **Merge all tabs** puts the Dockview panels in one tab group. File operations are disabled until M3.
+
+**Edit → Undo/Redo** uses one session timeline for reference navigation and deliberate content edits. Undoing or redoing a content change requires Edit mode. A completed Save and its resulting selection form one step; force ticks and view controls do not. This shared timeline is the implementation interpretation of the GUI unification request. The former reference arrows and separate history toolbar are removed locally; the published 0.2.0 interface retains them.
 
 - Use **Search** (phone) or **Library** (desktop) to select a concept. Search narrows only the result list; it does not remove graph nodes.
 - Drag empty graph space to pan. Pinch, scroll, or use `+`/`−` to zoom. **Fit all** follows the full layout while it settles. Selecting a concept or manually navigating stops automatic fitting.
-- Tap/click a node to inspect it. Dragging a node pins it; **Pin/Unpin** and **Pause/Resume** also work without keyboard or hover.
+- Tap/click a node to inspect it. In Browse mode, dragging pans. In Edit mode, dragging a node pins it and **Pin/Unpin** is available. **Pause/Resume** remains available in either mode without keyboard or hover.
 - Use **Map filters** for node type, classification, origin, relationships, and deprecated records. Focus a selected concept's one- or two-hop neighbourhood; **Reset map** restores the full universe. Pins follow stable IDs through filtering and display edits.
 - Open the authored sensible-heat example from the inspector welcome card or search. Its participants have stable references, exact unit identities, and no fixed solve direction. Display-name/LaTeX overrides can be applied and restored without rewriting the source; they last only in this tab.
 - Unit links and the searchable **Unit dictionary** open internal references. Explicit-use backlinks, source applicability, and display preferences are labelled separately. Reviewed preferences for 46 concepts select exact units while preserving values and equation conventions. No numerical conversion or equation solving is provided.
-- Desktop Dockview panels can be resized and moved. Phone navigation uses the same domain data in Map/Search/Inspector/Units views. Back/forward reference controls revisit concepts and units.
+- Desktop Dockview panels can be resized and moved. Phone navigation uses the same domain data in Map/Search/Inspector/Units views. The Edit menu revisits concepts and units through the shared session timeline.
 
 The default view includes all learning nodes. KaTeX labels appear at useful zoom levels with an overlap/budget cap of 60 HTML labels; the selected label has priority. Full formulas appear in the inspector. Twelve reviewed thermodynamic state-property quantities use hexagons; other quantities use circles, constants diamonds, and equations rounded rectangles. Eighteen exact concepts have sourced classifications; all other quantities remain visibly unreviewed. The legend identifies state property as a quantity subtype. Force placement is a navigation aid, not a physical model.
 
@@ -48,9 +52,9 @@ Source provenance, typed relationship meanings, four missing upstream subjects, 
 
 Version 0.2.0 adds editors for quantities, equations, contextual constants, unit notation and notes, and typed relationships. Equations use explicit participant bindings; source records remain separate from local overrides. Markdown notes support KaTeX, embedded images, and internal concept/unit links. Groups can overlap, and excluding content is reversible. Save, group changes, pinning, and completed drags enter session undo/redo as deliberate actions; force ticks do not.
 
-There is no global edit-mode toggle. Select a concept and open **Inspector → Edit concept**. In **Search** (phone) or **Library** (desktop), choose a type and use **Create concept**. A unit reference offers **Edit unit presentation**; relationships in Inspector offer **Edit relationship**. Editors use **Save/Cancel**, and the workspace provides **Undo/Redo**.
+In local version 0.2.1, first choose **Develop → Enter Edit Mode**. Select a concept and open **Inspector → Edit concept**. In **Search** (phone) or **Library** (desktop), choose a type and use **Create concept**. A unit reference offers **Edit unit presentation**; relationships in Inspector offer **Edit relationship**. Editors use **Save/Cancel**, with **Undo/Redo** in the Edit menu. The published 0.2.0 release exposes these editors directly and has no global mode toggle.
 
-All 57 automated tests and the production browser checks pass, including Chrome and WebKit authoring on desktop and emulated phone layouts. Andrew confirmed M2 complete against its Done when criteria; the confirmation supplies no detailed device/version or offline/storage protocol. **Save applies an edit to this session; it does not save a workspace file.** Refreshing or closing loses authored work and history. Autosave, portable workspace files, source export, and Reload from source remain M3. See [M2 results and checks](docs/M2-RESULTS.md).
+The M2 0.2.0 milestone passed 57 automated tests and its production browser checks, including Chrome and WebKit authoring on desktop and emulated phone layouts. Andrew confirmed M2 complete against its Done when criteria; the confirmation supplies no detailed device/version or offline/storage protocol. Current GUI verification is recorded separately in [GUI refinement](docs/GUI-REFINEMENT.md). **Save applies an edit to this session; it does not save a workspace file.** Refreshing or closing the browser loses authored work and history. Autosave, portable workspace files, source export, and Reload from source remain M3. See [M2 results and checks](docs/M2-RESULTS.md).
 
 ## Reproduce data and verification
 
@@ -68,15 +72,17 @@ BROWSER_ENGINE=webkit sh scripts/pnpm.sh test:authoring-browser
 OFFLINE_FIRST=1 sh scripts/pnpm.sh test:authoring-browser
 sh scripts/pnpm.sh test:authoring-graph
 sh scripts/pnpm.sh test:offline-browser
+PREVIEW_URL=http://127.0.0.1:4174/urban-palm-tree/ sh scripts/pnpm.sh test:gui-browser
+BROWSER_ENGINE=webkit PREVIEW_URL=http://127.0.0.1:4174/urban-palm-tree/ sh scripts/pnpm.sh test:gui-browser
 ```
 
-M2 passes 57 automated tests and all production browser harnesses; see [M2 results](docs/M2-RESULTS.md). The WebKit run requires the matching Playwright browser (`sh scripts/pnpm.sh exec playwright install webkit`). Browser tests require the matching production preview. They use installed Google Chrome on macOS by default; override `CHROME_PATH` and `PREVIEW_URL` if needed. Screenshots and machine-readable reports are written to ignored `test-results/`; retained milestone evidence is linked from [M2 results](docs/M2-RESULTS.md). Phone browser tests are **viewport/touch emulation on the Mac**, separate from Andrew's physical-phone reports. Use the matching source revision when reproducing historical milestone checks.
+See [GUI refinement](docs/GUI-REFINEMENT.md) for current verification and [M2 results](docs/M2-RESULTS.md) for the accepted 0.2.0 milestone. The WebKit run requires the matching Playwright browser (`sh scripts/pnpm.sh exec playwright install webkit`). Browser tests require the matching production preview. They use installed Google Chrome on macOS by default; override `CHROME_PATH` and `PREVIEW_URL` if needed. Screenshots and machine-readable reports are written to ignored `test-results/`; retained evidence is linked from each record. Phone browser tests are **viewport/touch emulation on the Mac**, separate from Andrew's physical-phone reports. Use the matching source revision when reproducing historical milestone checks.
 
 The requested `qudt-all.jsonld` was not available as an upstream release artifact. The exact official Turtle is retained, and the importer generates expanded JSON-LD without dropping any RDF assertions. See [source inventory and licensing](docs/QUDT-IMPORT.md). Repeated names/symbols do not merge identities, deprecated records are retained, and dimensions alone never create relationships.
 
 ## Scope and next work
 
-M1 established semantic browsing, reviewed classifications and display-unit choices, reference navigation, reversible view filters, and immutable source/display separation. Its offline checks cover fresh baseline reopening and in-session browsing/preferences. Authoring, curation, groups, and undo/redo are implemented and locally verified in **M2**; autosave, workspace files, source export, and Reload from source remain **M3**. CoolProp has an explicit uninstalled service boundary; there is no substituted engine or solver.
+M1 established semantic browsing, reviewed classifications and display-unit choices, reference navigation, reversible view filters, and immutable source/display separation. M2 added authoring, curation, groups, and undo/redo and is accepted. The current **0.2.1 GUI refinement** reorganizes those capabilities before M3. Autosave, workspace files, source export, and Reload from source remain **M3**, which has not started. CoolProp has an explicit uninstalled service boundary; there is no substituted engine or solver.
 
 On 6 October 2026 Andrew reported that **M1 passes on physical iOS and Android phones, apart from iOS UI rendering issues**. He clarified that **KaTeX renders as expected**, while other fonts appear missing in iOS Safari and Chrome. The logo arrow appears as an emoji, and a second screenshot shows the hop selector shorter than its adjacent control. Both screenshots remain local outside this public repository. Device models, OS/browser versions, the Android browser, and detailed measurements were not supplied. This is user-reported smoke acceptance with those rendering exceptions, not comprehensive or offline/storage certification.
 

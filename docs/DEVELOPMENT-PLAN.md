@@ -10,6 +10,8 @@ The published M1 **0.1.1** correction bundles pinned Inter 4.1, replaces UI glyp
 
 M2 status, 6 October 2026: Andrew explicitly instructed Codex to proceed with M2 after the phone recheck. Version **0.2.0** implements editing, curation, groups, and action history. All 57 automated tests and the production browser checks pass, including Chrome/WebKit authoring and fresh offline authoring. See [M2 results](M2-RESULTS.md). Andrew subsequently unpublished Pages and requested redeployment. M2 0.2.0 is published from `95684ad4`; live assets, Chrome/WebKit authoring, and fresh offline checks pass. See the [M2 deployment record](M2-PAGES-DEPLOYMENT.md). Andrew then confirmed M2 complete against its Done when criteria; no detailed device/version or offline/storage protocol accompanied the confirmation. M3 persistence remains outside this milestone.
 
+Current work, 7 October 2026: Andrew requested a GUI refinement before M3 and confirmed **Browse mode by default** and **File operations disabled until M3**. Local version **0.2.1** replaces the former header and separate navigation/history bars with an application menu and explicit Edit mode. Navigation and authoring share one session engine and Undo/Redo timeline; the single timeline is the implementation interpretation of the requested unification, not a separately confirmed preference. See [GUI refinement](GUI-REFINEMENT.md) for scope and verification. Public Pages remains M2 0.2.0 at `95684ad4376cc32221962b34f8acc3699d55ea1a`. No GUI deployment is authorized, and M3 implementation has not started.
+
 ## M0 — Local foundation and feasibility
 
 Establish the local Git project on the Mac and inspect installed tooling before modifying it. Select compatible current versions of the required libraries and a maintainable static build tool. Record the runtime/package-manager choice and lock dependencies.
@@ -70,6 +72,8 @@ Implement authoring for structured fields, Markdown with images/internal links, 
 - Altering a displayed unit with an example value preserves meaning or explicitly reports why conversion is unavailable.
 
 ## M3 — Persistence and reusable content
+
+**Not started.** The requested 0.2.1 GUI refinement reorganizes accepted M2 capabilities. Disabled File items do not implement workspace persistence or satisfy M3 acceptance criteria.
 
 Implement the confirmed offline-use target, session-only undo/redo, autosave, explicit workspace files, deterministic source exports, and the Reload from source menu operation.
 

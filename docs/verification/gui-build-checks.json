@@ -1,0 +1,70 @@
+{
+  "checkedOnLocalDate": "2026-10-07",
+  "implementationCommit": "564c47e04d7d048d3e79e50c464445c1ca66b2cc",
+  "appVersion": "0.2.1",
+  "environment": {
+    "os": "macOS 27.0.1 arm64",
+    "node": "24.19.0",
+    "pnpm": "11.25.0",
+    "playwright": "1.63.0",
+    "chrome": "154.0.8037.98",
+    "webkit": "26.6"
+  },
+  "checks": [
+    {
+      "command": "sh scripts/pnpm.sh test",
+      "passed": true,
+      "tests": 65,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "command": "sh scripts/pnpm.sh format:check",
+      "passed": true
+    },
+    {
+      "command": "APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh build",
+      "passed": true,
+      "includesTypecheck": true,
+      "advisory": "Main JavaScript chunk exceeds the existing Vite 500 kB advisory threshold."
+    },
+    {
+      "command": "git diff --check",
+      "passed": true
+    }
+  ],
+  "offlineBuild": {
+    "buildId": "3097e82d5fbfa3358db8",
+    "preparedAssetsIncludingInventory": 67,
+    "bytesIncludingInventory": 7221816
+  },
+  "browserEvidence": {
+    "finalBuild": [
+      "gui-chromium-report.json",
+      "gui-webkit-report.json",
+      "gui-offline-report.json",
+      "gui-authoring-chromium-offline-report.json"
+    ],
+    "beforeFinalFooterCssCorrection": {
+      "buildId": "c7ba0751fae5dcf76407",
+      "reports": [
+        "gui-interaction-report.json",
+        "gui-semantic-report.json",
+        "gui-graph-report.json",
+        "gui-authoring-chromium-report.json",
+        "gui-authoring-webkit-report.json"
+      ],
+      "difference": "Only obsolete mobile footer CSS hiding the Browse/Edit mode indicator was removed afterward. Application behavior was unchanged; GUI and offline suites passed again on the final build."
+    }
+  },
+  "publication": {
+    "guiDeployed": false,
+    "publicVersion": "0.2.0",
+    "publicSource": "95684ad4376cc32221962b34f8acc3699d55ea1a"
+  },
+  "limits": [
+    "Mac browser automation; phone profiles are viewport/touch emulation, not physical devices.",
+    "GUI tests block service workers for isolation. Offline readiness is verified separately.",
+    "Authoring and history remain session-only; M3 has not started."
+  ]
+}

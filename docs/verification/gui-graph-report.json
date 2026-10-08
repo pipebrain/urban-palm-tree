@@ -1,0 +1,108 @@
+{
+  "checkedAt": "2026-10-08T01:10:10.710Z",
+  "baseURL": "http://127.0.0.1:4175/urban-palm-tree/",
+  "browser": "154.0.8037.98",
+  "note": "Mac Chromium. Phone uses touch dispatch and viewport emulation, not a physical device.",
+  "runs": [
+    {
+      "profile": "desktop",
+      "errors": [],
+      "placement": {
+        "before": {
+          "x": 367.8558349609375,
+          "y": -74.41865539550781,
+          "pins": 0,
+          "ticks": 10,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "moved": {
+          "x": 379.2843933105469,
+          "y": -68.7043685913086,
+          "pins": 1,
+          "ticks": 10,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "afterForce": {
+          "x": 375.574951171875,
+          "y": -150.4031982421875,
+          "pins": 0,
+          "ticks": 25,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "pinned": {
+          "x": 375.574951171875,
+          "y": -150.4031982421875,
+          "pins": 1,
+          "ticks": 25,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "checks": "single drag / undo / redo / pin / unpin / ticks / cancelled drag / filtering / hidden-node history"
+      },
+      "groups": {
+        "primaryColor": "#2266aa",
+        "overlappingCount": 2,
+        "filteredCount": 1,
+        "countAfterGroupDeletion": 1556
+      }
+    },
+    {
+      "profile": "phone",
+      "errors": [],
+      "touchSelection": "Canvas tap preserves selected identity and cannot click through to inspector",
+      "placement": {
+        "before": {
+          "x": 367.8558349609375,
+          "y": -74.41865539550781,
+          "pins": 0,
+          "ticks": 10,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "moved": {
+          "x": 379.2843933105469,
+          "y": -68.7043685913086,
+          "pins": 1,
+          "ticks": 10,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "afterForce": {
+          "x": 375.574951171875,
+          "y": -150.4031982421875,
+          "pins": 0,
+          "ticks": 25,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "pinned": {
+          "x": 375.574951171875,
+          "y": -150.4031982421875,
+          "pins": 1,
+          "ticks": 25,
+          "count": 1556,
+          "color": "",
+          "groups": 0
+        },
+        "checks": "single drag / undo / redo / pin / unpin / ticks / cancelled drag / filtering / hidden-node history"
+      },
+      "groups": {
+        "primaryColor": "#2266aa",
+        "overlappingCount": 2,
+        "filteredCount": 1,
+        "countAfterGroupDeletion": 1556
+      }
+    }
+  ],
+  "passed": true
+}
