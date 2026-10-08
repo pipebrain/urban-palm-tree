@@ -3,9 +3,7 @@ import appPackage from "../package.json";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   DockviewReact,
-  DockviewDefaultTab,
   themeLight,
-  type IDockviewPanelHeaderProps,
   type DockviewReadyEvent,
 } from "dockview-react";
 import type { Dataset, LearningNode } from "./domain/types";
@@ -33,6 +31,16 @@ import { LibraryPanel } from "./workspace/LibraryPanel";
 import { MapPanel } from "./workspace/MapPanel";
 import { InspectorPanel } from "./workspace/InspectorPanel";
 import { UnitPanel } from "./workspace/UnitPanel";
+import {
+  WorkspaceTab,
+  CloseTabIcon,
+  panelTitles,
+} from "./workspace/WorkspaceTab";
+import {
+  arrangePanels,
+  syncOpenPanels,
+  type TileLayout,
+} from "./workspace/dock-layout";
 import { prepareOfflinePreview, type OfflineStatus } from "./offline";
 
 const components = {
@@ -41,23 +49,22 @@ const components = {
   inspector: InspectorPanel,
   units: UnitPanel,
 };
-const FixedTab = (props: IDockviewPanelHeaderProps) => (
-  <DockviewDefaultTab {...props} hideClose />
-);
-
 export function App() {
   const [data, setData] = useState<Dataset>();
   const [error, setError] = useState("");
   const [session, setSession] = useState(createSession);
   const sessionRef = useRef(session);
   const initialAuthoring = useRef(session.present.authoring);
-  const drafts = useRef(new Set<string>());
+  const drafts = useRef(new Map<string, PanelId>());
   const [draftCount, setDraftCount] = useState(0);
-  const registerDraft = useCallback((id: string, active: boolean) => {
-    if (active) drafts.current.add(id);
-    else drafts.current.delete(id);
-    setDraftCount(drafts.current.size);
-  }, []);
+  const registerDraft = useCallback(
+    (id: string, active: boolean, panel: PanelId) => {
+      if (active) drafts.current.set(id, panel);
+      else drafts.current.delete(id);
+      setDraftCount(drafts.current.size);
+    },
+    [],
+  );
   const [aboutOpen, setAboutOpen] = useState(false);
   const about = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -129,12 +136,12 @@ export function App() {
     };
   }, []);
   useEffect(() => {
-    if (mobile || !session.panelsOpen) {
+    if (mobile) {
       dock.current = undefined;
       dockListeners.current.forEach((listener) => listener.dispose());
       dockListeners.current = [];
     }
-  }, [mobile, session.panelsOpen]);
+  }, [mobile]);
   useEffect(
     () => () => dockListeners.current.forEach((listener) => listener.dispose()),
     [],
@@ -197,12 +204,16 @@ export function App() {
         : undefined;
     return send({ type: "author", command, label, reference });
   };
-  const unfinishedEditor = () => {
-    if (!drafts.current.size) return false;
+  const unfinishedEditor = (panel?: PanelId) => {
+    if (
+      !drafts.current.size ||
+      (panel && ![...drafts.current.values()].includes(panel))
+    )
+      return false;
     send({
       type: "error",
       message:
-        "Save or cancel the open editor before opening another concept or unit, creating a concept, changing modes, moving tabs, or using Undo/Redo.",
+        "Save or cancel the open editor before opening another concept or unit, creating a concept, changing modes, closing or arranging its tabs, or using Undo/Redo.",
     });
     return true;
   };
@@ -237,14 +248,16 @@ export function App() {
     return () => window.removeEventListener("keydown", key);
   });
   useEffect(() => {
-    if (session.panelsOpen && !mobile) {
+    if (!mobile) {
       const api = dock.current;
+      if (!api) return;
+      syncOpenPanels(api, session.openPanels);
       const target = api?.getPanel(visit.panel);
       // Dockview already activates a panel when its text field receives focus.
       // Activating it again steals that focus before the input event arrives.
       if (target && api?.activePanel !== target) target.api.setActive();
     }
-  }, [visit, mobile, session.panelsOpen]);
+  }, [visit, mobile, session.openPanels]);
   // While loading, the example's participants do not exist yet; index only a complete dataset.
   const index = useMemo(
     () => (data ? buildGraphIndex(nodes, edges, units) : undefined),
@@ -266,8 +279,11 @@ export function App() {
     groupFilter,
   ]);
   const activate = (panel: PanelId) => {
-    send({ type: "activate", panel });
-    if (!mobile) dock.current?.getPanel(panel)?.api.setActive();
+    send({ type: "panels.open", panel });
+  };
+  const closePanel = (panel: PanelId) => {
+    if (unfinishedEditor(panel)) return;
+    send({ type: "panels.close", panel });
   };
   const navigate = (reference: SessionReference) => {
     const current = sessionRef.current.present.reference;
@@ -288,35 +304,11 @@ export function App() {
     dock.current = event.api;
     dockListeners.current.forEach((listener) => listener.dispose());
     if (dockLayout.current) event.api.fromJSON(dockLayout.current);
-    else {
-      event.api.addPanel({
-        id: "library",
-        component: "library",
-        title: "Library",
-        initialWidth: 280,
-      });
-      event.api.addPanel({
-        id: "graph",
-        component: "graph",
-        title: "Knowledge map",
-        position: { referencePanel: "library", direction: "right" },
-      });
-      event.api.addPanel({
-        id: "inspector",
-        component: "inspector",
-        title: "Inspector",
-        position: { referencePanel: "graph", direction: "right" },
-        initialWidth: 350,
-      });
-      event.api.addPanel({
-        id: "units",
-        component: "units",
-        title: "Units",
-        position: { referencePanel: "inspector", direction: "within" },
-      });
-      event.api.getPanel("library")?.api.setSize({ width: 280 });
-      event.api.getPanel("inspector")?.api.setSize({ width: 350 });
-    }
+    syncOpenPanels(
+      event.api,
+      sessionRef.current.openPanels,
+      !dockLayout.current,
+    );
     event.api
       .getPanel(sessionRef.current.present.reference.panel)
       ?.api.setActive();
@@ -356,25 +348,39 @@ export function App() {
         if (dock.current) dockLayout.current = dock.current.toJSON();
         send({ type: "panels.closeAll" });
         break;
+      case "viewInspector":
+        activate("inspector");
+        break;
+      case "viewGraph":
+        activate("graph");
+        break;
+      case "viewLibrary":
+        activate("library");
+        break;
+      case "viewUnits":
+        activate("units");
+        break;
+      case "tileColumns":
+      case "tileRows":
+      case "tileQuarters":
       case "mergeTabs": {
         if (unfinishedEditor() || mobile || !dock.current) break;
-        const api = dock.current;
-        const target =
-          api.getPanel(sessionRef.current.present.reference.panel) ||
-          api.panels[0];
-        if (!target) break;
-        for (const panel of [...api.panels]) {
-          if (panel.api.group.id !== target.api.group.id)
-            panel.api.moveTo({
-              group: target.api.group,
-              position: "center",
-              skipSetActive: true,
-            });
-        }
-        target.api.setActive();
-        dockLayout.current = api.toJSON();
-        setDockGroupCount(api.groups.length);
-        send({ type: "panels.merge" });
+        const layout: TileLayout | "merge" =
+          action === "tileColumns"
+            ? "columns"
+            : action === "tileRows"
+              ? "rows"
+              : action === "tileQuarters"
+                ? "quarters"
+                : "merge";
+        arrangePanels(
+          dock.current,
+          layout,
+          sessionRef.current.present.reference.panel,
+        );
+        dockLayout.current = dock.current.toJSON();
+        setDockGroupCount(dock.current.groups.length);
+        send({ type: layout === "merge" ? "panels.merge" : "panels.tiles" });
         break;
       }
       // File items stay disabled until M3 supplies durable workspace operations.
@@ -399,6 +405,7 @@ export function App() {
   const workspace: Workspace = {
     editMode: session.editMode,
     registerDraft,
+    closePanel,
     data,
     nodes,
     edges,
@@ -511,6 +518,7 @@ export function App() {
           editMode={session.editMode}
           hasOpenTabs={session.panelsOpen}
           canMergeTabs={session.panelsOpen && !mobile && dockGroupCount > 1}
+          canTileTabs={!mobile && session.openPanels.length > 1}
         />
         {session.error && (
           <div className="authoring-error" role="alert">
@@ -520,53 +528,102 @@ export function App() {
             </button>
           </div>
         )}
-        <div className="workspace">
-          {!session.panelsOpen ? (
-            <div className="empty-workspace">
-              <h1>All tabs are closed</h1>
-              <p>Your session content is still here.</p>
-              <button onClick={() => send({ type: "panels.restore" })}>
-                Restore tabs
-              </button>
-            </div>
-          ) : mobile ? (
+        <div
+          className="workspace"
+          onKeyDownCapture={(event) => {
+            const target = event.target;
+            // Dockview's native tab shortcut closes through its own API.
+            // Route it through the same draft guard and session state as X.
+            if (
+              (event.key === "Delete" || event.key === "Backspace") &&
+              target instanceof HTMLElement &&
+              target.classList.contains("dv-tab")
+            ) {
+              const id =
+                target.querySelector<HTMLElement>("[data-panel-id]")?.dataset
+                  .panelId;
+              if (id && id in components) {
+                event.preventDefault();
+                event.stopPropagation();
+                closePanel(id as PanelId);
+              }
+            }
+          }}
+        >
+          {mobile ? (
             <>
-              <nav className="mobile-nav" aria-label="Workspace panels">
-                {[
-                  ["graph", "Map"],
-                  ["library", "Search"],
-                  ["inspector", "Inspector"],
-                  ["units", "Units"],
-                ].map(([id, label]) => (
-                  <button
-                    key={id}
-                    aria-pressed={tab === id}
-                    onClick={() => activate(id as PanelId)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </nav>
+              {session.panelsOpen && (
+                <nav className="mobile-nav" aria-label="Workspace panels">
+                  {session.openPanels.map((id) => (
+                    <div
+                      key={id}
+                      className="mobile-tab"
+                      data-panel-id={id}
+                      data-visible={tab === id}
+                    >
+                      <button
+                        className="mobile-tab-select"
+                        aria-pressed={tab === id}
+                        onClick={() => activate(id)}
+                      >
+                        {id === "graph"
+                          ? "Map"
+                          : id === "library"
+                            ? "Search"
+                            : panelTitles[id]}
+                      </button>
+                      <button
+                        className="tab-close"
+                        aria-label={`Close ${panelTitles[id]}`}
+                        onClick={() => closePanel(id)}
+                      >
+                        <CloseTabIcon />
+                      </button>
+                    </div>
+                  ))}
+                </nav>
+              )}
               <div className="mobile-panels">
-                {Object.entries(components).map(([id, Panel]) => (
-                  <div
-                    key={id}
-                    className={
-                      tab === id ? "mobile-panel" : "mobile-panel hidden"
-                    }
-                  >
-                    <Panel />
-                  </div>
-                ))}
+                {session.openPanels.map((id) => {
+                  const Panel = components[id];
+                  return (
+                    <div
+                      key={id}
+                      className={
+                        tab === id ? "mobile-panel" : "mobile-panel hidden"
+                      }
+                    >
+                      <Panel />
+                    </div>
+                  );
+                })}
               </div>
             </>
           ) : (
             <DockviewReact
-              defaultTabComponent={FixedTab}
+              defaultTabComponent={WorkspaceTab}
               components={components}
               onReady={ready}
               theme={themeLight}
             />
+          )}
+          {!session.panelsOpen && (
+            <div className="empty-workspace">
+              <h1>All tabs are closed</h1>
+              <p>
+                Your session content is still here. Open a panel from View to
+                continue.
+              </p>
+              <div className="empty-workspace-actions">
+                {(["inspector", "graph", "library", "units"] as PanelId[]).map(
+                  (id) => (
+                    <button key={id} onClick={() => activate(id)}>
+                      Open {panelTitles[id]}
+                    </button>
+                  ),
+                )}
+              </div>
+            </div>
           )}
         </div>
         {session.showStatusBar && (

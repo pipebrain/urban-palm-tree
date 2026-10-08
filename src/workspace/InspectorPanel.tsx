@@ -31,8 +31,8 @@ function DisplayOverrides({ node }: { node: LearningNode }) {
   const { registerDraft } = w;
   const dirty = label !== node.label || latex !== (node.latex || "");
   useEffect(() => {
-    registerDraft(draftId, dirty);
-    return () => registerDraft(draftId, false);
+    registerDraft(draftId, dirty, "inspector");
+    return () => registerDraft(draftId, false, "inspector");
   }, [draftId, dirty, registerDraft]);
   const source = w.sourceNodes.get(node.id) || node;
   useEffect(() => {

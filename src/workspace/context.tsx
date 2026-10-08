@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import type { SessionPanel } from "../domain/session";
 import type {
   Dataset,
   LearningNode,
@@ -16,7 +17,8 @@ import type {
 } from "../domain/authoring";
 export interface Workspace {
   editMode: boolean;
-  registerDraft: (id: string, active: boolean) => void;
+  registerDraft: (id: string, active: boolean, panel: SessionPanel) => void;
+  closePanel: (panel: SessionPanel) => void;
   data: Dataset;
   nodes: LearningNode[];
   edges: GraphEdge[];

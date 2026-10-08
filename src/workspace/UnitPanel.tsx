@@ -20,8 +20,8 @@ function UnitEditor({
   const draftId = useId();
   const { registerDraft } = w;
   useEffect(() => {
-    registerDraft(draftId, true);
-    return () => registerDraft(draftId, false);
+    registerDraft(draftId, true, "units");
+    return () => registerDraft(draftId, false, "units");
   }, [draftId, registerDraft]);
   const [label, setLabel] = useState(unit.label);
   const [latex, setLatex] = useState(

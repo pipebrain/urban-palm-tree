@@ -50,6 +50,12 @@ test("a new session defaults to browsing with immutable empty history and indepe
   assert.equal(state.editMode, false);
   assert.equal(state.showStatusBar, true);
   assert.equal(state.panelsOpen, true);
+  assert.deepEqual(state.openPanels, [
+    "library",
+    "graph",
+    "inspector",
+    "units",
+  ]);
   assert.equal(state.mergedTabs, false);
   assert.deepEqual(state.present.reference, { panel: "graph" });
   assert.equal(canUndo(state), false);
@@ -60,6 +66,7 @@ test("a new session defaults to browsing with immutable empty history and indepe
     requiresEditMode: false,
   });
   assert.throws(() => state.past.push({}), TypeError);
+  assert.throws(() => state.openPanels.push("graph"), TypeError);
   assert.throws(() => {
     state.present.reference.panel = "units";
   }, TypeError);
@@ -291,7 +298,10 @@ test("mode, status, panel arrangement, creation drafts and notices never add or 
     { type: "statusBar.set", value: false },
     { type: "panels.closeAll" },
     { type: "panels.merge" },
+    { type: "panels.tiles" },
     { type: "panels.restore" },
+    { type: "panels.close", panel: "units" },
+    { type: "panels.open", panel: "units" },
     { type: "activate", panel: "library" },
     { type: "editMode.set", value: true },
     { type: "beginCreate", kind: "equation" },
@@ -315,4 +325,159 @@ test("mode, status, panel arrangement, creation drafts and notices never add or 
   state = dispatch(state, { type: "redo" });
   assert.equal(state.present.reference.selectedId, "b");
   assert.equal(state.present.reference.panel, "inspector");
+});
+
+test("individual windows close independently with deterministic active fallback", () => {
+  let state = visit(createSession(), "a");
+  const past = state.past;
+  const future = state.future;
+  const authoring = state.present.authoring;
+  const referenceBefore = state.present.reference;
+  state = dispatch(state, { type: "panels.close", panel: "units" });
+  assert.deepEqual(state.openPanels, ["library", "graph", "inspector"]);
+  assert.equal(state.present.reference, referenceBefore);
+  state = dispatch(state, { type: "panels.close", panel: "inspector" });
+  assert.deepEqual(state.openPanels, ["library", "graph"]);
+  assert.deepEqual(state.present.reference, reference("a", "library"));
+  state = dispatch(state, { type: "panels.close", panel: "library" });
+  assert.deepEqual(state.openPanels, ["graph"]);
+  assert.deepEqual(state.present.reference, reference("a", "graph"));
+  const lastReference = state.present.reference;
+  state = dispatch(state, { type: "panels.close", panel: "graph" });
+  assert.deepEqual(state.openPanels, []);
+  assert.equal(state.panelsOpen, false);
+  assert.equal(state.present.reference, lastReference);
+  assert.equal(state.past, past);
+  assert.equal(state.future, future);
+  assert.equal(state.present.authoring, authoring);
+  assert.equal(
+    dispatch(state, { type: "panels.close", panel: "graph" }),
+    state,
+  );
+});
+
+test("closing all windows preserves content and redo; View opens only the requested window", () => {
+  let state = visit(rename(enableEdit(visit(createSession(), "a"))), "b");
+  state = dispatch(state, { type: "undo" });
+  const present = state.present;
+  const past = state.past;
+  const future = state.future;
+  state = dispatch(state, { type: "panels.closeAll" });
+  assert.deepEqual(state.openPanels, []);
+  assert.equal(state.panelsOpen, false);
+  assert.equal(state.present, present);
+  assert.equal(
+    state.present.authoring.nodeOverrides.a.label,
+    "Supply air flow",
+  );
+  state = dispatch(state, { type: "panels.merge" });
+  assert.deepEqual(state.openPanels, []);
+  assert.equal(state.mergedTabs, true);
+  state = dispatch(state, { type: "panels.tiles" });
+  assert.deepEqual(state.openPanels, []);
+  assert.equal(state.mergedTabs, false);
+  state = dispatch(state, { type: "panels.open", panel: "units" });
+  assert.deepEqual(state.openPanels, ["units"]);
+  assert.equal(state.panelsOpen, true);
+  assert.deepEqual(state.present.reference, reference("a", "units"));
+  assert.equal(dispatch(state, { type: "panels.open", panel: "units" }), state);
+  state = dispatch(state, { type: "activate", panel: "graph" });
+  assert.deepEqual(state.openPanels, ["units", "graph"]);
+  assert.deepEqual(state.present.reference, reference("a", "graph"));
+  state = dispatch(state, { type: "panels.merge" });
+  assert.deepEqual(state.openPanels, ["units", "graph"]);
+  assert.equal(state.mergedTabs, true);
+  assert.equal(state.past, past);
+  assert.equal(state.future, future);
+  assert.equal(state.present.authoring, present.authoring);
+  assert.throws(() => state.openPanels.splice(0, 1), TypeError);
+});
+
+test("navigation and history travel open only the destination window without restoring old layouts", () => {
+  let state = dispatch(createSession(), { type: "panels.closeAll" });
+  state = visit(state, "a");
+  assert.deepEqual(state.openPanels, ["inspector"]);
+  state = dispatch(state, { type: "panels.closeAll" });
+  state = dispatch(state, { type: "undo" });
+  assert.deepEqual(state.openPanels, ["graph"]);
+  assert.deepEqual(state.present.reference, { panel: "graph" });
+  state = dispatch(state, { type: "panels.closeAll" });
+  state = dispatch(state, { type: "redo" });
+  assert.deepEqual(state.openPanels, ["inspector"]);
+  assert.deepEqual(state.present.reference, reference("a"));
+  state = visit(state, "b");
+  state = dispatch(state, { type: "undo" });
+  const past = state.past;
+  const future = state.future;
+  state = dispatch(state, { type: "panels.closeAll" });
+  state = visit(state, "a");
+  assert.deepEqual(state.openPanels, ["inspector"]);
+  assert.equal(state.past, past);
+  assert.equal(state.future, future);
+});
+
+test("creation and atomic Save open Inspector while content undo restores only its reference window", () => {
+  let state = enableEdit(createSession());
+  state = dispatch(state, { type: "panels.closeAll" });
+  state = dispatch(state, { type: "beginCreate", kind: "quantity" });
+  assert.deepEqual(state.openPanels, ["inspector"]);
+  assert.equal(state.creating, "quantity");
+  assert.equal(state.past.length, 0);
+  state = dispatch(state, { type: "panels.close", panel: "inspector" });
+  assert.deepEqual(state.openPanels, []);
+  assert.equal(state.creating, undefined);
+  state = dispatch(state, { type: "panels.open", panel: "graph" });
+  state = dispatch(state, { type: "panels.closeAll" });
+  state = dispatch(state, {
+    type: "author",
+    command: { type: "node.create", node: concept("c", "New flow") },
+    reference: reference("c"),
+    label: "Create New flow",
+  });
+  assert.deepEqual(state.openPanels, ["inspector"]);
+  assert.ok(state.present.authoring.authoredNodes.c);
+  assert.equal(state.past.length, 1);
+  state = dispatch(state, { type: "panels.closeAll" });
+  state = dispatch(state, { type: "undo" });
+  assert.deepEqual(state.openPanels, ["graph"]);
+  assert.equal(state.present.authoring.authoredNodes.c, undefined);
+  state = dispatch(state, { type: "panels.closeAll" });
+  state = dispatch(state, { type: "redo" });
+  assert.deepEqual(state.openPanels, ["inspector"]);
+  assert.ok(state.present.authoring.authoredNodes.c);
+});
+
+test("failed actions and blocked content history keep every window closed", () => {
+  let state = rename(enableEdit(createSession()));
+  state = dispatch(state, { type: "editMode.set", value: false });
+  state = dispatch(state, { type: "panels.closeAll" });
+  for (const action of [
+    { type: "undo" },
+    { type: "beginCreate", kind: "equation" },
+    {
+      type: "author",
+      command: { type: "node.edit", id: "a", patch: { label: "New label" } },
+      reference: reference("a"),
+      label: "Rename",
+    },
+  ]) {
+    const rejected = dispatch(state, action);
+    assert.match(rejected.error, /Enable Edit mode/);
+    assert.equal(rejected.openPanels, state.openPanels);
+    assert.equal(rejected.panelsOpen, false);
+    assert.equal(rejected.present, state.present);
+    assert.equal(rejected.past, state.past);
+    assert.equal(rejected.future, state.future);
+  }
+  state = enableEdit(state);
+  const failed = dispatch(state, {
+    type: "author",
+    command: { type: "node.create", node: concept("c") },
+    reference: reference("missing"),
+    label: "Invalid reference",
+  });
+  assert.match(failed.error, /reference does not exist/);
+  assert.equal(failed.openPanels, state.openPanels);
+  assert.equal(failed.panelsOpen, false);
+  assert.equal(failed.present, state.present);
 });

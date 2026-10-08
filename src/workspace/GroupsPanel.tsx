@@ -17,8 +17,8 @@ function GroupEditor({
   const dirty =
     name !== (group?.name || "") || color !== (group?.color || "#438570");
   useEffect(() => {
-    registerDraft(draftId, dirty);
-    return () => registerDraft(draftId, false);
+    registerDraft(draftId, dirty, "library");
+    return () => registerDraft(draftId, false, "library");
   }, [draftId, dirty, registerDraft]);
   return (
     <form

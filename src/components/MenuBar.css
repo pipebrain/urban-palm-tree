@@ -56,24 +56,29 @@
 }
 
 .app-menu-bar .app-menu-brand {
-  gap: 9px;
-  padding-left: 3px;
-  padding-right: 15px;
+  padding-left: 8px;
+  padding-right: 12px;
   font-weight: 650;
 }
 
-.app-menu-mark {
-  width: 32px;
-  height: 32px;
-  display: flex;
+.app-menu-bar .app-system-button {
+  display: inline-flex;
+  flex: 0 0 44px;
   align-items: center;
   justify-content: center;
-  border-radius: 7px;
-  background: #0b211b;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: #fff;
+  opacity: 1;
+  cursor: default;
 }
 
-.app-menu-mark svg {
+.app-system-button svg {
   width: 29px;
   height: 29px;
 }
@@ -186,15 +191,35 @@
   }
 
   .app-menu-bar .app-menu-trigger {
-    padding-left: 9px;
-    padding-right: 9px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 12px;
   }
 
   .app-menu-bar .app-menu-brand {
-    padding: 0 6px;
+    padding: 0 5px;
   }
+}
 
-  .app-menu-name {
-    display: none;
-  }
+.app-menu-popup .app-menu-divider {
+  border-top: 1px solid #dce3da;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: 4px;
+}
+
+.app-menu-chevron {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.app-submenu-popup {
+  z-index: 10001;
+  width: 220px;
 }

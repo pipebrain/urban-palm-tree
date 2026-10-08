@@ -1,7 +1,7 @@
 {
   "name": "hvacr-knowledge-graph",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "engines": {
@@ -17,6 +17,7 @@
     "test:semantic-browser": "node scripts/semantic-browser-check.mjs",
     "test:authoring-browser": "node scripts/authoring-browser-check.mjs",
     "test:authoring-graph": "node scripts/authoring-graph-browser-check.mjs",
+    "test:window-browser": "node scripts/window-browser-check.mjs",
     "test:gui-browser": "node scripts/gui-browser-check.mjs",
     "data:import": "node scripts/import-qudt.mjs",
     "data:check": "node scripts/import-qudt.mjs --check",

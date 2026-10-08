@@ -98,6 +98,7 @@ h1 {
 }
 
 .workspace {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
@@ -116,7 +117,57 @@ h1 {
   --dv-tabs-and-actions-container-height: 35px;
 }
 .dv-tab {
-  padding: 0 18px !important;
+  padding: 0 10px !important;
+}
+.workspace-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+.workspace-tab .tab-close {
+  opacity: 0;
+}
+.workspace-tab[data-visible="true"] .tab-close,
+.workspace-tab:hover .tab-close,
+.workspace-tab:focus-within .tab-close {
+  opacity: 1;
+}
+.tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #526259;
+}
+.tab-close svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+.tab-close:hover,
+.tab-close:focus-visible {
+  background: #cbd8ca;
+  color: #122f27;
+}
+.tab-close:focus-visible {
+  outline: 2px solid #53745f;
+  outline-offset: -2px;
+}
+@media (hover: none) {
+  .workspace-tab .tab-close {
+    opacity: 1;
+  }
 }
 .panel-scroll {
   height: 100%;
@@ -722,21 +773,35 @@ canvas {
 
 .mobile-nav {
   display: flex;
-  padding: 7px 12px;
-  gap: 6px;
+  padding: 4px;
+  gap: 2px;
+  overflow-x: auto;
+  flex-shrink: 0;
   border-bottom: 1px solid #d9e2d2;
   background: #e9eee2;
 }
-.mobile-nav button {
-  flex: 1;
+.mobile-tab {
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+  border-radius: 4px;
+}
+.mobile-tab-select {
   border: 0;
   background: transparent;
-  font-size: 12px;
-  min-height: 42px;
+  font-size: 11px;
+  padding: 0 5px;
+  min-height: 44px;
 }
-.mobile-nav button[aria-pressed="true"] {
+.mobile-tab[data-visible="true"] {
   background: #fbfcf6;
   box-shadow: 0 1px 4px #17351912;
+}
+.mobile-tab .tab-close {
+  width: 32px;
+  flex-basis: 32px;
+  height: 44px;
+  min-height: 44px;
 }
 .mobile-panels {
   flex: 1;
@@ -917,10 +982,11 @@ textarea {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: auto;
 }
 .map-canvas {
   flex: 1;
-  min-height: 0;
+  min-height: 340px;
   position: relative;
 }
 .map-filters {
@@ -1367,7 +1433,9 @@ code {
 
 /* The menu owns global commands; panels retain the full available workspace. */
 .empty-workspace {
-  flex: 1;
+  position: absolute;
+  inset: 0;
+  background: #fafbf6;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1375,6 +1443,12 @@ code {
   gap: 14px;
   padding: 28px;
   text-align: center;
+}
+.empty-workspace-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
 }
 .empty-workspace p {
   color: #617265;

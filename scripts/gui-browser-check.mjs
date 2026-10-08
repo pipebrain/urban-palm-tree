@@ -126,11 +126,12 @@ try {
       assert.equal(await button("Edit concept").count(), 0);
       assert.equal(await page.locator(".brand-mark svg").count(), 1);
       assert.equal((await page.locator(".brand-mark").innerText()).trim(), "");
-      assert.equal(await page.locator(".app-menu-name").isVisible(), !phone);
+      assert.equal(await page.locator(".app-menu-name").isVisible(), true);
       for (const target of await page
         .getByRole("menubar")
         .getByRole("menuitem")
         .all()) {
+        if (phone) await target.scrollIntoViewIfNeeded();
         const box = await target.boundingBox();
         assert.ok(
           box.height >= 44,
@@ -154,7 +155,7 @@ try {
       }
       await noOverflow();
       await page.keyboard.press("Escape");
-      await trigger("HVACRbuild.app").focus();
+      await trigger("HVACRbuild").focus();
       await page.keyboard.press("ArrowRight");
       assert.equal(
         await page.locator(":focus").getAttribute("aria-label"),
@@ -170,12 +171,12 @@ try {
       await page.keyboard.press("ArrowDown");
       assert.equal(
         await page.locator(":focus").getAttribute("aria-label"),
-        "Open…",
+        "Open",
       );
       await page.keyboard.press("End");
       assert.equal(
         await page.locator(":focus").getAttribute("aria-label"),
-        "Export…",
+        "Export",
       );
       await page.keyboard.press("ArrowRight");
       assert.equal(
@@ -210,7 +211,7 @@ try {
         "Disabled M3 file actions are keyboard discoverable and inert; arrows, Enter, Escape, and Tab preserve focus",
       );
 
-      await menuAction("View", "Show status bar", true);
+      await menuAction("View", "Hide Status Bar");
       assert.equal(
         await page.getByLabel("Status bar", { exact: true }).count(),
         0,
@@ -218,30 +219,24 @@ try {
       await openMenu("View");
       assert.equal(
         await page
-          .getByRole("menuitemcheckbox", {
-            name: "Show status bar",
-            exact: true,
-          })
-          .getAttribute("aria-checked"),
-        "false",
+          .getByRole("menuitem", { name: "Show Status Bar", exact: true })
+          .count(),
+        1,
       );
       await click(
-        page.getByRole("menuitemcheckbox", {
-          name: "Show status bar",
-          exact: true,
-        }),
+        page.getByRole("menuitem", { name: "Show Status Bar", exact: true }),
       );
       assert.equal(
         await page.getByLabel("Status bar", { exact: true }).count(),
         1,
       );
-      await menuAction("HVACRbuild.app", "About HVACRbuild.app");
+      await menuAction("HVACRbuild", "About");
       await page
         .getByRole("dialog", { name: "HVACRbuild.app", exact: true })
         .waitFor();
       await click(button("Close About"));
       assert.equal(await page.getByRole("dialog").isVisible(), false);
-      await menuAction("HVACRbuild.app", "About HVACRbuild.app");
+      await menuAction("HVACRbuild", "About");
       await page.keyboard.press("Escape");
       assert.equal(await page.getByRole("dialog").isVisible(), false);
       run.checks.push(
@@ -370,17 +365,17 @@ try {
         await click(button("Dismiss"));
       };
       await guarded("Develop", "Leave Edit Mode", true);
-      await guarded("Window", "Close all tabs");
+      await guarded("Window", "Close All Tabs");
       if (phone) {
         await openMenu("Window");
         assert.equal(
           await page
-            .getByRole("menuitem", { name: "Merge all tabs", exact: true })
+            .getByRole("menuitem", { name: "Merge All Tabs", exact: true })
             .getAttribute("aria-disabled"),
           "true",
         );
         await page.keyboard.press("Escape");
-      } else await guarded("Window", "Merge all tabs");
+      } else await guarded("Window", "Merge All Tabs");
       await guarded("Edit", "Undo");
       await searchPanel();
       await page
@@ -485,31 +480,38 @@ try {
       );
 
       const beforeClose = await counts();
-      await menuAction("Window", "Close all tabs");
+      if (!phone) {
+        assert.ok((await page.locator(".dv-groupview").count()) > 1);
+        await menuAction("Window", "Merge All Tabs");
+        assert.equal(await page.locator(".dv-groupview").count(), 1);
+        assert.equal(await page.locator(".dv-tab").count(), 4);
+        assert.deepEqual(await counts(), beforeClose);
+      }
+      await menuAction("Window", "Close All Tabs");
       await page
         .getByRole("heading", { name: "All tabs are closed", exact: true })
         .waitFor();
       assert.deepEqual(await counts(), beforeClose);
-      await click(button("Restore tabs"));
+      await menuAction("View", "Inspector");
       await selected(createdId, "GUI authoring fixture");
       assert.deepEqual(await counts(), beforeClose);
+      for (const panel of ["Library", "Knowledge Map", "Units", "Inspector"])
+        await menuAction("View", panel);
       if (!phone) {
-        assert.ok((await page.locator(".dv-groupview").count()) > 1);
-        await menuAction("Window", "Merge all tabs");
         assert.equal(await page.locator(".dv-groupview").count(), 1);
         assert.equal(await page.locator(".dv-tab").count(), 4);
         await selected(createdId, "GUI authoring fixture");
         assert.deepEqual(await counts(), beforeClose);
-        await menuAction("Window", "Close all tabs");
-        await click(button("Restore tabs"));
+        await menuAction("Window", "Close All Tabs");
+        await menuAction("View", "Inspector");
         assert.equal(await page.locator(".dv-groupview").count(), 1);
-        assert.equal(await page.locator(".dv-tab").count(), 4);
+        assert.equal(await page.locator(".dv-tab").count(), 1);
         await selected(createdId, "GUI authoring fixture");
       }
       run.checks.push(
         phone
-          ? "Closing/restoring tabs preserves content and timeline; Merge all tabs is disabled for the existing phone tab layout"
-          : "Closing/restoring tabs preserves content and timeline; desktop merge yields one group with four tabs and preserves that layout on restore",
+          ? "Closing tabs and reopening panels through View preserves content and timeline; Merge All Tabs is disabled for the phone layout"
+          : "View reopens individual panels without discarding content/history; desktop merge yields one group with four tabs",
       );
       await noOverflow();
       await openMenu("Develop");

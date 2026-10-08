@@ -25,8 +25,8 @@ export function RelationshipEditor({
   const draftId = useId();
   const { registerDraft } = w;
   useEffect(() => {
-    registerDraft(draftId, true);
-    return () => registerDraft(draftId, false);
+    registerDraft(draftId, true, "inspector");
+    return () => registerDraft(draftId, false, "inspector");
   }, [draftId, registerDraft]);
   const [draft, setDraft] = useState<GraphEdge>(() => {
     const id = `urn:hvacr:edge:${crypto.randomUUID()}`;

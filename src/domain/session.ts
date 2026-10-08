@@ -10,6 +10,13 @@ import {
 import type { LearningNode } from "./types.ts";
 
 export type SessionPanel = "library" | "graph" | "inspector" | "units";
+export const DEFAULT_OPEN_PANELS: readonly SessionPanel[] = Object.freeze([
+  "library",
+  "graph",
+  "inspector",
+  "units",
+]);
+const NO_OPEN_PANELS: readonly SessionPanel[] = Object.freeze([]);
 export interface SessionReference {
   selectedId?: string;
   unitId?: string;
@@ -31,6 +38,9 @@ export interface SessionState {
   readonly future: readonly SessionHistoryEntry[];
   readonly editMode: boolean;
   readonly showStatusBar: boolean;
+  /** Live window state is independent of content and reference history. */
+  readonly openPanels: readonly SessionPanel[];
+  /** Compatibility view of openPanels; never updated independently. */
   readonly panelsOpen: boolean;
   readonly mergedTabs: boolean;
   readonly creating?: LearningNode["kind"];
@@ -53,9 +63,12 @@ export type SessionAction =
   | { type: "cancelCreate" }
   | { type: "editMode.set"; value: boolean }
   | { type: "statusBar.set"; value: boolean }
+  | { type: "panels.open"; panel: SessionPanel }
+  | { type: "panels.close"; panel: SessionPanel }
   | { type: "panels.closeAll" }
   | { type: "panels.restore" }
   | { type: "panels.merge" }
+  | { type: "panels.tiles" }
   | { type: "notice"; message: string }
   | { type: "error"; message: string }
   | { type: "error.clear" };
@@ -78,8 +91,12 @@ function entry(
 }
 function update(
   state: SessionState,
-  patch: Partial<SessionState>,
+  changes: Partial<Omit<SessionState, "panelsOpen">>,
 ): SessionState {
+  const patch = {
+    ...changes,
+    panelsOpen: (changes.openPanels || state.openPanels).length > 0,
+  };
   if (
     Object.entries(patch).every(
       ([key, value]) => state[key as keyof SessionState] === value,
@@ -87,6 +104,23 @@ function update(
   )
     return state;
   return Object.freeze({ ...state, ...patch });
+}
+function withOpenPanel(state: SessionState, panel: SessionPanel) {
+  return state.openPanels.includes(panel)
+    ? state.openPanels
+    : Object.freeze([...state.openPanels, panel]);
+}
+function activatePanel(state: SessionState, panel: SessionPanel) {
+  return update(state, {
+    present:
+      state.present.reference.panel === panel
+        ? state.present
+        : snapshot(state.present.authoring, {
+            ...state.present.reference,
+            panel,
+          }),
+    openPanels: withOpenPanel(state, panel),
+  });
 }
 function sameReference(a: SessionReference, b: SessionReference) {
   return (
@@ -106,6 +140,7 @@ export function createSession(
     future: Object.freeze([]),
     editMode: false,
     showStatusBar: true,
+    openPanels: DEFAULT_OPEN_PANELS,
     panelsOpen: true,
     mergedTabs: false,
     error: "",
@@ -163,7 +198,7 @@ function travel(state: SessionState, direction: "undo" | "redo"): SessionState {
         : state.future.slice(0, -1),
     ),
     creating: undefined,
-    panelsOpen: true,
+    openPanels: withOpenPanel(state, next.state.reference.panel),
     error: "",
     message: `${direction === "undo" ? "Undid" : "Redid"}: ${next.label}`,
   });
@@ -180,7 +215,7 @@ export function dispatchSession(
       if (sameReference(state.present.reference, action.reference))
         return update(state, {
           creating: undefined,
-          panelsOpen: true,
+          openPanels: withOpenPanel(state, action.reference.panel),
           error: "",
           message: action.label,
         });
@@ -192,7 +227,7 @@ export function dispatchSession(
         present: snapshot(state.present.authoring, action.reference),
         future: Object.freeze([]),
         creating: undefined,
-        panelsOpen: true,
+        openPanels: withOpenPanel(state, action.reference.panel),
         error: "",
         message: action.label,
       });
@@ -244,7 +279,9 @@ export function dispatchSession(
           ),
           future: Object.freeze([]),
           creating: action.reference ? undefined : state.creating,
-          panelsOpen: action.reference ? true : state.panelsOpen,
+          openPanels: action.reference
+            ? withOpenPanel(state, action.reference.panel)
+            : state.openPanels,
           error: "",
           message: action.label,
         });
@@ -259,16 +296,8 @@ export function dispatchSession(
     case "redo":
       return travel(state, action.type);
     case "activate":
-      return update(state, {
-        present:
-          state.present.reference.panel === action.panel
-            ? state.present
-            : snapshot(state.present.authoring, {
-                ...state.present.reference,
-                panel: action.panel,
-              }),
-        panelsOpen: true,
-      });
+    case "panels.open":
+      return activatePanel(state, action.panel);
     case "beginCreate":
       if (!state.editMode)
         return update(state, {
@@ -281,7 +310,7 @@ export function dispatchSession(
           ...state.present.reference,
           panel: "inspector",
         }),
-        panelsOpen: true,
+        openPanels: withOpenPanel(state, "inspector"),
         error: "",
       });
     case "cancelCreate":
@@ -295,12 +324,40 @@ export function dispatchSession(
       });
     case "statusBar.set":
       return update(state, { showStatusBar: action.value });
+    case "panels.close": {
+      if (!state.openPanels.includes(action.panel)) return state;
+      const openPanels = Object.freeze(
+        state.openPanels.filter((panel) => panel !== action.panel),
+      );
+      // Keep the last reference dormant when the workspace has no windows.
+      // Otherwise activate the first remaining window in stable open order.
+      const fallback = openPanels[0];
+      return update(state, {
+        openPanels,
+        present:
+          state.present.reference.panel === action.panel && fallback
+            ? snapshot(state.present.authoring, {
+                ...state.present.reference,
+                panel: fallback,
+              })
+            : state.present,
+        creating: action.panel === "inspector" ? undefined : state.creating,
+      });
+    }
     case "panels.closeAll":
-      return update(state, { panelsOpen: false, creating: undefined });
+      return update(state, {
+        openPanels: NO_OPEN_PANELS,
+        creating: undefined,
+      });
     case "panels.restore":
-      return update(state, { panelsOpen: true, mergedTabs: false });
+      return update(state, {
+        openPanels: DEFAULT_OPEN_PANELS,
+        mergedTabs: false,
+      });
     case "panels.merge":
-      return update(state, { panelsOpen: true, mergedTabs: true });
+      return update(state, { mergedTabs: true });
+    case "panels.tiles":
+      return update(state, { mergedTabs: false });
     case "notice":
       return update(state, { message: action.message, error: "" });
     case "error":
