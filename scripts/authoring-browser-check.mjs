@@ -1,5 +1,11 @@
+import {
+  enterEditMode,
+  historyAction,
+  historyInfo,
+  offlineBuildStatus,
+} from "./browser-ui.mjs";
 import assert from "node:assert/strict";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { chromium, webkit } from "playwright";
 
 const engine = process.env.BROWSER_ENGINE || "chromium";
@@ -24,6 +30,9 @@ const report = {
   engine,
   offlineFirst,
   browser: browser.version(),
+  appVersion: JSON.parse(
+    await readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ).version,
   note: "Mac browser automation; phone is viewport/touch emulation, not physical-device acceptance.",
   runs: [],
 };
@@ -79,9 +88,12 @@ try {
       }
       await page.goto(baseURL);
       await page.getByTestId("graph").waitFor();
+      if (offlineFirst) {
+        run.offlineBuild = await offlineBuildStatus(page);
+        assert.equal(run.offlineBuild.ready, true);
+      }
+      await enterEditMode(page);
       const inspector = page.getByTestId("inspector");
-      const undo = page.getByRole("button", { name: "Undo", exact: true });
-      const redo = page.getByRole("button", { name: "Redo", exact: true });
       const library = async () => {
         if (phone)
           await page
@@ -178,17 +190,17 @@ try {
       const quantity = await saved("Authoring check quantity");
       assert.match(quantity, /^urn:hvacr:node:/);
       assert.match(
-        await undo.getAttribute("title"),
+        (await historyInfo(page)).undo.label,
         /^Create Authoring check quantity$/,
       );
-      await undo.click();
+      await historyAction(page, "Undo");
       assert.equal(
-        await undo.isDisabled(),
+        (await historyInfo(page)).undo.disabled,
         true,
         "All draft typing and embedded upload belong to one create action",
       );
-      await redo.click();
-      await select(quantity);
+      await historyAction(page, "Redo");
+      assert.equal(await inspector.getAttribute("data-node-id"), quantity);
       assert.equal(await inspector.locator(".markdown-content img").count(), 1);
       await click("Edit concept");
       await page
@@ -200,7 +212,7 @@ try {
         "Authoring check quantity",
       );
       assert.equal(
-        await undo.getAttribute("title"),
+        (await historyInfo(page)).undo.label,
         "Create Authoring check quantity",
       );
       await inspector
@@ -225,14 +237,14 @@ try {
       assert.equal(await inspector.getAttribute("data-node-id"), quantity);
       assert.equal(await inspector.locator(".markdown-content img").count(), 1);
       await click("Restore to map");
-      await undo.click();
+      await historyAction(page, "Undo");
       assert.equal(
         await inspector
           .getByRole("button", { name: "Restore to map", exact: true })
           .count(),
         1,
       );
-      await redo.click();
+      await historyAction(page, "Redo");
       assert.equal(
         await inspector
           .getByRole("button", { name: "Exclude from map", exact: true })
@@ -294,6 +306,7 @@ try {
 
       await inspector.locator(".constant-value .unit-link").click();
       const unitPanel = page.getByTestId("unit-inspector");
+      const originalUnitLabel = await unitPanel.locator("h2").innerText();
       await unitPanel
         .getByRole("button", { name: "Edit unit presentation", exact: true })
         .click();
@@ -324,14 +337,23 @@ try {
           .textContent(),
         "\\mathrm{lb}_{test}",
       );
-      await undo.click();
-      assert.doesNotMatch(
-        await inspector
-          .locator(".constant-value .unit-link")
-          .getAttribute("title"),
-        /Edited pound-mass/,
+      // Reference navigation and content edits now share one ordered timeline.
+      await historyAction(page, "Undo");
+      assert.equal(
+        await unitPanel.locator("h2").innerText(),
+        "Edited pound-mass label",
       );
-      await redo.click();
+      await historyAction(page, "Undo");
+      assert.equal(
+        await unitPanel.locator("h2").innerText(),
+        originalUnitLabel,
+      );
+      await historyAction(page, "Redo");
+      assert.equal(
+        await unitPanel.locator("h2").innerText(),
+        "Edited pound-mass label",
+      );
+      await historyAction(page, "Redo");
       assert.match(
         await inspector
           .locator(".constant-value .unit-link")
@@ -412,14 +434,14 @@ try {
       const disposable = await saved("Disposable authored quantity");
       await click("Delete custom node");
       await click("Delete node");
-      assert.match(await undo.getAttribute("title"), /^Delete Disposable/);
-      await undo.click();
-      await select(disposable);
+      assert.match((await historyInfo(page)).undo.label, /^Delete Disposable/);
+      await historyAction(page, "Undo");
+      assert.equal(await inspector.getAttribute("data-node-id"), disposable);
       assert.equal(
         await inspector.locator("h2").innerText(),
         "Disposable authored quantity",
       );
-      await redo.click();
+      await historyAction(page, "Redo");
       await library();
       await page.getByRole("button", { name: "Concepts", exact: true }).click();
       await page

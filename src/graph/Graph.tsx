@@ -35,6 +35,7 @@ export function Graph({
   fitRequest,
   placements = EMPTY_PLACEMENTS,
   onPlacement,
+  canEdit = true,
 }: {
   nodes: ViewNode[];
   edges: ViewEdge[];
@@ -50,6 +51,7 @@ export function Graph({
     next: ManualPlacement,
     before: ManualPlacement,
   ) => void;
+  canEdit?: boolean;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -322,6 +324,16 @@ export function Graph({
     [indices, topologyKey, schedule],
   );
 
+  useEffect(() => {
+    const active = gesture.current;
+    if (!canEdit && active?.before && active.node) {
+      if (active.moved) applyPlacement(active.node, active.before);
+      gesture.current = undefined;
+      completedTap.current = undefined;
+      pointers.current.clear();
+    }
+  }, [canEdit, applyPlacement]);
+
   // History restores deliberate placements independently of topology. Hidden
   // nodes keep their positions and pins until they return to the current view.
   useEffect(() => {
@@ -547,6 +559,7 @@ export function Graph({
   const post = (data: Record<string, unknown>) =>
     worker.current?.postMessage({ ...data, generation: generation.current });
   const togglePin = () => {
+    if (!canEdit) return;
     const i = indices.get(selectedId || "");
     if (i === undefined || !selectedId) return;
     const has = pinned.current.has(selectedId);
@@ -614,7 +627,11 @@ export function Graph({
       >
         <canvas
           ref={canvas}
-          aria-label="Interactive knowledge graph. Search to select nodes; drag to pan, pinch to zoom, or drag a node to pin it."
+          aria-label={
+            canEdit
+              ? "Interactive knowledge graph. Search to select nodes; drag to pan, pinch to zoom, or drag a node to pin it."
+              : "Interactive knowledge graph. Tap a node to inspect it; drag to pan or pinch to zoom."
+          }
           onPointerDown={(e) => {
             completedTap.current = undefined;
             e.currentTarget.setPointerCapture(e.pointerId);
@@ -633,7 +650,7 @@ export function Graph({
                 node,
                 moved: false,
                 before:
-                  node && i !== undefined
+                  canEdit && node && i !== undefined
                     ? {
                         x: positions.current[i * 2],
                         y: positions.current[i * 2 + 1],
@@ -677,7 +694,7 @@ export function Graph({
             if (g.moved) {
               autoFit.current = false;
               const i = indices.get(g.node || "");
-              if (g.node && i !== undefined) {
+              if (canEdit && g.before && g.node && i !== undefined) {
                 const c = camera.current;
                 const px = (x - size.current.w / 2 - c.x) / c.k,
                   py = (y - size.current.h / 2 - c.y) / c.k;
@@ -759,7 +776,11 @@ export function Graph({
             (filtered
               ? "Filtered view · hidden nodes are retained"
               : "Every eligible node is included.")}
-          <small>Zoom for labels · drag a node to pin it</small>
+          <small>
+            {canEdit
+              ? "Zoom for labels · drag a node to pin it"
+              : "Zoom for labels · drag to pan"}
+          </small>
         </div>
         <div className="zoom-controls">
           <button aria-label="Zoom in" onClick={() => zoomAt(1.4)}>
@@ -777,9 +798,11 @@ export function Graph({
           >
             {filtered ? "Fit view" : "Fit all"}
           </button>
-          <button disabled={selectedIndex === undefined} onClick={togglePin}>
-            {selectedId && pinned.current.has(selectedId) ? "Unpin" : "Pin"}
-          </button>
+          {canEdit && (
+            <button disabled={selectedIndex === undefined} onClick={togglePin}>
+              {selectedId && pinned.current.has(selectedId) ? "Unpin" : "Pin"}
+            </button>
+          )}
         </div>
       </div>
       <div className="graph-footer">

@@ -162,6 +162,7 @@ export function MapPanel() {
           onSelect={w.select}
           placements={w.placements}
           onPlacement={w.place}
+          canEdit={w.editMode}
           totalNodeCount={w.nodes.length}
           viewDescription={
             w.filters.focus

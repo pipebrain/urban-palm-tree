@@ -1,5 +1,5 @@
 import { Icon } from "../components/Icon";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { MathText } from "../components/Math";
 import { EXAMPLE_ID, example } from "../domain/example";
 import { classificationLabel } from "../domain/classifications";
@@ -27,6 +27,13 @@ function DisplayOverrides({ node }: { node: LearningNode }) {
   const w = useWorkspace();
   const [label, setLabel] = useState(node.label);
   const [latex, setLatex] = useState(node.latex || "");
+  const draftId = useId();
+  const { registerDraft } = w;
+  const dirty = label !== node.label || latex !== (node.latex || "");
+  useEffect(() => {
+    registerDraft(draftId, dirty);
+    return () => registerDraft(draftId, false);
+  }, [draftId, dirty, registerDraft]);
   const source = w.sourceNodes.get(node.id) || node;
   useEffect(() => {
     setLabel(node.label);
@@ -66,6 +73,15 @@ function DisplayOverrides({ node }: { node: LearningNode }) {
           Apply display
         </button>
         <button
+          disabled={!dirty}
+          onClick={() => {
+            setLabel(node.label);
+            setLatex(node.latex || "");
+          }}
+        >
+          Cancel display edit
+        </button>
+        <button
           onClick={() => {
             w.override(node.id);
             setLabel(source.label);
@@ -90,31 +106,36 @@ function UnitPreference({ node }: { node: LearningNode }) {
       <h3>Preferred display unit</h3>
       {options.length ? (
         <>
-          <label className="sr-only" htmlFor="unit-preference">
-            Preferred display unit
-          </label>
-          <select
-            id="unit-preference"
-            aria-label="Preferred display unit"
-            value={selected || ""}
-            onChange={(e) => w.setPreference(node, e.target.value)}
-          >
-            {!selected && <option value="">Unresolved preference</option>}
-            {options.map((o) => (
-              <option key={o.unit.id} value={o.unit.id}>
-                {o.displayLabel}
-              </option>
-            ))}
-          </select>
+          {w.editMode && (
+            <>
+              <label className="sr-only" htmlFor="unit-preference">
+                Preferred display unit
+              </label>
+              <select
+                id="unit-preference"
+                aria-label="Preferred display unit"
+                value={selected || ""}
+                onChange={(e) => w.setPreference(node, e.target.value)}
+              >
+                {!selected && <option value="">Unresolved preference</option>}
+                {options.map((o) => (
+                  <option key={o.unit.id} value={o.unit.id}>
+                    {o.displayLabel}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           <div className="preference-current">
             {selected && <UnitLink id={selected} />}
+            {!selected && <span>Unresolved preference</span>}
             <small>
               {Object.hasOwn(w.preferences, node.id)
                 ? "Session choice"
                 : "US customary profile"}
             </small>
           </div>
-          {Object.hasOwn(w.preferences, node.id) && (
+          {w.editMode && Object.hasOwn(w.preferences, node.id) && (
             <button
               className="text-button"
               onClick={() => w.resetPreference(node.id)}
@@ -253,7 +274,7 @@ export function InspectorPanel() {
     setEditingEdge(undefined);
     setDeleting(false);
   }, [w.selectedId]);
-  if (w.creating)
+  if (w.editMode && w.creating)
     return (
       <section className="inspector panel-scroll" data-testid="inspector">
         <NodeEditor
@@ -277,7 +298,7 @@ export function InspectorPanel() {
         </p>
       </section>
     );
-  if (editing === node.id)
+  if (w.editMode && editing === node.id)
     return (
       <section
         className="inspector panel-scroll"
@@ -328,31 +349,33 @@ export function InspectorPanel() {
         <span>{node.kind}</span>
       </div>
       <h2>{node.label}</h2>
-      <div className="action-row authoring-actions">
-        <button onClick={() => setEditing(node.id)}>Edit concept</button>
-        <button
-          onClick={() =>
-            w.perform(
-              { type: "node.exclude", id: node.id, excluded: !excluded },
-              `${excluded ? "Restore" : "Exclude"} ${node.label}`,
-            )
-          }
-        >
-          {excluded ? "Restore to map" : "Exclude from map"}
-        </button>
-        {custom && (
-          <button onClick={() => setDeleting(!deleting)}>
-            Delete custom node
+      {w.editMode && (
+        <div className="action-row authoring-actions">
+          <button onClick={() => setEditing(node.id)}>Edit concept</button>
+          <button
+            onClick={() =>
+              w.perform(
+                { type: "node.exclude", id: node.id, excluded: !excluded },
+                `${excluded ? "Restore" : "Exclude"} ${node.label}`,
+              )
+            }
+          >
+            {excluded ? "Restore to map" : "Exclude from map"}
           </button>
-        )}
-      </div>
+          {custom && (
+            <button onClick={() => setDeleting(!deleting)}>
+              Delete custom node
+            </button>
+          )}
+        </div>
+      )}
       {excluded && (
         <p className="notice">
           Excluded from the curated map. References and notes are retained;
           restoration is reversible.
         </p>
       )}
-      {deleting && (
+      {w.editMode && deleting && (
         <div className="notice">
           <p>
             Delete this custom concept and its relationships/group memberships?
@@ -541,7 +564,7 @@ export function InspectorPanel() {
       {node.kind === "quantity" && <UnitPreference node={node} />}
       {source && (
         <>
-          <DisplayOverrides key={node.id} node={node} />
+          {w.editMode && <DisplayOverrides key={node.id} node={node} />}
           <details>
             <summary>Original baseline & local overrides</summary>
             <p className="muted">
@@ -552,17 +575,19 @@ export function InspectorPanel() {
             <pre className="source-record">
               {JSON.stringify(source, null, 2)}
             </pre>
-            <button
-              disabled={!Object.hasOwn(w.authoring.nodeOverrides, node.id)}
-              onClick={() =>
-                w.perform(
-                  { type: "node.reset", id: node.id },
-                  `Restore ${source.label} from baseline`,
-                )
-              }
-            >
-              Restore all source fields
-            </button>
+            {w.editMode && (
+              <button
+                disabled={!Object.hasOwn(w.authoring.nodeOverrides, node.id)}
+                onClick={() =>
+                  w.perform(
+                    { type: "node.reset", id: node.id },
+                    `Restore ${source.label} from baseline`,
+                  )
+                }
+              >
+                Restore all source fields
+              </button>
+            )}
           </details>
         </>
       )}
@@ -583,14 +608,16 @@ export function InspectorPanel() {
         </details>
       )}
       <h3>Relationships · {related.length}</h3>
-      <button
-        onClick={() =>
-          setEditingEdge(editingEdge === "new" ? undefined : "new")
-        }
-      >
-        Create relationship
-      </button>
-      {editingEdge === "new" && (
+      {w.editMode && (
+        <button
+          onClick={() =>
+            setEditingEdge(editingEdge === "new" ? undefined : "new")
+          }
+        >
+          Create relationship
+        </button>
+      )}
+      {w.editMode && editingEdge === "new" && (
         <RelationshipEditor
           sourceId={node.id}
           onClose={() => setEditingEdge(undefined)}
@@ -601,7 +628,7 @@ export function InspectorPanel() {
         const id = e.source === node.id ? e.target : e.source;
         const edgeExcluded = w.authoring.excludedEdgeIds.includes(e.id);
         const originalEdge = w.sourceEdges.get(e.id);
-        if (editingEdge !== "new" && editingEdge?.id === e.id)
+        if (w.editMode && editingEdge !== "new" && editingEdge?.id === e.id)
           return (
             <RelationshipEditor
               key={e.id}
@@ -634,58 +661,62 @@ export function InspectorPanel() {
               {edgeExcluded && (
                 <p className="notice">Excluded from the curated map.</p>
               )}
-              <div className="action-row">
-                <button onClick={() => setEditingEdge(e)}>
-                  Edit relationship
-                </button>
-                <button
-                  onClick={() =>
-                    w.perform(
-                      {
-                        type: "edge.exclude",
-                        id: e.id,
-                        excluded: !edgeExcluded,
-                      },
-                      `${edgeExcluded ? "Restore" : "Exclude"} relationship`,
-                    )
-                  }
-                >
-                  {edgeExcluded
-                    ? "Restore relationship"
-                    : "Exclude relationship"}
-                </button>
-                {Object.hasOwn(w.authoring.authoredEdges, e.id) &&
-                  e.predicate !==
-                    "urn:hvacr:relationship:equation-participation" && (
-                    <button
-                      onClick={() =>
-                        w.perform(
-                          { type: "edge.delete", id: e.id },
-                          "Delete relationship",
-                        )
-                      }
-                    >
-                      Delete relationship
-                    </button>
-                  )}
-              </div>
+              {w.editMode && (
+                <div className="action-row">
+                  <button onClick={() => setEditingEdge(e)}>
+                    Edit relationship
+                  </button>
+                  <button
+                    onClick={() =>
+                      w.perform(
+                        {
+                          type: "edge.exclude",
+                          id: e.id,
+                          excluded: !edgeExcluded,
+                        },
+                        `${edgeExcluded ? "Restore" : "Exclude"} relationship`,
+                      )
+                    }
+                  >
+                    {edgeExcluded
+                      ? "Restore relationship"
+                      : "Exclude relationship"}
+                  </button>
+                  {Object.hasOwn(w.authoring.authoredEdges, e.id) &&
+                    e.predicate !==
+                      "urn:hvacr:relationship:equation-participation" && (
+                      <button
+                        onClick={() =>
+                          w.perform(
+                            { type: "edge.delete", id: e.id },
+                            "Delete relationship",
+                          )
+                        }
+                      >
+                        Delete relationship
+                      </button>
+                    )}
+                </div>
+              )}
               {originalEdge && (
                 <details>
                   <summary>Original relationship</summary>
                   <pre className="source-record">
                     {JSON.stringify(originalEdge, null, 2)}
                   </pre>
-                  <button
-                    disabled={!Object.hasOwn(w.authoring.edgeOverrides, e.id)}
-                    onClick={() =>
-                      w.perform(
-                        { type: "edge.reset", id: e.id },
-                        "Restore original relationship",
-                      )
-                    }
-                  >
-                    Restore relationship fields
-                  </button>
+                  {w.editMode && (
+                    <button
+                      disabled={!Object.hasOwn(w.authoring.edgeOverrides, e.id)}
+                      onClick={() =>
+                        w.perform(
+                          { type: "edge.reset", id: e.id },
+                          "Restore original relationship",
+                        )
+                      }
+                    >
+                      Restore relationship fields
+                    </button>
+                  )}
                 </details>
               )}
               <p className="muted">Relationship ID: {e.id}</p>

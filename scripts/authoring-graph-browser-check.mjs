@@ -1,3 +1,4 @@
+import { enterEditMode, historyAction } from "./browser-ui.mjs";
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
@@ -18,6 +19,7 @@ const report = {
   note: "Mac Chromium. Phone uses touch dispatch and viewport emulation, not a physical device.",
   runs: [],
 };
+let activePage;
 await mkdir("test-results", { recursive: true });
 try {
   for (const phone of [false, true]) {
@@ -30,6 +32,7 @@ try {
       serviceWorkers: "block",
     });
     const page = await context.newPage();
+    activePage = page;
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
     const run = { profile: phone ? "phone" : "desktop", errors };
@@ -80,6 +83,7 @@ try {
       if (phone) await button("Map").tap();
     };
     await graph.waitFor();
+    await enterEditMode(page);
     await page.waitForFunction(
       () =>
         Number(document.querySelector("[data-testid=graph]")?.dataset.ticks) >=
@@ -97,6 +101,7 @@ try {
       .getByRole("button", { name: "Show on map", exact: true })
       .click();
     await mapPanel();
+    const historyBeforePlacement = await undoCount();
     const before = await state();
     assert.equal(before.pins, 0);
     const cdp = phone ? await context.newCDPSession(page) : undefined;
@@ -143,25 +148,25 @@ try {
     const moved = await state();
     assert.equal(
       await undoCount(),
-      1,
+      historyBeforePlacement + 1,
       "Eight drag moves produce one history step",
     );
     assert.equal(moved.pins, 1);
     assert.ok(Math.hypot(moved.x - before.x, moved.y - before.y) > 5);
-    await button("Undo").click();
+    await historyAction(page, "Undo");
     const undone = await state();
     samePosition(undone, before);
     assert.equal(undone.pins, 0);
-    assert.equal(await undoCount(), 0);
-    await button("Redo").click();
+    assert.equal(await undoCount(), historyBeforePlacement);
+    await historyAction(page, "Redo");
     samePosition(await state(), moved);
     assert.equal((await state()).pins, 1);
     await button("Unpin").click();
-    assert.equal(await undoCount(), 2);
+    assert.equal(await undoCount(), historyBeforePlacement + 2);
     assert.equal((await state()).pins, 0);
-    await button("Undo").click();
+    await historyAction(page, "Undo");
     assert.equal((await state()).pins, 1);
-    await button("Redo").click();
+    await historyAction(page, "Redo");
     assert.equal((await state()).pins, 0);
     const ticks = (await state()).ticks;
     await button("Resume").click();
@@ -174,10 +179,14 @@ try {
     await button("Pause").click();
     await frames();
     const afterForce = await state();
-    assert.equal(await undoCount(), 2, "Resumed force ticks create no history");
+    assert.equal(
+      await undoCount(),
+      historyBeforePlacement + 2,
+      "Resumed force ticks create no history",
+    );
     await button("Pin").click();
-    assert.equal(await undoCount(), 3);
-    await button("Undo").click();
+    assert.equal(await undoCount(), historyBeforePlacement + 3);
+    await historyAction(page, "Undo");
     samePosition(await state(), afterForce);
     assert.equal(
       (await state()).pins,
@@ -187,7 +196,11 @@ try {
     await drag(true);
     samePosition(await state(), afterForce);
     assert.equal((await state()).pins, 0);
-    assert.equal(await undoCount(), 2, "Cancelled drag creates no history");
+    assert.equal(
+      await undoCount(),
+      historyBeforePlacement + 2,
+      "Cancelled drag creates no history",
+    );
     await button("Pin").click();
     const pinned = await state();
     if (phone) {
@@ -197,6 +210,7 @@ try {
         .getByRole("button", { name: "Show on map", exact: true })
         .click();
       await state();
+      const beforeCanvasNavigation = await undoCount();
       await page.evaluate(() => {
         window.graphTapTarget = undefined;
         document.addEventListener(
@@ -220,6 +234,14 @@ try {
         true,
         "The completed touch click stays on canvas instead of activating an inspector control",
       );
+      assert.equal(await undoCount(), beforeCanvasNavigation + 1);
+      await historyAction(page, "Undo");
+      assert.equal(await undoCount(), beforeCanvasNavigation);
+      assert.equal(
+        (await state()).pins,
+        1,
+        "Undoing navigation preserves the pin",
+      );
       await mapPanel();
       run.touchSelection =
         "Canvas tap preserves selected identity and cannot click through to inspector";
@@ -230,14 +252,18 @@ try {
       .selectOption("quantity");
     assert.equal((await state()).pins, 1);
     assert.equal(await graph.getAttribute("data-visible-pins"), "0");
-    await button("Undo").click();
+    await historyAction(page, "Undo");
     assert.equal((await state()).pins, 0, "Undo reaches a filtered-out node");
-    await button("Redo").click();
+    await historyAction(page, "Redo");
     assert.equal((await state()).pins, 1, "Redo restores a filtered-out pin");
     await button("Reset map").click();
     samePosition(await state(), pinned);
     assert.equal(await graph.getAttribute("data-visible-pins"), "1");
-    assert.equal(await undoCount(), 3, "Filtering and fit create no history");
+    assert.equal(
+      await undoCount(),
+      historyBeforePlacement + 3,
+      "Filtering and fit create no history",
+    );
     run.placement = {
       before,
       moved,
@@ -288,7 +314,7 @@ try {
     assert.equal(deletedGroup.groups, 1);
     assert.equal(deletedGroup.color, "#aa6622");
     assert.equal(await undoCount(), groupHistory + 1);
-    await button("Undo").click();
+    await historyAction(page, "Undo");
     assert.equal((await state()).groups, 2);
     assert.equal((await state()).color, "#2266aa");
     samePosition(await state(), pinned);
@@ -309,6 +335,11 @@ try {
 } catch (error) {
   report.passed = false;
   report.error = error.stack || String(error);
+  if (activePage && !activePage.isClosed())
+    await activePage.screenshot({
+      path: "test-results/m2-graph-failure.png",
+      fullPage: true,
+    });
   throw error;
 } finally {
   await writeFile(

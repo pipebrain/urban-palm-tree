@@ -1,3 +1,4 @@
+import { enterEditMode } from "./browser-ui.mjs";
 import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
@@ -38,6 +39,9 @@ const results = {
   checkedAt: new Date().toISOString(),
   baseURL,
   engine: "Chromium via installed Google Chrome",
+  appVersion: JSON.parse(
+    await readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ).version,
   note: "Browser automation on the Mac; phone viewport/touch emulation is not an actual Android or iPhone device test.",
   dataset: {
     sourceVersion: baseline.source.version,
@@ -268,6 +272,7 @@ try {
       .evaluateAll((buttons) => buttons.map((button) => button.title));
     assert.equal(bindingUnitsBefore.length, 4);
     await selectConcept(temperatureId);
+    await enterEditMode(reopened);
     const preference = reopened.getByRole("combobox", {
       name: "Preferred display unit",
       exact: true,

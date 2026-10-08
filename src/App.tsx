@@ -1,5 +1,6 @@
-import { Icon } from "./components/Icon";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { MenuBar, type MenuAction } from "./components/MenuBar";
+import appPackage from "../package.json";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   DockviewReact,
   DockviewDefaultTab,
@@ -10,14 +11,15 @@ import {
 import type { Dataset, LearningNode } from "./domain/types";
 import { example, exampleEdges, intervalUnit } from "./domain/example";
 import { buildGraphIndex } from "./domain/semantics";
+import { buildWorkspace, type AuthoringCommand } from "./domain/authoring";
 import {
-  buildWorkspace,
-  createHistory,
-  executeCommand,
-  undo,
-  redo,
-  type AuthoringCommand,
-} from "./domain/authoring";
+  createSession,
+  dispatchSession,
+  historyControls,
+  type SessionAction,
+  type SessionReference,
+  type SessionPanel as PanelId,
+} from "./domain/session";
 import { parseDataset } from "./domain/validation";
 import { getClassification } from "./domain/classifications";
 import {
@@ -42,20 +44,30 @@ const components = {
 const FixedTab = (props: IDockviewPanelHeaderProps) => (
   <DockviewDefaultTab {...props} hideClose />
 );
-type Visit = {
-  selectedId?: string;
-  unitId?: string;
-  panel: "inspector" | "units";
-};
 
 export function App() {
   const [data, setData] = useState<Dataset>();
   const [error, setError] = useState("");
-  const [edits, setEdits] = useState(createHistory);
-  const editsRef = useRef(edits);
-  const [actionError, setActionError] = useState("");
-  const [actionMessage, setActionMessage] = useState("");
-  const [creating, setCreating] = useState<LearningNode["kind"]>();
+  const [session, setSession] = useState(createSession);
+  const sessionRef = useRef(session);
+  const initialAuthoring = useRef(session.present.authoring);
+  const drafts = useRef(new Set<string>());
+  const [draftCount, setDraftCount] = useState(0);
+  const registerDraft = useCallback((id: string, active: boolean) => {
+    if (active) drafts.current.add(id);
+    else drafts.current.delete(id);
+    setDraftCount(drafts.current.size);
+  }, []);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const about = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (aboutOpen && !about.current?.open) about.current?.showModal();
+    else if (!aboutOpen && about.current?.open) about.current.close();
+  }, [aboutOpen]);
+  const edits = session.present.authoring;
+  const visit = session.present.reference;
+  const tab = visit.panel;
+  const creating = session.creating;
   const [groupFilter, setGroupFilter] = useState<string | null>(null);
   const [filters, setFilters] = useState<MapFilters>(defaultFilters);
   const [focusRequest, setFocusRequest] = useState<{
@@ -63,16 +75,21 @@ export function App() {
     nonce: number;
   }>();
   const [fitRequest, setFitRequest] = useState(0);
-  const [history, setHistory] = useState<{ visits: Visit[]; index: number }>({
-    visits: [{ panel: "inspector" }],
-    index: 0,
-  });
-  const visit = history.visits[history.index];
-  const [tab, setTab] = useState("graph");
-  const [mobile, setMobile] = useState(
+  const [viewportMobile, setViewportMobile] = useState(
     matchMedia("(max-width: 800px)").matches,
   );
+  const [mobile, setMobile] = useState(viewportMobile);
+  // Switching panel trees remounts editors. Finish the draft before applying
+  // a phone rotation or window resize that crosses the layout breakpoint.
+  useEffect(() => {
+    if (!draftCount) setMobile(viewportMobile);
+  }, [viewportMobile, draftCount]);
   const dock = useRef<DockviewReadyEvent["api"] | undefined>(undefined);
+  const dockLayout = useRef<
+    ReturnType<DockviewReadyEvent["api"]["toJSON"]> | undefined
+  >(undefined);
+  const dockListeners = useRef<{ dispose(): void }[]>([]);
+  const [dockGroupCount, setDockGroupCount] = useState(3);
   const [offline, setOffline] = useState<OfflineStatus>({
     state: "preparing",
     message: "Checking offline preview…",
@@ -96,7 +113,7 @@ export function App() {
         if (!stopped) setError(String(e));
       });
     const media = matchMedia("(max-width: 800px)");
-    const change = () => setMobile(media.matches);
+    const change = () => setViewportMobile(media.matches);
     media.addEventListener("change", change);
     let cleanup: (() => void) | undefined;
     void prepareOfflinePreview((status) => {
@@ -112,8 +129,16 @@ export function App() {
     };
   }, []);
   useEffect(() => {
-    if (mobile) dock.current = undefined;
-  }, [mobile]);
+    if (mobile || !session.panelsOpen) {
+      dock.current = undefined;
+      dockListeners.current.forEach((listener) => listener.dispose());
+      dockListeners.current = [];
+    }
+  }, [mobile, session.panelsOpen]);
+  useEffect(
+    () => () => dockListeners.current.forEach((listener) => listener.dispose()),
+    [],
+  );
   const sourceNodes = useMemo(
     () => new Map([...(data?.nodes || []), example].map((n) => [n.id, n])),
     [data],
@@ -135,8 +160,8 @@ export function App() {
     [baseline],
   );
   const authored = useMemo(
-    () => (data ? buildWorkspace(baseline, edits.present) : undefined),
-    [data, baseline, edits.present],
+    () => (data ? buildWorkspace(baseline, edits) : undefined),
+    [data, baseline, edits],
   );
   const nodes = useMemo(
     () =>
@@ -149,49 +174,51 @@ export function App() {
   );
   const edges = authored?.edges || [];
   const units = authored?.units || [];
-  const preferences = edits.present.unitPreferences;
-  const groups = useMemo(
-    () => Object.values(edits.present.groups),
-    [edits.present.groups],
-  );
+  const preferences = edits.unitPreferences;
+  const groups = useMemo(() => Object.values(edits.groups), [edits.groups]);
   useEffect(() => {
-    if (groupFilter && !edits.present.groups[groupFilter]) setGroupFilter(null);
-  }, [groupFilter, edits.present.groups]);
+    if (groupFilter && !edits.groups[groupFilter]) setGroupFilter(null);
+  }, [groupFilter, edits.groups]);
+  const send = (action: SessionAction) => {
+    const next = dispatchSession(baseline, sessionRef.current, action);
+    sessionRef.current = next;
+    setSession(next);
+    return !next.error;
+  };
   const perform = (command: AuthoringCommand, label: string) => {
-    try {
-      const next = executeCommand(baseline, editsRef.current, command, label);
-      editsRef.current = next;
-      setEdits(next);
-      setActionError("");
-      setActionMessage(label);
-      return true;
-    } catch (error) {
-      setActionError(error instanceof Error ? error.message : String(error));
-      return false;
-    }
+    const reference =
+      command.type === "node.create" || command.type === "node.edit"
+        ? {
+            ...sessionRef.current.present.reference,
+            selectedId:
+              command.type === "node.create" ? command.node.id : command.id,
+            panel: "inspector" as const,
+          }
+        : undefined;
+    return send({ type: "author", command, label, reference });
+  };
+  const unfinishedEditor = () => {
+    if (!drafts.current.size) return false;
+    send({
+      type: "error",
+      message:
+        "Save or cancel the open editor before opening another concept or unit, creating a concept, changing modes, moving tabs, or using Undo/Redo.",
+    });
+    return true;
   };
   const travelEdit = (direction: "undo" | "redo") => {
-    const current = editsRef.current;
-    const entry =
-      direction === "undo" ? current.past.at(-1) : current.future.at(-1);
-    if (!entry) return;
-    const next = direction === "undo" ? undo(current) : redo(current);
-    editsRef.current = next;
-    setEdits(next);
-    setActionError("");
-    setActionMessage(
-      `${direction === "undo" ? "Undid" : "Redid"}: ${entry.label}`,
-    );
+    if (unfinishedEditor()) return;
+    send({ type: direction });
   };
   useEffect(() => {
-    if (!edits.past.length) return;
+    if (edits === initialAuthoring.current && !draftCount) return;
     const warn = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "";
     };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [edits.past.length]);
+  }, [edits, draftCount]);
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if (
@@ -209,14 +236,23 @@ export function App() {
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
   });
+  useEffect(() => {
+    if (session.panelsOpen && !mobile) {
+      const api = dock.current;
+      const target = api?.getPanel(visit.panel);
+      // Dockview already activates a panel when its text field receives focus.
+      // Activating it again steals that focus before the input event arrives.
+      if (target && api?.activePanel !== target) target.api.setActive();
+    }
+  }, [visit, mobile, session.panelsOpen]);
   // While loading, the example's participants do not exist yet; index only a complete dataset.
   const index = useMemo(
     () => (data ? buildGraphIndex(nodes, edges, units) : undefined),
     [data, nodes, edges, units],
   );
   const view = useMemo(() => {
-    const excluded = new Set(edits.present.excludedNodeIds);
-    const group = groupFilter ? edits.present.groups[groupFilter] : undefined;
+    const excluded = new Set(edits.excludedNodeIds);
+    const group = groupFilter ? edits.groups[groupFilter] : undefined;
     const eligible = nodes.filter(
       (n) => !excluded.has(n.id) && (!group || group.nodeIds.includes(n.id)),
     );
@@ -225,71 +261,131 @@ export function App() {
     nodes,
     authored,
     filters,
-    edits.present.excludedNodeIds,
-    edits.present.groups,
+    edits.excludedNodeIds,
+    edits.groups,
     groupFilter,
   ]);
-  const activate = (panel: string) => {
-    setTab(panel);
+  const activate = (panel: PanelId) => {
+    send({ type: "activate", panel });
     if (!mobile) dock.current?.getPanel(panel)?.api.setActive();
   };
-  const navigate = (next: Visit) => {
-    setCreating(undefined);
-    setHistory((old) => {
-      const current = old.visits[old.index];
-      if (
-        current.panel === next.panel &&
-        current.selectedId === next.selectedId &&
-        current.unitId === next.unitId
-      )
-        return old;
-      const visits = [...old.visits.slice(0, old.index + 1), next];
-      return { visits, index: visits.length - 1 };
-    });
-    activate(next.panel);
-  };
-  const travel = (offset: number) => {
-    const next = history.index + offset;
-    if (next < 0 || next >= history.visits.length) return;
-    setCreating(undefined);
-    setHistory({ ...history, index: next });
-    activate(history.visits[next].panel);
+  const navigate = (reference: SessionReference) => {
+    const current = sessionRef.current.present.reference;
+    if (
+      (reference.selectedId !== current.selectedId ||
+        reference.unitId !== current.unitId ||
+        sessionRef.current.creating) &&
+      unfinishedEditor()
+    )
+      return;
+    const label =
+      reference.panel === "units"
+        ? `Open ${index?.unitsById.get(reference.unitId || "")?.label || "unit reference"}`
+        : `Inspect ${index?.nodesById.get(reference.selectedId || "")?.label || "concept"}`;
+    send({ type: "navigate", reference, label });
   };
   const ready = (event: DockviewReadyEvent) => {
     dock.current = event.api;
-    event.api.addPanel({
-      id: "library",
-      component: "library",
-      title: "Library",
-      initialWidth: 280,
-    });
-    event.api.addPanel({
-      id: "graph",
-      component: "graph",
-      title: "Knowledge map",
-      position: { referencePanel: "library", direction: "right" },
-    });
-    event.api.addPanel({
-      id: "inspector",
-      component: "inspector",
-      title: "Inspector",
-      position: { referencePanel: "graph", direction: "right" },
-      initialWidth: 350,
-    });
-    event.api.addPanel({
-      id: "units",
-      component: "units",
-      title: "Units",
-      position: { referencePanel: "inspector", direction: "within" },
-    });
-    event.api.getPanel("library")?.api.setSize({ width: 280 });
-    event.api.getPanel("inspector")?.api.setSize({ width: 350 });
-    event.api.getPanel(visit.panel)?.api.setActive();
+    dockListeners.current.forEach((listener) => listener.dispose());
+    if (dockLayout.current) event.api.fromJSON(dockLayout.current);
+    else {
+      event.api.addPanel({
+        id: "library",
+        component: "library",
+        title: "Library",
+        initialWidth: 280,
+      });
+      event.api.addPanel({
+        id: "graph",
+        component: "graph",
+        title: "Knowledge map",
+        position: { referencePanel: "library", direction: "right" },
+      });
+      event.api.addPanel({
+        id: "inspector",
+        component: "inspector",
+        title: "Inspector",
+        position: { referencePanel: "graph", direction: "right" },
+        initialWidth: 350,
+      });
+      event.api.addPanel({
+        id: "units",
+        component: "units",
+        title: "Units",
+        position: { referencePanel: "inspector", direction: "within" },
+      });
+      event.api.getPanel("library")?.api.setSize({ width: 280 });
+      event.api.getPanel("inspector")?.api.setSize({ width: 350 });
+    }
+    event.api
+      .getPanel(sessionRef.current.present.reference.panel)
+      ?.api.setActive();
+    setDockGroupCount(event.api.groups.length);
+    dockListeners.current = [
+      event.api.onDidLayoutChange(() => {
+        dockLayout.current = event.api.toJSON();
+        setDockGroupCount(event.api.groups.length);
+      }),
+      event.api.onDidActivePanelChange(({ panel, origin }) => {
+        if (origin === "user" && panel && panel.id in components)
+          send({ type: "activate", panel: panel.id as PanelId });
+      }),
+    ];
   };
+  const menuAction = (action: MenuAction) => {
+    switch (action) {
+      case "about":
+        setAboutOpen(true);
+        break;
+      case "undo":
+      case "redo":
+        travelEdit(action);
+        break;
+      case "toggleStatusBar":
+        send({
+          type: "statusBar.set",
+          value: !sessionRef.current.showStatusBar,
+        });
+        break;
+      case "toggleEditMode":
+        if (!unfinishedEditor())
+          send({ type: "editMode.set", value: !sessionRef.current.editMode });
+        break;
+      case "closeTabs":
+        if (unfinishedEditor()) break;
+        if (dock.current) dockLayout.current = dock.current.toJSON();
+        send({ type: "panels.closeAll" });
+        break;
+      case "mergeTabs": {
+        if (unfinishedEditor() || mobile || !dock.current) break;
+        const api = dock.current;
+        const target =
+          api.getPanel(sessionRef.current.present.reference.panel) ||
+          api.panels[0];
+        if (!target) break;
+        for (const panel of [...api.panels]) {
+          if (panel.api.group.id !== target.api.group.id)
+            panel.api.moveTo({
+              group: target.api.group,
+              position: "center",
+              skipSetActive: true,
+            });
+        }
+        target.api.setActive();
+        dockLayout.current = api.toJSON();
+        setDockGroupCount(api.groups.length);
+        send({ type: "panels.merge" });
+        break;
+      }
+      // File items stay disabled until M3 supplies durable workspace operations.
+      default:
+        break;
+    }
+  };
+
   if (!data || !index)
     return (
       <main className="loading">
-        <span className="brand-mark">H</span>
         <h1>
           {error
             ? "The atlas could not open"
@@ -299,7 +395,10 @@ export function App() {
         {error && <button onClick={() => location.reload()}>Try again</button>}
       </main>
     );
+  const controls = historyControls(session);
   const workspace: Workspace = {
+    editMode: session.editMode,
+    registerDraft,
     data,
     nodes,
     edges,
@@ -308,13 +407,13 @@ export function App() {
     sourceNodes,
     sourceUnits,
     sourceEdges,
-    authoring: edits.present,
+    authoring: edits,
     perform,
     groups,
     groupFilter,
     setGroupFilter,
-    excludedIds: edits.present.excludedNodeIds,
-    placements: edits.present.placements,
+    excludedIds: edits.excludedNodeIds,
+    placements: edits.placements,
     place: (id, placement, before) => {
       perform(
         { type: "placement.set", id, placement, before },
@@ -327,10 +426,12 @@ export function App() {
     },
     creating,
     startCreate: (kind) => {
-      setCreating(kind);
-      activate("inspector");
+      if (unfinishedEditor()) return;
+      send({ type: "beginCreate", kind });
     },
-    cancelCreate: () => setCreating(undefined),
+    cancelCreate: () => {
+      send({ type: "cancelCreate" });
+    },
     selectedId: visit.selectedId,
     unitId: visit.unitId,
     select: (id) =>
@@ -370,7 +471,7 @@ export function App() {
           "Change preferred display unit",
         );
       } catch (error) {
-        setActionError(String(error));
+        send({ type: "error", message: String(error) });
       }
     },
     resetPreference: (id) => {
@@ -393,85 +494,42 @@ export function App() {
   };
   return (
     <WorkspaceContext.Provider value={workspace}>
-      <div className="app-shell">
-        <header>
-          <div className="brand">
-            <span className="brand-mark">
-              H<Icon name="arrow-up-right" />
-            </span>
-            <div>
-              <h1>
-                HVACR <span>Knowledge atlas</span>
-              </h1>
-              <p>A working map of measurable things</p>
-            </div>
-          </div>
-          <div className="header-meta">
-            <span className="prototype">M2 · SHAPE YOUR ATLAS</span>
-            <span>QUDT {data.source.version}</span>
-          </div>
-        </header>
-        <div className="workspace-trail">
-          <div className="history-controls">
-            <button
-              aria-label="Previous reference"
-              title="Previous reference"
-              disabled={history.index === 0}
-              onClick={() => travel(-1)}
-            >
-              <Icon name="arrow-left" />
-            </button>
-            <button
-              aria-label="Next reference"
-              title="Next reference"
-              disabled={history.index === history.visits.length - 1}
-              onClick={() => travel(1)}
-            >
-              <Icon name="arrow-right" />
-            </button>
-          </div>
-          <span>
-            {visit.panel === "units" && visit.unitId
-              ? index.unitsById.get(visit.unitId)?.label || "Missing unit"
-              : index.nodesById.get(visit.selectedId || "")?.label ||
-                "Full reference universe"}
-          </span>
-          <small>Session only · refresh loses edits</small>
-        </div>
-        <div className="authoring-toolbar" aria-label="Editing history">
-          <button
-            aria-label="Undo"
-            disabled={!edits.past.length}
-            title={edits.past.at(-1)?.label || "Nothing to undo"}
-            onClick={() => travelEdit("undo")}
-          >
-            Undo
-          </button>
-          <button
-            aria-label="Redo"
-            disabled={!edits.future.length}
-            title={edits.future.at(-1)?.label || "Nothing to redo"}
-            onClick={() => travelEdit("redo")}
-          >
-            Redo
-          </button>
-          <span
-            role="status"
-            data-testid="history-status"
-            data-undo-count={edits.past.length}
-            data-redo-count={edits.future.length}
-          >
-            Session only. {actionMessage || "Workspace saving arrives in M3."}
-          </span>
-        </div>
-        {actionError && (
+      <div
+        className="app-shell"
+        data-testid="history-status"
+        data-undo-count={session.past.length}
+        data-redo-count={session.future.length}
+        data-edit-mode={session.editMode}
+      >
+        <MenuBar
+          onAction={menuAction}
+          canUndo={controls.undo.enabled}
+          canRedo={controls.redo.enabled}
+          undoLabel={controls.undo.label}
+          redoLabel={controls.redo.label}
+          showStatusBar={session.showStatusBar}
+          editMode={session.editMode}
+          hasOpenTabs={session.panelsOpen}
+          canMergeTabs={session.panelsOpen && !mobile && dockGroupCount > 1}
+        />
+        {session.error && (
           <div className="authoring-error" role="alert">
-            <span>{actionError}</span>
-            <button onClick={() => setActionError("")}>Dismiss</button>
+            <span>{session.error}</span>
+            <button onClick={() => send({ type: "error.clear" })}>
+              Dismiss
+            </button>
           </div>
         )}
         <div className="workspace">
-          {mobile ? (
+          {!session.panelsOpen ? (
+            <div className="empty-workspace">
+              <h1>All tabs are closed</h1>
+              <p>Your session content is still here.</p>
+              <button onClick={() => send({ type: "panels.restore" })}>
+                Restore tabs
+              </button>
+            </div>
+          ) : mobile ? (
             <>
               <nav className="mobile-nav" aria-label="Workspace panels">
                 {[
@@ -483,7 +541,7 @@ export function App() {
                   <button
                     key={id}
                     aria-pressed={tab === id}
-                    onClick={() => activate(id)}
+                    onClick={() => activate(id as PanelId)}
                   >
                     {label}
                   </button>
@@ -511,28 +569,61 @@ export function App() {
             />
           )}
         </div>
-        <footer className="app-footer">
-          <span>
-            <i className={"status-dot " + offline.state} />
-            {offline.state === "ready"
-              ? "Offline preview prepared"
-              : offline.state === "preparing"
-                ? "Preparing offline preview"
-                : offline.state === "update-available"
-                  ? "Preview update waiting"
-                  : offline.state === "unsupported"
-                    ? "Local development build"
-                    : "Offline preview unavailable"}
-          </span>
-          <span title={offline.message}>
-            {offline.state === "ready"
-              ? "Verify reopening on each device."
-              : "Explore · inspect · connect"}
-          </span>
+        {session.showStatusBar && (
+          <footer className="app-footer" aria-label="Status bar">
+            <span>
+              <i className={"status-dot " + offline.state} />
+              {offline.state === "ready"
+                ? "Offline preview prepared"
+                : offline.state === "preparing"
+                  ? "Preparing offline preview"
+                  : offline.state === "update-available"
+                    ? "Preview update waiting"
+                    : offline.state === "unsupported"
+                      ? "Local development build"
+                      : "Offline preview unavailable"}
+            </span>
+            <span className="session-status" title={session.message}>
+              {session.editMode ? "Edit mode" : "Browse mode"} · Session only
+            </span>
+            <a href={data.source.licenseUrl} target="_blank" rel="noreferrer">
+              QUDT · {data.source.license}
+            </a>
+          </footer>
+        )}
+        <dialog
+          ref={about}
+          className="about-dialog"
+          aria-labelledby="about-title"
+          onCancel={() => setAboutOpen(false)}
+          onClose={() => setAboutOpen(false)}
+        >
+          <h1 id="about-title">HVACRbuild.app</h1>
+          <p>A working map of measurable things.</p>
+          <dl>
+            <dt>Version</dt>
+            <dd>{appPackage.version}</dd>
+            <dt>Reference data</dt>
+            <dd>QUDT {data.source.version}</dd>
+          </dl>
+          <p>
+            Browse concepts and their relationships. Use Develop → Enter Edit
+            Mode to author your atlas.
+          </p>
+          <p className="notice">
+            Changes last for this session. Workspace saving and recovery arrive
+            in M3.
+          </p>
           <a href={data.source.licenseUrl} target="_blank" rel="noreferrer">
-            QUDT · {data.source.license}
+            QUDT attribution · {data.source.license}
           </a>
-        </footer>
+          <button autoFocus onClick={() => setAboutOpen(false)}>
+            Close About
+          </button>
+        </dialog>
+        <div className="sr-only" role="status" aria-live="polite">
+          {session.message}
+        </div>
         <div
           className="sr-only"
           role="status"

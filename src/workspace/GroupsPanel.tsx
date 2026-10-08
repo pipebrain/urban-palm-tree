@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { NodeGroup } from "../domain/authoring";
 import { useWorkspace } from "./context";
 
@@ -12,6 +12,14 @@ function GroupEditor({
   const w = useWorkspace();
   const [name, setName] = useState(group?.name || "");
   const [color, setColor] = useState(group?.color || "#438570");
+  const draftId = useId();
+  const { registerDraft } = w;
+  const dirty =
+    name !== (group?.name || "") || color !== (group?.color || "#438570");
+  useEffect(() => {
+    registerDraft(draftId, dirty);
+    return () => registerDraft(draftId, false);
+  }, [draftId, dirty, registerDraft]);
   return (
     <form
       className="group-editor"
@@ -82,16 +90,18 @@ export function GroupsPanel() {
             <strong>{group.name}</strong>
             <span>{group.nodeIds.length} concepts</span>
           </div>
-          {editing === group.id ? (
+          {w.editMode && editing === group.id ? (
             <GroupEditor group={group} close={() => setEditing(undefined)} />
           ) : (
             <div className="action-row">
-              <button
-                onClick={() => setEditing(group.id)}
-                aria-label={`Edit group ${group.name}`}
-              >
-                Edit
-              </button>
+              {w.editMode && (
+                <button
+                  onClick={() => setEditing(group.id)}
+                  aria-label={`Edit group ${group.name}`}
+                >
+                  Edit
+                </button>
+              )}
               <button
                 onClick={() =>
                   w.setGroupFilter(w.groupFilter === group.id ? null : group.id)
@@ -101,48 +111,65 @@ export function GroupsPanel() {
               >
                 Filter map
               </button>
-              <button
-                onClick={() => {
-                  if (
-                    w.perform(
-                      { type: "group.delete", id: group.id },
-                      "Delete group",
-                    )
-                  ) {
-                    if (w.groupFilter === group.id) w.setGroupFilter(null);
-                  }
-                }}
-                aria-label={`Delete group ${group.name}`}
-              >
-                Delete group
-              </button>
+              {w.editMode && (
+                <button
+                  onClick={() => {
+                    if (
+                      w.perform(
+                        { type: "group.delete", id: group.id },
+                        "Delete group",
+                      )
+                    ) {
+                      if (w.groupFilter === group.id) w.setGroupFilter(null);
+                    }
+                  }}
+                  aria-label={`Delete group ${group.name}`}
+                >
+                  Delete group
+                </button>
+              )}
             </div>
           )}
-          <p className="muted">
-            Deleting a group keeps its concepts and can be undone.
-          </p>
+          {w.editMode && (
+            <p className="muted">
+              Deleting a group keeps its concepts and can be undone.
+            </p>
+          )}
         </div>
       ))}
-      {editing === "new" ? (
-        <GroupEditor close={() => setEditing(undefined)} />
-      ) : (
-        <button className="load-more" onClick={() => setEditing("new")}>
-          New group
-        </button>
-      )}
+      {w.editMode &&
+        (editing === "new" ? (
+          <GroupEditor close={() => setEditing(undefined)} />
+        ) : (
+          <button className="load-more" onClick={() => setEditing("new")}>
+            New group
+          </button>
+        ))}
     </details>
   );
 }
 
 export function NodeGroups({ id }: { id: string }) {
   const w = useWorkspace();
+  const memberships = w.groups.filter((g) => g.nodeIds.includes(id));
   return (
     <details className="node-groups">
-      <summary>
-        Group membership ·{" "}
-        {w.groups.filter((g) => g.nodeIds.includes(id)).length}
-      </summary>
-      {w.groups.length ? (
+      <summary>Group membership · {memberships.length}</summary>
+      {!w.editMode ? (
+        memberships.length ? (
+          memberships.map((group) => (
+            <p key={group.id}>
+              <i
+                className="group-swatch"
+                style={{ backgroundColor: group.color }}
+              />
+              {group.name}
+            </p>
+          ))
+        ) : (
+          <p className="muted">This concept does not belong to a group.</p>
+        )
+      ) : w.groups.length ? (
         w.groups.map((group) => (
           <label className="checkbox-label" key={group.id}>
             <input

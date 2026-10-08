@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { MathText } from "../components/Math";
 import type { LearningNode } from "../domain/types";
 import { useWorkspace } from "./context";
@@ -47,6 +47,12 @@ export function NodeEditor({
   onClose?: () => void;
 }) {
   const w = useWorkspace();
+  const draftId = useId();
+  const { registerDraft } = w;
+  useEffect(() => {
+    registerDraft(draftId, true);
+    return () => registerDraft(draftId, false);
+  }, [draftId, registerDraft]);
   const [draft, setDraft] = useState<LearningNode>(() =>
     structuredClone(node || newNode(kind)),
   );

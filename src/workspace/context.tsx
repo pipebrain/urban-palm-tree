@@ -15,6 +15,8 @@ import type {
   Placement,
 } from "../domain/authoring";
 export interface Workspace {
+  editMode: boolean;
+  registerDraft: (id: string, active: boolean) => void;
   data: Dataset;
   nodes: LearningNode[];
   edges: GraphEdge[];

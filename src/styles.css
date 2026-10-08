@@ -88,42 +88,7 @@ small {
   flex-direction: column;
   overflow: hidden;
 }
-header {
-  height: 88px;
-  flex-shrink: 0;
-  background: #122f27;
-  color: #f5f4e9;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-  border-bottom: 1px solid #3c5445;
-}
-.brand {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-.brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 43px;
-  height: 43px;
-  border: 1px solid #7d9d83;
-  border-radius: 10px;
-  font-family: Georgia, serif;
-  font-size: 26px;
-  position: relative;
-  color: #d5deb8;
-}
-.brand-mark > .icon {
-  width: 14px;
-  height: 14px;
-  position: absolute;
-  right: 3px;
-  top: 4px;
-}
+
 h1 {
   font-size: 21px;
   line-height: 1.2;
@@ -131,36 +96,7 @@ h1 {
   letter-spacing: 1.5px;
   font-weight: 600;
 }
-h1 > span {
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: -0.4px;
-  border-left: 1px solid #5b7162;
-  margin-left: 10px;
-  padding-left: 13px;
-}
-.brand p {
-  color: #a4b6a6;
-  font-size: 11px;
-  margin: 5px 0 0;
-  letter-spacing: 0.25px;
-}
-.header-meta {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  color: #b6c7b8;
-  font-size: 11px;
-}
-.prototype {
-  color: #d9dfa8;
-  background: #253d30;
-  border: 1px solid #4a5f40;
-  border-radius: 4px;
-  padding: 6px 9px;
-  font-size: 10px;
-  letter-spacing: 1px;
-}
+
 .workspace {
   flex: 1;
   min-height: 0;
@@ -783,9 +719,7 @@ canvas {
   letter-spacing: 0;
   font-family: Georgia, serif;
 }
-.loading .brand-mark {
-  color: #2d593f;
-}
+
 .mobile-nav {
   display: flex;
   padding: 7px 12px;
@@ -826,15 +760,6 @@ canvas {
   white-space: nowrap;
 }
 @media (max-width: 1100px) {
-  header {
-    padding: 0 18px;
-  }
-  .header-meta {
-    gap: 8px;
-  }
-  .header-meta > span:last-child {
-    display: none;
-  }
   .panel-scroll {
     padding: 22px 17px;
   }
@@ -855,39 +780,14 @@ canvas {
   }
 }
 @media (max-width: 800px) {
-  header {
-    height: 73px;
-    padding: 0 16px;
-  }
-  .brand {
-    gap: 10px;
-  }
-  .brand-mark {
-    width: 36px;
-    height: 36px;
-    font-size: 23px;
-  }
   h1 {
     font-size: 17px;
   }
-  h1 > span {
-    font-size: 15px;
-    margin-left: 6px;
-    padding-left: 9px;
-  }
-  .brand p {
-    font-size: 9px;
-  }
-  .header-meta {
-    display: none;
-  }
+
   .app-footer {
     padding: 7px 12px;
     font-size: 8px;
     gap: 8px;
-  }
-  .app-footer > span:nth-child(2) {
-    display: none;
   }
   .panel-scroll {
     padding: 24px;
@@ -1011,33 +911,7 @@ input,
 textarea {
   touch-action: manipulation;
 }
-.workspace-trail {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 5px 22px;
-  background: #edf1e8;
-  border-bottom: 1px solid #d5dfd4;
-  min-height: 44px;
-}
-.workspace-trail > span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.workspace-trail > small {
-  margin-left: auto;
-  color: #627263;
-  white-space: nowrap;
-}
-.history-controls {
-  display: flex;
-  gap: 5px;
-}
-.history-controls button {
-  min-height: 32px;
-  padding: 2px 10px;
-}
+
 .map-panel {
   height: 100%;
   display: flex;
@@ -1247,18 +1121,6 @@ code {
   font-size: 10px;
 }
 @media (max-width: 800px) {
-  .workspace-trail {
-    padding: 3px 10px;
-    gap: 8px;
-    font-size: 11px;
-  }
-  .workspace-trail > small {
-    display: none;
-  }
-  .history-controls button {
-    min-height: 40px;
-    min-width: 40px;
-  }
   .map-filters > summary {
     min-height: 35px;
     padding-top: 5px;
@@ -1297,24 +1159,7 @@ code {
 }
 
 /* M2 authoring shares the same desktop panels and touch-first phone controls. */
-.authoring-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 18px;
-  border-bottom: 1px solid #d4decf;
-  background: #f5f7ef;
-  flex-shrink: 0;
-}
-.authoring-toolbar button {
-  min-height: 40px;
-  padding: 7px 12px;
-}
-.authoring-toolbar > span {
-  font-size: 11px;
-  color: #567060;
-  min-width: 0;
-}
+
 .authoring-error {
   display: flex;
   align-items: center;
@@ -1496,16 +1341,6 @@ code {
   margin: 0;
 }
 @media (max-width: 800px) {
-  .authoring-toolbar {
-    padding: 5px 12px;
-  }
-  .authoring-toolbar button {
-    min-height: 44px;
-  }
-  .authoring-toolbar > span {
-    font-size: 10px;
-    line-height: 1.4;
-  }
   .authoring-form input,
   .authoring-form textarea,
   .authoring-form select,
@@ -1528,4 +1363,61 @@ code {
   .editor-actions {
     bottom: -24px;
   }
+}
+
+/* The menu owns global commands; panels retain the full available workspace. */
+.empty-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 28px;
+  text-align: center;
+}
+.empty-workspace p {
+  color: #617265;
+  margin: 0;
+}
+.empty-workspace button {
+  min-height: 44px;
+}
+.about-dialog {
+  max-width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  padding: 28px;
+  border: 1px solid #a8b8aa;
+  border-radius: 14px;
+  background: #fafbf6;
+  color: #20382f;
+  box-shadow: 0 20px 80px #14291f40;
+}
+.about-dialog::backdrop {
+  background: #15281e66;
+}
+.about-dialog h1 {
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+.about-dialog dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 13px;
+}
+.about-dialog dt {
+  color: #617265;
+}
+.about-dialog dd {
+  margin: 0;
+}
+.about-dialog > button {
+  display: block;
+  margin: 20px 0 0 auto;
+  min-height: 44px;
+}
+.app-footer {
+  flex-wrap: wrap;
 }

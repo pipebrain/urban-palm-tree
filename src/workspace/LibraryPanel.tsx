@@ -34,26 +34,30 @@ export function LibraryPanel() {
   return (
     <section className="library panel-scroll">
       <div className="panel-intro">
-        <span className="eyebrow">EXPLORE & AUTHOR</span>
+        <span className="eyebrow">
+          {w.editMode ? "EXPLORE & AUTHOR" : "EXPLORE"}
+        </span>
         <h2>The reference library</h2>
         <p>Find a concept. Follow its relationships.</p>
       </div>
-      <div className="create-concept">
-        <label className="sr-only" htmlFor="new-concept-kind">
-          New concept type
-        </label>
-        <select
-          id="new-concept-kind"
-          aria-label="New concept type"
-          value={newKind}
-          onChange={(e) => setNewKind(e.target.value as LearningNode["kind"])}
-        >
-          <option value="quantity">Quantity</option>
-          <option value="equation">Equation</option>
-          <option value="constant">Constant</option>
-        </select>
-        <button onClick={() => w.startCreate(newKind)}>Create concept</button>
-      </div>
+      {w.editMode && (
+        <div className="create-concept">
+          <label className="sr-only" htmlFor="new-concept-kind">
+            New concept type
+          </label>
+          <select
+            id="new-concept-kind"
+            aria-label="New concept type"
+            value={newKind}
+            onChange={(e) => setNewKind(e.target.value as LearningNode["kind"])}
+          >
+            <option value="quantity">Quantity</option>
+            <option value="equation">Equation</option>
+            <option value="constant">Constant</option>
+          </select>
+          <button onClick={() => w.startCreate(newKind)}>Create concept</button>
+        </div>
+      )}
       <GroupsPanel />
       <div className="filter-tabs" aria-label="Library collection">
         <button

@@ -1,3 +1,4 @@
+import { enterEditMode } from "./browser-ui.mjs";
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
@@ -43,6 +44,7 @@ try {
     await page.goto(baseURL, { waitUntil: "domcontentloaded" });
     const graph = page.getByTestId("graph");
     await graph.waitFor();
+    await enterEditMode(page);
     await page.waitForFunction(
       () =>
         Number(document.querySelector("[data-testid=graph]")?.dataset.ticks) >=

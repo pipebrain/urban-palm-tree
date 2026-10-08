@@ -1,3 +1,4 @@
+import { enterEditMode, historyAction } from "./browser-ui.mjs";
 import assert from "node:assert/strict";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
@@ -50,6 +51,7 @@ try {
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(baseURL);
     await page.getByTestId("graph").waitFor();
+    await enterEditMode(page);
     const inspect = page.getByTestId("inspector");
     const select = async (id) => {
       if (phone)
@@ -92,13 +94,9 @@ try {
         .locator(`.related[data-node-id="${q("Temperature")}"]`)
         .count(),
     );
-    await page
-      .getByRole("button", { name: "Previous reference", exact: true })
-      .click();
+    await historyAction(page, "Undo");
     assert.equal(await unitSelect.inputValue(), u("DEG_C"));
-    await page
-      .getByRole("button", { name: "Next reference", exact: true })
-      .click();
+    await historyAction(page, "Redo");
     await units.waitFor();
     await units
       .getByRole("button", { name: "Back to concept", exact: false })
@@ -203,7 +201,7 @@ try {
         "classification-subtype",
         "exact-unit-choice",
         "preference-backlinks-separate",
-        "back-forward-navigation",
+        "unified-undo-redo-reference-navigation",
         "temperature-interval",
         "gauge-pressure-context",
         "unknown-data-visible",

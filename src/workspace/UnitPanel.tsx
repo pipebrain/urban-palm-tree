@@ -1,5 +1,5 @@
 import { Icon } from "../components/Icon";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { MathText } from "../components/Math";
 import { unitLatex } from "../domain/notation";
 import {
@@ -17,6 +17,12 @@ function UnitEditor({
   onClose: () => void;
 }) {
   const w = useWorkspace();
+  const draftId = useId();
+  const { registerDraft } = w;
+  useEffect(() => {
+    registerDraft(draftId, true);
+    return () => registerDraft(draftId, false);
+  }, [draftId, registerDraft]);
   const [label, setLabel] = useState(unit.label);
   const [latex, setLatex] = useState(
     unitLatex(unit, w.authoring.unitOverrides[unit.id]?.latex),
@@ -147,17 +153,18 @@ export function UnitPanel() {
       ) : (
         <>
           <h2>{unit.label}</h2>
-          {editing ? (
-            <UnitEditor
-              key={unit.id}
-              unit={unit}
-              onClose={() => setEditing(false)}
-            />
-          ) : (
-            <button onClick={() => setEditing(true)}>
-              Edit unit presentation
-            </button>
-          )}
+          {w.editMode &&
+            (editing ? (
+              <UnitEditor
+                key={unit.id}
+                unit={unit}
+                onClose={() => setEditing(false)}
+              />
+            ) : (
+              <button onClick={() => setEditing(true)}>
+                Edit unit presentation
+              </button>
+            ))}
           <div className="math-card">
             <MathText
               latex={unitLatex(unit, w.authoring.unitOverrides[unit.id]?.latex)}
@@ -197,20 +204,22 @@ export function UnitPanel() {
               <pre className="source-record">
                 {JSON.stringify(source, null, 2)}
               </pre>
-              <button
-                disabled={!Object.hasOwn(w.authoring.unitOverrides, unit.id)}
-                onClick={() => {
-                  if (
-                    w.perform(
-                      { type: "unit.reset", id: unit.id },
-                      `Restore unit ${source.label}`,
+              {w.editMode && (
+                <button
+                  disabled={!Object.hasOwn(w.authoring.unitOverrides, unit.id)}
+                  onClick={() => {
+                    if (
+                      w.perform(
+                        { type: "unit.reset", id: unit.id },
+                        `Restore unit ${source.label}`,
+                      )
                     )
-                  )
-                    setEditing(false);
-                }}
-              >
-                Restore source unit fields
-              </button>
+                      setEditing(false);
+                  }}
+                >
+                  Restore source unit fields
+                </button>
+              )}
             </details>
           )}
           <h3>Explicit uses · {uses.length}</h3>

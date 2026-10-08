@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { GraphEdge } from "../domain/types";
 import { describeRelationship } from "../domain/semantics";
 import { useWorkspace } from "./context";
@@ -22,6 +22,12 @@ export function RelationshipEditor({
   onClose: () => void;
 }) {
   const w = useWorkspace();
+  const draftId = useId();
+  const { registerDraft } = w;
+  useEffect(() => {
+    registerDraft(draftId, true);
+    return () => registerDraft(draftId, false);
+  }, [draftId, registerDraft]);
   const [draft, setDraft] = useState<GraphEdge>(() => {
     const id = `urn:hvacr:edge:${crypto.randomUUID()}`;
     return structuredClone(
