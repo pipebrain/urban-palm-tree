@@ -50,13 +50,15 @@ Andrew authorized M2 after the successful physical-phone recheck. Local source i
 
 ## GUI refinement decisions — 7 October 2026
 
-Andrew requested a GUI refinement before M3. Local source is **0.2.1**; the public site remains the accepted M2 **0.2.0** release at `95684ad4376cc32221962b34f8acc3699d55ea1a`. The GUI request does not authorize deployment. Scope and verification are recorded in [GUI refinement](GUI-REFINEMENT.md); historical milestone and deployment records remain unchanged.
+Andrew requested GUI refinements before M3. Current source is **0.2.2**; the public site remains the accepted M2 **0.2.0** release at `95684ad4376cc32221962b34f8acc3699d55ea1a`. Source commit/push is authorized, but Pages publication is not. Current scope and verification are recorded in [GUI window refinement](GUI-WINDOW-REFINEMENT.md). The preceding **0.2.1** menu/session work remains recorded in [GUI refinement](GUI-REFINEMENT.md); historical milestone and deployment records remain unchanged.
 
 - Andrew confirmed Browse mode as the default and keeping File operations disabled until M3. **Develop → Enter Edit Mode** enables authoring. Browse mode retains inspection, filtering, pan/zoom, and reference navigation; it does not change content or manual placement.
-- A browser application menu provides HVACRbuild.app, File, Edit, View, Develop, and Window. It replaces the former branding header, reference-arrow bar, and separate Undo/Redo toolbar. It is part of the web app, not a native macOS menu bar.
+- A browser application menu replaces the former branding header, reference-arrow bar, and separate Undo/Redo toolbar. Version 0.2.2 separates an inert SVG system mark from the HVACRbuild application menu and its About item, followed by File, Edit, View, Develop, and Window. It is part of the web app, not a native macOS menu bar.
 - One session engine coordinates references, authoring state, mode, notices, and panel controls. One shared navigation/authoring timeline is the implementation interpretation of the unification request; the optional clarification about timeline semantics received no answer. It must not be described as an explicitly confirmed preference.
 - A Save and its resulting concept selection form one undo step. Force ticks and view controls do not create history. No-op and failed actions preserve redo. Browse mode can traverse navigation entries; undoing or redoing content requires Edit mode.
-- Closing all tabs retains session content. Desktop tab merging changes Dockview arrangement, and restoring tabs reopens the workspace. Unfinished drafts must survive navigation and responsive changes or block operations that would discard them. None of these controls saves a workspace file.
+- View opens or activates Inspector, Knowledge Map, Library, or Units individually. Each tab can close independently; Close All Tabs leaves an empty workspace while retaining session content and history. Selecting a concept, opening a unit, creating content, or travelling through history opens only the needed panel. Panel visibility is live session UI state, outside the Undo/Redo timeline.
+- Desktop **Window → Tile Tabs → Columns / Rows / Quarters** arranges existing open panels, and **Merge All Tabs** combines them into one group. Closed panels stay closed. Tiling and merging are disabled in the phone layout; phone tabs retain individual close and View reopening controls.
+- Draft guards track which panel owns an editor. Closing an unrelated panel can proceed; closing the owner, closing all tabs, navigation that replaces the edited reference, and layout/mode changes must preserve unfinished work or require Save/Cancel first. Responsive layout remounts wait for drafts to finish. None of these controls saves a workspace file.
 
 M3 has not started. Autosave, workspace files, source export, and Reload from source remain governed by the existing milestone requirements.
 
@@ -73,7 +75,7 @@ These defaults guide remaining implementation. M1, M2, and the current GUI decis
 | Group colours    | M2: first matching group's colour plus a membership-count badge                                                                 | During physical-device usability review              |
 | Source export    | Versioned, deterministic data and assets consumable by the app; exact format chosen by Codex                                    | Before M3                                            |
 | Release trigger  | Manually initiated Pages publishing via `.github/workflows/pages.yml` (`workflow_dispatch`), separate from ordinary code pushes | Each requested preview or alpha release              |
-| App name         | HVACRbuild.app in the application menu, as requested for the GUI refinement                                                    | When Andrew changes the product naming               |
+| App name         | HVACRbuild.app product name; HVACRbuild application menu beside an inert SVG system mark                                       | When Andrew changes the product naming               |
 
 Offline use is now selected. The implementation must distinguish online preparation, offline-ready status, and offline reopening; storing edits in an online tab alone is insufficient. The working interpretation of source is the released app content/defaults, not direct access to unpublished GitHub commits. Detailed source-replacement behaviour is specified in the product brief.
 
@@ -111,6 +113,8 @@ These are primary source entry points. Verify the current release and relevant d
 14. [GitHub Pages custom workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) — future build/deploy workflow.
 
 ## Change log
+
+- GUI window refinement, 7 October 2026: Current source 0.2.2 implements Andrew's follow-up menu/window request: separate system mark and app menu, View opening individual panels, independent/all-tab closing, and desktop columns/rows/quarters tiling or merging. Window operations preserve session content/history and protect drafts. See [GUI window refinement](GUI-WINDOW-REFINEMENT.md) for scope and verification. Source commit/push is authorized; Pages publication is not, and M3 has not started.
 
 - GUI refinement, 7 October 2026: Andrew requested the menu and unified-state changes before M3 and confirmed Browse mode by default with File operations disabled. Local version 0.2.1 introduces explicit Edit mode and one navigation/authoring timeline as the implementation interpretation of unification. See [GUI refinement](GUI-REFINEMENT.md) for verification. Public Pages remains M2 0.2.0; no GUI deployment was authorized, and M3 has not started.
 

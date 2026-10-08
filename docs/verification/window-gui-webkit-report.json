@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-10-08T02:10:08.179Z",
+  "baseURL": "http://127.0.0.1:4175/urban-palm-tree/",
+  "engine": "webkit",
+  "browser": "26.6",
+  "note": "Mac browser automation. Phone means viewport/touch emulation, not physical-device acceptance. Chromium phone drags use touch dispatch; WebKit drags use mouse pointer events.",
+  "runs": [
+    {
+      "profile": "desktop",
+      "checks": [
+        "Compact SVG brand, six accessible menus, old toolbars removed, Browse mode by default, 44px menu triggers, no overflow",
+        "Disabled M3 file actions are keyboard discoverable and inert; arrows, Enter, Escape, and Tab preserve focus",
+        "Status bar toggles and restores; About opens and closes by button and Escape",
+        "Dragging a selected node in Browse mode pans without pinning, authoring, or errors",
+        "Edit mode unlocks authoring; Save is atomic; one Undo/Redo timeline traverses references and content edits in order",
+        "Unsaved draft survives attempted mode exit, close tabs, desktop merge, Undo, concept/unit navigation, new-concept action, and responsive breakpoint changes; cancellation allows mode exit; Browse history cannot mutate authored content",
+        "Creating and selecting a new node saves one history action; Undo and Redo restore the prior reference and new content together",
+        "View reopens individual panels without discarding content/history; desktop merge yields one group with four tabs"
+      ],
+      "errors": [],
+      "history": {
+        "undo": 5,
+        "redo": 0
+      },
+      "passed": true
+    },
+    {
+      "profile": "phone",
+      "checks": [
+        "Compact SVG brand, six accessible menus, old toolbars removed, Browse mode by default, 44px menu triggers, no overflow",
+        "Disabled M3 file actions are keyboard discoverable and inert; arrows, Enter, Escape, and Tab preserve focus",
+        "Status bar toggles and restores; About opens and closes by button and Escape",
+        "Dragging a selected node in Browse mode pans without pinning, authoring, or errors",
+        "Edit mode unlocks authoring; Save is atomic; one Undo/Redo timeline traverses references and content edits in order",
+        "Unsaved draft survives attempted mode exit, close tabs, Undo, concept/unit navigation, new-concept action, and responsive breakpoint changes; cancellation allows mode exit; Browse history cannot mutate authored content",
+        "Creating and selecting a new node saves one history action; Undo and Redo restore the prior reference and new content together",
+        "Closing tabs and reopening panels through View preserves content and timeline; Merge All Tabs is disabled for the phone layout"
+      ],
+      "errors": [],
+      "history": {
+        "undo": 5,
+        "redo": 0
+      },
+      "passed": true
+    }
+  ]
+}

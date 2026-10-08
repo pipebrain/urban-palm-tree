@@ -1,0 +1,77 @@
+{
+  "checkedOnLocalDate": "2026-10-07",
+  "implementationCommit": "b2a307d217305510d5018e07de362b6876c69a50",
+  "appVersion": "0.2.2",
+  "environment": {
+    "os": "macOS 27.0.1 arm64",
+    "node": "24.19.0",
+    "pnpm": "11.25.0",
+    "playwright": "1.63.0",
+    "chrome": "154.0.8037.98",
+    "webkit": "26.6"
+  },
+  "checks": [
+    {
+      "command": "sh scripts/pnpm.sh test",
+      "passed": true,
+      "tests": 70,
+      "sessionTests": 13,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "command": "sh scripts/pnpm.sh format:check",
+      "passed": true
+    },
+    {
+      "command": "APP_BASE=/urban-palm-tree/ sh scripts/pnpm.sh build",
+      "passed": true,
+      "includesTypecheck": true,
+      "advisory": "Existing Vite main JavaScript chunk size advisory remains."
+    },
+    {
+      "command": "git diff --check",
+      "passed": true
+    }
+  ],
+  "offlineBuild": {
+    "buildId": "74ccbeb451e7e33fae20",
+    "preparedAssetsIncludingInventory": 67,
+    "bytesIncludingInventory": 7226876
+  },
+  "browserEvidence": {
+    "finalBuild": [
+      "window-chromium-report.json",
+      "window-webkit-report.json",
+      "window-offline-report.json"
+    ],
+    "beforeFinalMapSizingAndFloatingTabFix": {
+      "buildId": "a03005c814735080719f",
+      "reports": [
+        "window-gui-chromium-report.json",
+        "window-gui-webkit-report.json"
+      ],
+      "difference": "Final changes make short map panels scroll and dock floated tabs before arranging. Final Window checks cover both changes."
+    },
+    "beforeNativeTabKeyboardGuard": {
+      "buildId": "f4047a998c588b818ccc",
+      "reports": [
+        "window-authoring-chromium-report.json",
+        "window-authoring-webkit-report.json",
+        "window-authoring-chromium-offline-report.json"
+      ],
+      "difference": "Later changes route native tab Delete/Backspace through the draft guard, retain usable short map canvases, and dock floated tabs before arranging. Final Window checks cover those paths; final offline baseline verifies current assets."
+    }
+  },
+  "publication": {
+    "guiDeployed": false,
+    "publicVersion": "0.2.0",
+    "publicSource": "95684ad4376cc32221962b34f8acc3699d55ea1a"
+  },
+  "limits": [
+    "Phone profiles use Mac viewport/touch emulation, not physical devices.",
+    "Window/GUI checks block service workers for isolation; offline preparation is checked separately.",
+    "Tiling and merging apply to desktop/tablet Dockview; phone panels stay tabbed.",
+    "Session-only authoring remains; M3 has not started."
+  ]
+}

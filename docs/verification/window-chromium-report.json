@@ -1,0 +1,132 @@
+{
+  "checkedAt": "2026-10-08T02:17:44.044Z",
+  "baseURL": "http://127.0.0.1:4175/urban-palm-tree/",
+  "engine": "chromium",
+  "appVersion": "0.2.2",
+  "browser": "154.0.8037.98",
+  "note": "Mac browser automation; phone is viewport/touch emulation, not physical-device acceptance. Geometry is measured from rendered Dockview groups.",
+  "runs": [
+    {
+      "profile": "desktop",
+      "checks": [
+        "Inert SVG system icon is separate from the application About menu",
+        "Native outer-tab Delete/Backspace respect draft guards and panel state; unrelated tabs close without discarding another panel's draft",
+        "Closing an editor tab refuses unsaved draft loss; saving creates stable authored content",
+        "Close all preserves content/history; View opens one panel; concept, unit and map navigation open only their required panels",
+        "Shift-dragged floating Library returns to the grid when tiled; short Rows retain a scrollable canvas and usable zoom controls",
+        "Columns, rows and quarters have correct nonoverlapping geometry; merged active/inactive tabs close by click, hover and keyboard focus",
+        "Authored content and selection survive every close/reopen/tile/merge action; reopening Inspector alone restores the current concept"
+      ],
+      "layouts": {
+        "Columns": [
+          {
+            "x": 0,
+            "y": 48,
+            "width": 360,
+            "height": 881
+          },
+          {
+            "x": 360,
+            "y": 48,
+            "width": 360,
+            "height": 881
+          },
+          {
+            "x": 720,
+            "y": 48,
+            "width": 360,
+            "height": 881
+          },
+          {
+            "x": 1080,
+            "y": 48,
+            "width": 360,
+            "height": 881
+          }
+        ],
+        "Rows": [
+          {
+            "x": 0,
+            "y": 48,
+            "width": 1440,
+            "height": 220
+          },
+          {
+            "x": 0,
+            "y": 268,
+            "width": 1440,
+            "height": 220
+          },
+          {
+            "x": 0,
+            "y": 488,
+            "width": 1440,
+            "height": 221
+          },
+          {
+            "x": 0,
+            "y": 709,
+            "width": 1440,
+            "height": 220
+          }
+        ],
+        "Quarters": [
+          {
+            "x": 0,
+            "y": 48,
+            "width": 720,
+            "height": 441
+          },
+          {
+            "x": 0,
+            "y": 489,
+            "width": 720,
+            "height": 440
+          },
+          {
+            "x": 720,
+            "y": 48,
+            "width": 720,
+            "height": 441
+          },
+          {
+            "x": 720,
+            "y": 489,
+            "width": 720,
+            "height": 440
+          }
+        ]
+      },
+      "errors": [],
+      "rowCanvas": {
+        "height": 183,
+        "viewportHeight": 185,
+        "scrollTop": 115,
+        "zoomBefore": 0.08,
+        "zoomAfter": 0.112
+      },
+      "history": {
+        "undo": 5,
+        "redo": 0
+      },
+      "passed": true
+    },
+    {
+      "profile": "phone",
+      "checks": [
+        "Inert SVG system icon is separate from the application About menu",
+        "Closing an editor tab refuses unsaved draft loss; saving creates stable authored content",
+        "Close all preserves content/history; View opens one panel; concept, unit and map navigation open only their required panels",
+        "Phone tab close/reopen works by touch; desktop-only tiling/merging stays disabled",
+        "Authored content and selection survive every close/reopen/tile/merge action; reopening Inspector alone restores the current concept"
+      ],
+      "layouts": {},
+      "errors": [],
+      "history": {
+        "undo": 5,
+        "redo": 0
+      },
+      "passed": true
+    }
+  ]
+}
